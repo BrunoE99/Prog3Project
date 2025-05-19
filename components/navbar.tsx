@@ -1,0 +1,51 @@
+'use client'
+
+import { useState } from 'react';
+import Link from 'next/link';
+
+export default function Navbar() {
+    const [isNavOpen, setOpen] = useState(false);
+
+    return (
+        <nav className="relative bg-[#000814] text-white">
+            <div className="lg:hidden p-5 text-end">
+                <button className="space-y-2" onClick={() => setOpen((prev) => !prev)} aria-label="Toggle menu" aria-expanded={isNavOpen}>
+                    <span className="block h-0.5 w-8 bg-gray-600"></span>
+                    <span className="block h-0.5 w-8 bg-gray-600"></span>
+                    <span className="block h-0.5 w-8 bg-gray-600"></span> {/* change to a SVG */}
+                </button>
+            </div>
+
+            <div className={`${isNavOpen ? "flex" : "hidden"} bg-[#010f24] lg:hidden`}> 
+                <ul role="menu" className="flex flex-col px-5 gap-4 py-3">
+                    <li role="menuitem">
+                        <Link href="/" className="hover:bg-[#041b3d]">Home</Link>
+                    </li>
+                    <li role="menuitem">
+                        <Link href="/reviews" className="hover:bg-[#041b3d]">Reviews</Link>
+                    </li>
+                    <li role="menuitem">
+                        <Link href="/genres" className="hover:bg-[#041b3d]">Genres</Link>
+                    </li>
+                    <li role="menuitem">
+                        <Link href="/about" className="hover:bg-[#041b3d]">About</Link>
+                    </li>
+                </ul>
+            </div>
+            
+            <div className="hidden lg:flex justify-between items-center px-6 py-4 bg-[#000814] text-white shadow">
+                <div className="flex gap-4">
+                    <Link href="/" className="hover:bg-[#041b3d] p-1">Home</Link>
+                    <Link href="/reviews" className="hover:bg-[#041b3d] p-1">Reviews</Link>
+                    <Link href="/genres" className="hover:bg-[#041b3d] p-1">Genres</Link>
+                    <Link href="/about" className="hover:bg-[#041b3d] p-1">About</Link>
+                </div>
+                <div className="flex gap-4">
+                    <Link href="/login" className="hover:bg-[#041b3d] p-1">Login</Link>
+                    <Link href="/register" className="hover:bg-[#041b3d] p-1">Register</Link>
+                </div>
+            </div>
+        
+        </nav>
+    )
+}

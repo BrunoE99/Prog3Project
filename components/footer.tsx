@@ -9,24 +9,16 @@ export default function Footer() {
             <ul>
                 <li><Link href="/reviews">Reviews</Link></li>
                 <li><Link href="/genres">Genres</Link></li>
-                <li><Link href="/about">About</Link></li>
+                <li><Link href="/about">About us</Link></li>
             </ul>
             </div>
             <div>
             <h4 className="font-bold mb-2">Resources</h4>
             <ul>
-                <li><a href="#">Privacy Policy</a></li>
-                <li><a href="#">Terms of Service</a></li>
+                <li><a href="#">Contact us</a></li>
+                <li><a href="#">Report bugs</a></li>
             </ul>
             </div>
-            {/* <div>
-            <h4 className="font-bold mb-2">Follow Us</h4>
-            <ul>
-                <li><a href="#">Twitter</a></li>
-                <li><a href="#">Instagram</a></li>
-                <li><a href="#">Facebook</a></li>
-            </ul>
-            </div> */}
         </div>
         </footer>
     )

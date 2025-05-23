@@ -41,8 +41,8 @@ export default function Navbar() {
                     <Link href="/about" className="hover:bg-[#041b3d] p-1">About</Link>
                 </div>
                 <div className="flex gap-4">
-                    <Link href="/login" className="hover:bg-[#041b3d] p-1">Login</Link>
-                    <Link href="/register" className="hover:bg-[#041b3d] p-1">Register</Link>
+                    <Link href="/login" className="hover:bg-[#041b3d] p-1">Log in</Link>
+                    <Link href="/signup" className="hover:bg-[#041b3d] p-1">Sign up</Link>
                 </div>
             </div>
         

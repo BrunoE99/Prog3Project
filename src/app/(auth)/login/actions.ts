@@ -21,7 +21,9 @@ export async function logIn(_: any, formData: FormData) {
 
     // I need to call a function which encrypts the password
 
-    await logInPost(email, password);
+    const duki = await logInPost(email, password);
+
+    console.log(duki);
 
     redirect('/');
 }

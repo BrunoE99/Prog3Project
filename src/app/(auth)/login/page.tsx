@@ -17,16 +17,6 @@ export default function Login() {
                 <label htmlFor="password">Password</label>
                 <input id="password" name="password" type="password" className="border rounded p-0.5"/>
             </div>
-            {state?.errors?.password && (
-                <div>
-                    <p>La password debe tener:</p>
-                    <ul>
-                        {state.errors.password.map((error) => (
-                            <li key={error}>- {error}</li>
-                        ))}
-                    </ul>
-                </div>
-            )}
             <button disabled={pending} type="submit" className="bg-[#020b59] w-20 border rounded">Log in</button>
         </form>
     )

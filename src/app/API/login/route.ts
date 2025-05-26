@@ -1,11 +1,13 @@
 import 'server-only'
 import { cookies } from 'next/headers'
 
+const api_URL = 'http://localhost:3000';
+
 export async function logInPost(userEmail: string, userPassword: string) { // Password should already be received encrypted
     const cookieStore = await cookies()
 
     try {
-        const loginRequest = await fetch('idk.com/login', {
+        const loginRequest = await fetch(`${api_URL}/api/auth/login`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

@@ -23,7 +23,12 @@ export async function logIn(_: any, formData: FormData) {
 
     const duki = await logInPost(email, password);
 
-    console.log(duki);
+    if (duki.success == true) {
+        redirect('/');
+    } else {
+        return {
+            errors: duki.message,
+        }
+    }
 
-    redirect('/');
 }

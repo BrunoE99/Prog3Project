@@ -18,6 +18,7 @@ export default function Login() {
                 <input id="password" name="password" type="password" className="border rounded p-0.5"/>
             </div>
             <button disabled={pending} type="submit" className="bg-[#020b59] w-20 border rounded">Log in</button>
+            {state?.errors && <p>{state.errors}</p>}
         </form>
     )
 }

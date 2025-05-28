@@ -18,16 +18,15 @@ export async function logInPost(userEmail: string, userPassword: string) { // Pa
             })
         })
 
+        const token = await loginRequest.json();
+
         if (!loginRequest.ok) {
-            const err = await loginRequest.json();
             return {
                 success: false,
                 error: 'This failed.',
-                message: err?.message || 'Login failed',
+                message: token?.message || 'Login failed',
             }
         }
-
-        const token = await loginRequest.json();
 
         if (!token) {
             return {
@@ -36,7 +35,7 @@ export async function logInPost(userEmail: string, userPassword: string) { // Pa
             }
         }
 
-        cookieStore.set('auth_token', token, {
+        cookieStore.set('auth_token', token.access_token, {
             httpOnly: true,
             secure: true,
             maxAge: 3600,

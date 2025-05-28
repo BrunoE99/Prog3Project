@@ -107,7 +107,8 @@ export default function CreateReview() {
         <div className="flex flex-col h-3/4">
           <textarea
             required
-            name="review-content"
+            name="content"
+            id="content"
             className="border-2 h-3/4 p-2 text-start rounded-md items-start justify-start"
             placeholder="Write you review here..."
           />

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { logOut } from '@/app/(auth)/actions';
 
 export default function Navbar() {
     const [isNavOpen, setOpen] = useState(false);
@@ -44,6 +45,9 @@ export default function Navbar() {
                     <Link href="/login" className="hover:bg-[#041b3d] p-1">Log in</Link>
                     <Link href="/signup" className="hover:bg-[#041b3d] p-1">Sign up</Link>
                 </div>
+                <form action={logOut}>
+                    <button type="submit" className="hover:bg-[#041b3d] p-1">Logout</button>
+                </form>
             </div>
         
         </nav>

@@ -19,9 +19,10 @@ export async function logIn(_: any, formData: FormData) {
         }
     }
 
-    // I need to call a function which encrypts the password
-
     const duki = await logInPost(email, password);
+
+    // this needs to redirect to the profile page maybe?
+    // i need to add a message when the login is successfull
 
     if (duki.success == true) {
         redirect('/');

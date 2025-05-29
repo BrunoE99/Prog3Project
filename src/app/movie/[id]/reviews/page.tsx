@@ -71,6 +71,11 @@ interface ReviewComponents {
 
 export default function Reviews() {
   const [isSidebarOpen, setOpen] = useState(false);
+  const [filter, setFilter] = useState("all");
+  //Para paginar las reviews, eventualmente a la hora de hacer los fetch podriamos usar algo como
+  // offset = (limit * pageNumber) - 1
+  //aunque probablemente hay una mejor forma de hacerlo
+  const [pageNumber, setPageNumber] = useState(1);
 
   const handleSidebarToggle = () => {
     setOpen((prev) => !prev);
@@ -83,7 +88,8 @@ export default function Reviews() {
     {
       id: 1,
       userId: 1,
-      content: "Great movie!",
+      content:
+        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur vitae ducimus maxime nobis quam. Aliquid consequuntur voluptas quibusdam amet at alias laudantium libero, ut magnam explicabo nam corporis pariatur maiores.",
       score: 5,
       user: {
         id: 1,
@@ -107,7 +113,7 @@ export default function Reviews() {
   ];
 
   return (
-    <div>
+    <div className="">
       <div className={`${isSidebarOpen ? "flex" : "hidden"}`}>
         <button
           className="absolute top-3 right-3 text-4xl mr-5 self-end z-2"
@@ -122,7 +128,7 @@ export default function Reviews() {
           isSidebarOpen ? "fixed" : "hidden"
         } inset-0 bg-black opacity-60`}
       ></div>
-      <div className="flex flex-row items-center justify-start gap-2 m-2 p-2 w-full mx-auto">
+      <div className="flex flex-row items-center justify-start gap-2 m-2 p-5 w-full mx-auto">
         <Image
           className="rounded-sm"
           src="/MV5BMDAyY2FhYjctNDc5OS00MDNlLThi.png"
@@ -139,6 +145,7 @@ export default function Reviews() {
             className="[&>option]:text-black text-[#0e63be] rounded-sm transition-colors delay-75 duration-200 ease-in-out hover:bg-[#899fff]/20 [&>option]:bg-white"
             name="review-filter"
             id="filter-options"
+            onChange={(e) => setFilter(e.target.value)}
           >
             <option value="all">Show All</option>
             <option value="1">1 star</option>
@@ -160,13 +167,38 @@ export default function Reviews() {
           Write Review
         </button>
       </div>
-      {reviews.map((review, index) => (
-        <MovieReview key={index} {...review} />
-      ))}
-      <div>
-        <button></button>
-        <span></span>
-        <button></button>
+      <div className="mx-auto w-2/3">
+        <div className="items-center self-center justify-center p-2 m-2">
+          {reviews.map((review, index) =>
+            review.score === Number(filter) || filter === "all" ? (
+              <MovieReview key={index} {...review} />
+            ) : null
+          )}
+        </div>
+        <div className="flex flex-row p-5 items-center">
+          <button
+            className="pr-2 text-2xl cursor-pointer"
+            onClick={() => {
+              if (pageNumber > 1) {
+                setPageNumber(pageNumber - 1);
+              }
+            }}
+          >
+            &lt;
+          </button>
+          <span className="text-sm">Page {pageNumber}</span>
+          <button
+            className="pl-2 text-2xl cursor-pointer"
+            onClick={() => {
+              // Cambiar esto a cuando el response.next == null asi no permitimos pasar a paginas pasadas del limite
+              if (pageNumber > 1) {
+                setPageNumber(pageNumber + 1);
+              }
+            }}
+          >
+            &gt;
+          </button>
+        </div>
       </div>
     </div>
   );

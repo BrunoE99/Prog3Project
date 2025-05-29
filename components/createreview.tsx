@@ -1,9 +1,11 @@
 import { createReview } from "@/app/movie/[id]/actions";
+import { useParams } from "next/navigation";
 import { useActionState, useEffect, useRef } from "react";
 
 export default function CreateReview() {
   const scoreSelected = useRef(false);
   const [state, action, pending] = useActionState(createReview, undefined);
+  const params = useParams();
 
   useEffect(() => {
     const starButtons = document.querySelectorAll("#review-sidebar button");
@@ -68,6 +70,13 @@ export default function CreateReview() {
         action={action}
         className="flex flex-col h-3/4 p-6 gap-4"
       >
+        <input
+          type="text"
+          className="hidden"
+          id="pelicula_id"
+          name="pelicula_id"
+          defaultValue={params.id}
+        />
         <div className="flex flex-col gap-2">
           <span className="">Your score</span>
           <div id="review-score" className="flex flex-row gap-2 items-center">
@@ -119,6 +128,16 @@ export default function CreateReview() {
           name="Submit"
           id="submit-review-button"
           className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-full"
+          onClick={() => {
+            scoreSelected.current = false;
+            const stars = document.querySelectorAll(
+              "#review-sidebar button span"
+            );
+            stars.forEach((star) => {
+              star.classList.add("fa-star-o");
+              star.classList.remove("fa-star");
+            });
+          }}
         />
       </form>
     </div>

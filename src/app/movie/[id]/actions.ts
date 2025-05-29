@@ -1,6 +1,6 @@
 "use server";
 
-import { reviewPost } from "@/app/API/reviews/route";
+import { reviewGetAll, reviewPost } from "@/app/API/reviews/route";
 import { reviewFormSchema } from "@/app/lib/definitions";
 import { cookies } from "next/headers";
 
@@ -11,16 +11,16 @@ export async function getAuthToken() {
   return authToken;
 }
 
+export async function getAllReviewsByMovie(pelicula_id: number) {
+  const response = await reviewGetAll(pelicula_id);
+
+  return response.body;
+}
+
 export async function createReview(_: any, formData: FormData) {
   const score = formData.get("score") as string;
   const content = formData.get("content") as string;
   const pelicula_id = formData.get("pelicula_id") as string;
-
-  console.log("Creating review with data:", {
-    score: score,
-    content: content,
-    pelicula_id: pelicula_id,
-  });
 
   const validateFields = reviewFormSchema.safeParse({
     score: score,
@@ -38,7 +38,6 @@ export async function createReview(_: any, formData: FormData) {
     Number(score),
     content,
     Number(pelicula_id)
-    //user_id
   );
 
   console.log(response);
@@ -50,6 +49,7 @@ export async function createReview(_: any, formData: FormData) {
     };
   } else {
     return {
+      status: response.status,
       error: response.message || "An unexpected error occurred",
     };
   }

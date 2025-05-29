@@ -3,8 +3,9 @@
 import Image from "next/image";
 import MovieReview from "../../../../../components/genericreview";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CreateReview from "../../../../../components/createreview";
+import { getAllReviewsByMovie } from "../actions";
 
 interface MovieComponents {
   id: number;
@@ -60,12 +61,12 @@ interface Comment {
 interface ReviewComponents {
   id: number;
   userId: number;
-  content: string;
-  score: number;
+  texto: string;
+  puntuacion: number;
   user: User;
-  movieId: number;
-  movie: MovieComponents;
-  group: Group | undefined;
+  peliculaId: number;
+  pelicula: MovieComponents;
+  grupo: Group | undefined;
   comentarios: Comment[];
 }
 
@@ -76,41 +77,20 @@ export default function Reviews() {
   // offset = (limit * pageNumber) - 1
   //aunque probablemente hay una mejor forma de hacerlo
   const [pageNumber, setPageNumber] = useState(1);
+  const params = useParams();
+  const [reviews, setReviews] = useState<ReviewComponents[]>([]);
+  useEffect(() => {
+    const fetchReviews = async () => {
+      const fetchedReviews = await getAllReviewsByMovie(Number(params.id));
+      setReviews(fetchedReviews);
+    };
+    fetchReviews();
+  }, [params.id]);
 
   const handleSidebarToggle = () => {
     setOpen((prev) => !prev);
     document.body.style.overflow = isSidebarOpen ? "unset" : "hidden";
   };
-
-  // Hacer un fetch para las reviews con movieId correcto
-  const params = useParams();
-  const reviews: ReviewComponents[] = [
-    {
-      id: 1,
-      userId: 1,
-      content:
-        "Lorem ipsum dolor sit amet consectetur adipisicing elit. Consequatur vitae ducimus maxime nobis quam. Aliquid consequuntur voluptas quibusdam amet at alias laudantium libero, ut magnam explicabo nam corporis pariatur maiores.",
-      score: 5,
-      user: {
-        id: 1,
-        username: "user1",
-        email: "",
-        password: "",
-        role: "user",
-        date: new Date(),
-        level: 1,
-        imageURL: "/userimage",
-        reviews: [],
-        deletedAt: new Date(),
-        relatedGroups: [],
-        comments: [],
-      },
-      movieId: Number(params.id),
-      movie: {} as MovieComponents,
-      group: undefined,
-      comentarios: [],
-    },
-  ];
 
   return (
     <div className="">
@@ -170,7 +150,7 @@ export default function Reviews() {
       <div className="mx-auto w-2/3">
         <div className="items-center self-center justify-center p-2 m-2">
           {reviews.map((review, index) =>
-            review.score === Number(filter) || filter === "all" ? (
+            review.puntuacion === Number(filter) || filter === "all" ? (
               <MovieReview key={index} {...review} />
             ) : null
           )}

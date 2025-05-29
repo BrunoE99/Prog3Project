@@ -54,12 +54,12 @@ interface Comment {
 interface ReviewComponents {
   id: number;
   userId: number;
-  content: string;
-  score: number;
+  texto: string;
+  puntuacion: number;
   user: User;
-  movieId: number;
-  movie: MovieComponents;
-  group: Group | undefined;
+  peliculaId: number;
+  pelicula: MovieComponents;
+  grupo: Group | undefined;
   comentarios: Comment[];
 }
 
@@ -77,15 +77,15 @@ export default function MovieReview(review: ReviewComponents) {
         <div className="p-2 flex flex-col w-full">
           <h3 className="text-2xl font-semibold">{review.user.username}</h3>
           <h4 className="text-sm font-medium opacity-60">
-            {review.group?.name}
+            {review.grupo?.name}
           </h4>
         </div>
         <div>
           <div className="text-md md:text-xl font-semibold flex justify-end w-full p-2">
-            {review.score}/10
+            {review.puntuacion}/10
           </div>
           <div className="hidden md:flex justify-end w-full pr-2 m-0">
-            {Array.from({ length: review.score }).map((_, index) => {
+            {Array.from({ length: review.puntuacion }).map((_, index) => {
               return (
                 <span
                   key={index}
@@ -97,7 +97,7 @@ export default function MovieReview(review: ReviewComponents) {
         </div>
       </div>
       <div className="text-sm p-2 pl-0 lg:pl-15 w-3/4 wrap-balanced md:text-base ">
-        {review.content}
+        {review.texto}
       </div>
     </div>
   );

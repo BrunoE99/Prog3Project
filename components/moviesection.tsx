@@ -58,12 +58,12 @@ interface Comment {
 interface ReviewComponents {
   id: number;
   userId: number;
-  content: string;
-  score: number;
+  texto: string;
+  puntuacion: number;
   user: User;
-  movieId: number;
-  movie: MovieComponents;
-  group: Group | undefined;
+  peliculaId: number;
+  pelicula: MovieComponents;
+  grupo: Group | undefined;
   comentarios: Comment[];
 }
 
@@ -102,7 +102,7 @@ export function MovieReviewsSection({
           </h2>
           <Link
             className="text-sm text-left after:content-['>'] after:ml-1 after:text-xl after:font-bold transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
-            href={`${reviews[0].movie.id}/reviews`}
+            href={`${reviews[0].pelicula.id}/reviews`}
           >
             All Reviews
           </Link>

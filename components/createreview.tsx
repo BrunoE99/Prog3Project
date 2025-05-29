@@ -1,5 +1,5 @@
 import { createReview } from "@/app/movie/[id]/actions";
-import { useParams } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 import { useActionState, useEffect, useRef } from "react";
 
 export default function CreateReview() {
@@ -8,6 +8,11 @@ export default function CreateReview() {
   const params = useParams();
 
   useEffect(() => {
+    if (state?.status === 401) {
+      //refresh token here
+      // redirecting to login for now
+      redirect("/login");
+    }
     const starButtons = document.querySelectorAll("#review-sidebar button");
     starButtons.forEach((button) => {
       button.addEventListener("mouseover", () => {

@@ -60,12 +60,12 @@ interface Comment {
 interface ReviewComponents {
   id: number;
   userId: number;
-  content: string;
-  score: number;
+  texto: string;
+  puntuacion: number;
   user: User;
-  movieId: number;
-  movie: MovieComponents;
-  group: Group | undefined;
+  peliculaId: number;
+  pelicula: MovieComponents;
+  grupo: Group | undefined;
   comentarios: Comment[];
 }
 
@@ -122,35 +122,35 @@ export default function Movie() {
     {
       id: 1,
       userId: 1,
-      content:
+      texto:
         "Lorem ipsum dolor sit amet consectetur adipisicing elit. Minus velit molestiae accusantium explicabo dolorem est voluptate corrupti, rerum quia, blanditiis odio, aspernatur voluptas accusamus qui sapiente hic laboriosam repellat aliquam.",
-      score: 9,
+      puntuacion: 9,
       user: dummyUser,
-      movieId: 1,
-      movie: dummyData,
-      group: dummyGroup,
+      peliculaId: 1,
+      pelicula: dummyData,
+      grupo: dummyGroup,
       comentarios: dummyComments,
     },
     {
       id: 2,
       userId: 2,
-      content: "This is a bad movie",
-      score: 2,
+      texto: "This is a bad movie",
+      puntuacion: 2,
       user: dummyUser,
-      movieId: 1,
-      movie: dummyData,
-      group: undefined,
+      peliculaId: 1,
+      pelicula: dummyData,
+      grupo: undefined,
       comentarios: dummyComments,
     },
     {
       id: 3,
       userId: 1,
-      content: "This is a okay movie",
-      score: 6,
+      texto: "This is a okay movie",
+      puntuacion: 6,
       user: dummyUser,
-      movieId: 1,
-      movie: dummyData,
-      group: undefined,
+      peliculaId: 1,
+      pelicula: dummyData,
+      grupo: undefined,
       comentarios: dummyComments,
     },
   ];

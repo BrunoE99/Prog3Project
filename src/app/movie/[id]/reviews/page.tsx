@@ -177,12 +177,11 @@ export default function Reviews() {
         </div>
         <div className="flex flex-row p-5 items-center">
           <button
-            className="pr-2 text-2xl cursor-pointer"
-            onClick={() => {
-              if (pageNumber > 1) {
-                setPageNumber(pageNumber - 1);
-              }
-            }}
+            disabled={pageNumber <= 1}
+            className={`pr-2 text-2xl ${
+              pageNumber <= 1 ? "cursor-default" : "cursor-pointer"
+            }`}
+            onClick={() => setPageNumber(pageNumber - 1)}
           >
             &lt;
           </button>
@@ -190,8 +189,9 @@ export default function Reviews() {
           <button
             className="pl-2 text-2xl cursor-pointer"
             onClick={() => {
-              // Cambiar esto a cuando el response.next == null asi no permitimos pasar a paginas pasadas del limite
-              if (pageNumber > 1) {
+              // Cambiar esto a cuando el response.next == null asi no permitimos pasar a paginas pasadas del limite, usando disabled = {}
+              // lo mismo con cursor-pointer a cursor-default
+              if (pageNumber >= 1) {
                 setPageNumber(pageNumber + 1);
               }
             }}

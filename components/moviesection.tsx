@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import MovieReview from "./genericreview";
@@ -23,7 +25,7 @@ interface User {
   role: string;
   date: Date;
   level: number;
-  imageURL: string;
+  urlImagen: string;
   reviews: ReviewComponents[];
   deletedAt: Date;
   relatedGroups: GroupMembership[];
@@ -102,7 +104,7 @@ export function MovieReviewsSection({
           </h2>
           <Link
             className="text-sm text-left after:content-['>'] after:ml-1 after:text-xl after:font-bold transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
-            href={`${reviews[0].pelicula.id}/reviews`}
+            href={`${reviews[0].peliculaId}/reviews`}
           >
             All Reviews
           </Link>

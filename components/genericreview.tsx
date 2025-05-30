@@ -19,7 +19,7 @@ interface User {
   role: string;
   date: Date;
   level: number;
-  imageURL: string;
+  urlImagen: string;
   reviews: ReviewComponents[];
   deletedAt: Date;
   relatedGroups: GroupMembership[];
@@ -69,7 +69,8 @@ export default function MovieReview(review: ReviewComponents) {
       <div className="flex flex-row gap-2">
         <Image
           className="rounded-full"
-          src={review.user.imageURL}
+          // This is temporary until we figure out images
+          src={review.user.urlImagen.replace(".", "")}
           alt="User's Avatar"
           width={50}
           height={50}

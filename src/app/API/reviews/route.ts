@@ -1,6 +1,6 @@
-import "server-only";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
+import "server-only";
 
 const api_URL = "http:localhost:3000/api/reviews";
 
@@ -11,11 +11,7 @@ type JwtBody = {
   exp: number;
 };
 
-export async function reviewGetAll(
-  pelicula_id: number
-  // offset: number,
-  // limit: number
-) {
+export async function reviewGetAll(pelicula_id: number) {
   try {
     const request = await fetch(`${api_URL}/${pelicula_id}`, {
       method: "GET",
@@ -78,10 +74,10 @@ export async function reviewPost(
         Authorization: "Bearer " + token,
       },
       body: JSON.stringify({
-        score: score,
-        content: content,
+        puntuacion: score,
+        texto: content,
         user_id: userId,
-        grupo_id: null,
+        grupoId: null,
       }),
     });
 

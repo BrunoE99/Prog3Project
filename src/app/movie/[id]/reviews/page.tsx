@@ -5,7 +5,7 @@ import MovieReview from "../../../../../components/genericreview";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import CreateReview from "../../../../../components/createreview";
-import { getAllReviewsByMovie } from "../actions";
+import { getAllReviewsByMovie, getAuthToken } from "../actions";
 
 interface MovieComponents {
   id: number;
@@ -26,7 +26,7 @@ interface User {
   role: string;
   date: Date;
   level: number;
-  imageURL: string;
+  urlImagen: string;
   reviews: ReviewComponents[];
   deletedAt: Date;
   relatedGroups: GroupMembership[];
@@ -73,6 +73,7 @@ interface ReviewComponents {
 export default function Reviews() {
   const [isSidebarOpen, setOpen] = useState(false);
   const [filter, setFilter] = useState("all");
+
   //Para paginar las reviews, eventualmente a la hora de hacer los fetch podriamos usar algo como
   // offset = (limit * pageNumber) - 1
   //aunque probablemente hay una mejor forma de hacerlo

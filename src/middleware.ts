@@ -1,16 +1,10 @@
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { jwtDecode } from "jwt-decode";
+import { DecodeToken } from "./actions";
 
-const protectedRoutes = [/^\/$/, /^\/profile(\/.*)?$/]
-const publicRoutes = ["/login", "/register"]
-
-type JwtBody = {
-    sub: number,
-    role: 'user' | 'admin',
-    iat: number,
-    exp: number
-}
+// atm this works for checking if the Token is valid, need to change/update it
+const protectedRoutes = [/^\/profile(\/.*)?$/]
+const publicRoutes = ["/", "/login", "/register"]
 
 export default async function middleware(req: NextRequest) {
     const path = req.nextUrl.pathname;
@@ -25,22 +19,16 @@ export default async function middleware(req: NextRequest) {
     let userId = null;
 
     if (token) {
-        const now = Math.floor(Date.now() / 1000);
 
         try {
-            const decoded = jwtDecode<JwtBody>(token);
+            const decoded = await DecodeToken(token);
+
             userId = decoded.sub;
             role = decoded.role;
             expiresAt = decoded.exp;
-
-            if (expiresAt < now) {
-            NextResponse.redirect(new URL ("/login", req.nextUrl));
-        }
         } catch (e) {
             console.error('Invalid token');
         }
-
-        
     }
 
     const isLogged = role === 'user' || role === 'admin';

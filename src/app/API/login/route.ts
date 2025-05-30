@@ -20,8 +20,6 @@ export async function logInPost(userEmail: string, userPassword: string) { // Pa
 
         const token = await loginRequest.json();
 
-        console.log(token);
-
         if (!loginRequest.ok) {
             return {
                 success: false,

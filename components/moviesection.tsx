@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import MovieReview from "./genericreview";
 import CreateReview from "./createreview";
@@ -70,9 +69,13 @@ interface ReviewComponents {
 }
 
 export function MovieReviewsSection({
+  id,
   reviews,
+  title,
 }: {
+  id: number;
   reviews: ReviewComponents[];
+  title: string;
 }) {
   const [isSidebarOpen, setOpen] = useState(false);
 
@@ -90,7 +93,7 @@ export function MovieReviewsSection({
         >
           &times;
         </button>
-        <CreateReview />
+        <CreateReview title={title} />
       </div>
       <div
         className={`${
@@ -104,7 +107,7 @@ export function MovieReviewsSection({
           </h2>
           <Link
             className="text-sm text-left after:content-['>'] after:ml-1 after:text-xl after:font-bold transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
-            href={`${reviews[0].peliculaId}/reviews`}
+            href={`${id}/reviews`}
           >
             All Reviews
           </Link>
@@ -117,9 +120,13 @@ export function MovieReviewsSection({
         </button>
       </div>
       <div id="reviewsPreview">
-        {reviews.map((review, index) => (
-          <MovieReview key={index} {...review} />
-        ))}
+        {reviews.length > 0 ? (
+          reviews.map((review, index) => (
+            <MovieReview key={index} {...review} />
+          ))
+        ) : (
+          <span className="flex justify-center p-10">Reviews go here</span>
+        )}
       </div>
     </section>
   );

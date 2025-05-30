@@ -47,8 +47,6 @@ export async function createReview(_: any, formData: FormData) {
     pelicula_id: pelicula_id,
   });
 
-  console.log(validateFields);
-
   if (!validateFields.success) {
     return {
       error: validateFields.error.flatten().fieldErrors,
@@ -60,8 +58,6 @@ export async function createReview(_: any, formData: FormData) {
     content,
     Number(pelicula_id)
   );
-
-  console.log(response);
 
   if (response.status === 201) {
     return {

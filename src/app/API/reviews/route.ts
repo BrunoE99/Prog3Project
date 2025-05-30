@@ -8,7 +8,7 @@ export async function reviewGetAll(pelicula_id: number) {
     const request = await fetch(`${api_URL}/${pelicula_id}`, {
       method: "GET",
       headers: {
-        contentType: "application/json",
+        "Content-Type": "application/json",
       },
     });
 
@@ -59,7 +59,7 @@ export async function reviewPost(
     const request = await fetch(`${api_URL}/${pelicula_id}`, {
       method: "POST",
       headers: {
-        contentType: "application/json",
+        "Content-Type": "application/json",
         Authorization: "Bearer " + token,
       },
       body: JSON.stringify({

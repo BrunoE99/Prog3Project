@@ -7,7 +7,7 @@ export async function getMovie(pelicula_id: number) {
     const request = await fetch(`${api_URL}/${pelicula_id}`, {
       method: "GET",
       headers: {
-        contentType: "application/json",
+        "Content-Type": "application/json",
       },
     });
 

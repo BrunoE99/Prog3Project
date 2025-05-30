@@ -5,7 +5,7 @@ import {
   MovieInfoSection,
   MovieReviewsSection,
 } from "../../../../components/moviesection";
-import { getAuthToken, getFeaturedReviews } from "./actions";
+import { getFeaturedReviews } from "./actions";
 
 interface MovieComponents {
   id: number;
@@ -75,13 +75,16 @@ export default async function Movie({ params }: { params: { id: string } }) {
   const reviews = await getFeaturedReviews(Number(id));
   const response = await getMovie(Number(id));
   const movie = response.body;
-  await getAuthToken();
 
   return (
     <div className="bg-[#001d3d] px-0 py-0 md:px-7 md:py-7 w-full mx-auto">
       <div className="mx-auto w-full md:w-5/6">
         <MovieInfoSection {...movie} />
-        <MovieReviewsSection reviews={reviews} />
+        <MovieReviewsSection
+          reviews={reviews}
+          id={Number(id)}
+          title={movie.nombre}
+        />
       </div>
     </div>
   );

@@ -2,7 +2,7 @@ import { createReview } from "@/app/movie/[id]/actions";
 import { redirect, useParams } from "next/navigation";
 import { useActionState, useEffect, useRef } from "react";
 
-export default function CreateReview() {
+export default function CreateReview({ title }: { title: string }) {
   const scoreSelected = useRef(false);
   const [state, action, pending] = useActionState(createReview, undefined);
   const params = useParams();
@@ -69,7 +69,7 @@ export default function CreateReview() {
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
       ></link>
-      <div className="text-2xl p-4 ml-2">The Shawshank Redemtion</div>
+      <div className="text-2xl p-4 ml-2">{title}</div>
       <form
         name="create-review"
         action={action}

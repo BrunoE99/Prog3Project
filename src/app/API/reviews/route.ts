@@ -1,15 +1,7 @@
-import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
 import "server-only";
 
 const api_URL = "http:localhost:3000/api/reviews";
-
-type JwtBody = {
-  sub: number;
-  role: "user" | "admin";
-  iat: number;
-  exp: number;
-};
 
 export async function reviewGetAll(pelicula_id: number) {
   try {
@@ -50,8 +42,8 @@ export async function reviewGetAll(pelicula_id: number) {
 }
 
 export async function reviewPost(
-  score: number,
-  content: string,
+  puntuacion: number,
+  texto: string,
   pelicula_id: number
 ) {
   try {
@@ -64,9 +56,6 @@ export async function reviewPost(
       };
     }
 
-    let userId = null;
-    const claims = jwtDecode<JwtBody>(token);
-    userId = claims.sub;
     const request = await fetch(`${api_URL}/${pelicula_id}`, {
       method: "POST",
       headers: {
@@ -74,10 +63,9 @@ export async function reviewPost(
         Authorization: "Bearer " + token,
       },
       body: JSON.stringify({
-        puntuacion: score,
-        texto: content,
-        user_id: userId,
-        grupoId: null,
+        puntuacion: Number(puntuacion),
+        texto: String(texto),
+        grupoId: undefined,
       }),
     });
 
@@ -93,6 +81,11 @@ export async function reviewPost(
       return {
         status: answer.status,
         message: answerJson.message || "Bad Request",
+      };
+    } else if (answer.status === 401) {
+      return {
+        status: answer.status,
+        message: answerJson.message || "Expired token",
       };
     } else {
       return {

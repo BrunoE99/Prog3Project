@@ -1,11 +1,11 @@
 import { z } from "zod";
 
 export const reviewFormSchema = z.object({
-  score: z.coerce
+  puntuacion: z.coerce
     .number()
     .gte(1, { message: "Score must be at least 1" })
     .lte(10, { message: "Score must be at most 10" }),
-  content: z.string(),
+  texto: z.string().min(1, "Review content must not be empty"),
   pelicula_id: z.coerce
     .number()
     .int({ message: "Pelicula ID must be an integer" })

@@ -1,10 +1,11 @@
 "use server";
 
+import { getMovie } from "@/app/API/movie/route";
 import {
   MovieInfoSection,
   MovieReviewsSection,
 } from "../../../../components/moviesection";
-import { getFeaturedReviews } from "./actions";
+import { getAuthToken, getFeaturedReviews } from "./actions";
 
 interface MovieComponents {
   id: number;
@@ -72,23 +73,14 @@ interface ReviewComponents {
 export default async function Movie({ params }: { params: { id: string } }) {
   const { id } = await params;
   const reviews = await getFeaturedReviews(Number(id));
-
-  const dummyData: MovieComponents = {
-    id: Number(id),
-    title: "The Shawshank Redemption",
-    description:
-      "A banker convicted of uxoricide forms a friendship over a quarter century with a hardened convict, while maintaining his innocence and trying to remain hopeful through simple compassion.",
-    genre: "Drama",
-    release_date: new Date("1994-05-21T10:20:00Z"),
-    length: 142,
-    image_url: "/MV5BMDAyY2FhYjctNDc5OS00MDNlLThi.png",
-    score: 9.3,
-  };
+  const response = await getMovie(Number(id));
+  const movie = response.body;
+  await getAuthToken();
 
   return (
     <div className="bg-[#001d3d] px-0 py-0 md:px-7 md:py-7 w-full mx-auto">
       <div className="mx-auto w-full md:w-5/6">
-        <MovieInfoSection {...dummyData} />
+        <MovieInfoSection {...movie} />
         <MovieReviewsSection reviews={reviews} />
       </div>
     </div>

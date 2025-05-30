@@ -2,13 +2,13 @@ import Image from "next/image";
 
 interface MovieComponents {
   id: number;
-  title: string;
-  description: string;
-  genre: string;
-  release_date: Date;
-  length: number;
-  image_url: string;
-  score: number;
+  nombre: string;
+  sinopsis: string;
+  genero: string;
+  fechaEstreno: string;
+  duracion: number;
+  urlImagen: string;
+  calificacion: number;
 }
 
 interface User {

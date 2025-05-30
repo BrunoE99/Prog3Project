@@ -42,8 +42,8 @@ export async function createReview(_: any, formData: FormData) {
   const pelicula_id = formData.get("pelicula_id") as string;
 
   const validateFields = reviewFormSchema.safeParse({
-    score: score,
-    content: content,
+    puntuacion: score,
+    texto: content,
     pelicula_id: pelicula_id,
   });
 

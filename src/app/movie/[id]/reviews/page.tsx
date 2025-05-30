@@ -5,17 +5,17 @@ import MovieReview from "../../../../../components/genericreview";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import CreateReview from "../../../../../components/createreview";
-import { getAllReviewsByMovie, getAuthToken } from "../actions";
+import { getAllReviewsByMovie } from "../actions";
 
 interface MovieComponents {
   id: number;
-  title: string;
-  description: string;
-  genre: string;
-  release_date: Date;
-  length: number;
-  image_url: string;
-  score: number;
+  nombre: string;
+  sinopsis: string;
+  genero: string;
+  fechaEstreno: string;
+  duracion: number;
+  urlImagen: string;
+  calificacion: number;
 }
 
 interface User {

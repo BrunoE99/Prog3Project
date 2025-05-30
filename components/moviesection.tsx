@@ -8,13 +8,13 @@ import { useState } from "react";
 
 interface MovieComponents {
   id: number;
-  title: string;
-  description: string;
-  genre: string;
-  release_date: Date;
-  length: number;
-  image_url: string;
-  score: number;
+  nombre: string;
+  sinopsis: string;
+  genero: string;
+  fechaEstreno: string;
+  duracion: number;
+  urlImagen: string;
+  calificacion: number;
 }
 
 interface User {
@@ -126,6 +126,8 @@ export function MovieReviewsSection({
 }
 
 export function MovieInfoSection(movie: MovieComponents) {
+  const release_date = movie.fechaEstreno;
+  const release_year = release_date.split("-")[0];
   return (
     <section className="flex flex-col bg-[#001d3d] mb-5 justify-center items-center w-full mx-auto">
       <link
@@ -133,22 +135,22 @@ export function MovieInfoSection(movie: MovieComponents) {
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
       ></link>
       <div className="flex items-start flex-row flex-nowrap p-6 bg-[#003566] shadow-sm rounded-md">
-        <div className="relative mx-auto w-1/5 h-auto">
-          <Image
-            className="rounded-sm w-1/5 md:w-full md:h-full lg:w-full"
+        <div className="relative mx-auto w-1/2 h-auto">
+          {/* eslint-disable-next-line @next/next/no-img-element*/}
+          <img
+            className="mx-auto rounded-sm w-full md:w-full md:h-full lg:w-full"
             src="/MV5BMDAyY2FhYjctNDc5OS00MDNlLThi.png"
             alt="Movie's Poster"
-            fill={true}
           />
         </div>
         <div className="flex flex-col w-full px-6 gap-2">
           <h1 className="text-md lg:text-3xl font-bold break-words">
-            {movie.title}
+            {movie.nombre}
           </h1>
 
           <div>
             <div className="block text-xs md:text-sm lg:text-lg mt-4 md:mt1 text-balance lg:text-wrap w-full pr-4">
-              {movie.description}
+              {movie.sinopsis}
             </div>
           </div>
         </div>
@@ -156,15 +158,15 @@ export function MovieInfoSection(movie: MovieComponents) {
           <div className="flex flex-row gap-3 items-end justify-end p-2">
             <span
               className={`fa ${
-                movie.score <= 3 + 1 / 3
+                movie.calificacion <= 3 + 1 / 3
                   ? "fa-star-o"
-                  : movie.score >= 8
+                  : movie.calificacion >= 8
                   ? "fa-star"
                   : "fa-star-half-o"
               } fa-2x checked text-[#f5c518] inline-block`}
             ></span>
             <div className="flex items-end justify-end self-end font-extrabold text-md md:text-2xl">
-              {movie.score}
+              {movie.calificacion}
             </div>
           </div>
           <div className="flex flex-col items-end p-10 m-2 justify-end w-full text-sm md:text-lg wrap-normal xl:text-nowrap pr-0">
@@ -172,9 +174,7 @@ export function MovieInfoSection(movie: MovieComponents) {
               <span className="text-start mr-1 opacity-90 font-semibold text-xs md:text-sm">
                 Year of Release
               </span>
-              <span className="p-1 text-end w-full">
-                {movie.release_date.getFullYear()}
-              </span>
+              <span className="p-1 text-end w-full">{release_year}</span>
             </div>
 
             <div className="w-full mt-1 border-1 border-solid border-[#001d3d] shadow-2xl m-1"></div>
@@ -184,7 +184,7 @@ export function MovieInfoSection(movie: MovieComponents) {
                 Length
               </span>
               <span className="p-1 text-end w-full">
-                {Math.floor(movie.length / 60)}h {movie.length % 60}m
+                {Math.floor(movie.duracion / 60)}h {movie.duracion % 60}m
               </span>
             </div>
 
@@ -194,7 +194,7 @@ export function MovieInfoSection(movie: MovieComponents) {
               <span className="text-start mr-1 opacity-90 font-semibold text-xs md:text-sm">
                 Genre
               </span>
-              <span className="p-1 text-end w-full">{movie.genre}</span>
+              <span className="p-1 text-end w-full">{movie.genero}</span>
             </div>
           </div>
         </div>

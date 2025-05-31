@@ -8,7 +8,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Movie Review App",
-  description: "Meet people with similar interests and review your favorite moviews.",
+  description:
+    "Meet people with similar interests and review your favorite moviews.",
 };
 
 export default function RootLayout({
@@ -18,10 +19,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>
-        <header><Navbar /></header>
-        <main>{children}</main>
-        <footer><Footer /></footer>
+      <body
+        className={`${inter.className} antialiased min-h-screen flex flex-col`}
+      >
+        <header>
+          <Navbar />
+        </header>
+        <main className="flex-1 flex flex-col">{children}</main>
+        <footer>
+          <Footer />
+        </footer>
       </body>
     </html>
   );

@@ -5,6 +5,7 @@ import {
   PagedReviews,
   ShortenedMovieInfo,
 } from "../../../../../components/allReviewPage";
+import NotFoundPage from "../../../../../components/notFoundPage";
 
 interface MovieComponents {
   id: number;
@@ -75,9 +76,19 @@ export default async function Reviews({ params }: { params: { id: string } }) {
   const reviews: ReviewComponents[] = await getAllReviewsByMovie(Number(id));
 
   return (
-    <div>
-      <ShortenedMovieInfo movie={movie} />
-      <PagedReviews reviews={reviews} title={movie.nombre} />
+    <div
+      className={`flex flex-col flex-1 w-full mx-auto justify-center ${
+        !movie ? "bg-[#001d3d]" : ""
+      }`}
+    >
+      {movie ? (
+        <>
+          <ShortenedMovieInfo movie={movie} />
+          <PagedReviews reviews={reviews} title={movie.nombre} />
+        </>
+      ) : (
+        <NotFoundPage />
+      )}
     </div>
   );
 }

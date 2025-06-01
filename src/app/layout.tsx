@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "../../components/navbar";
 import Footer from "../../components/footer";
+import { cookies } from "next/headers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,18 +13,20 @@ export const metadata: Metadata = {
     "Meet people with similar interests and review your favorite moviews.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const token = (await cookies()).get("auth_token")?.value;
+
   return (
     <html lang="en">
       <body
         className={`${inter.className} antialiased min-h-screen flex flex-col`}
       >
         <header>
-          <Navbar />
+          <Navbar token={token} />
         </header>
         <main className="flex-1 flex flex-col">{children}</main>
         <footer>

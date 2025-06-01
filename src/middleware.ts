@@ -4,7 +4,7 @@ import { DecodeToken } from "./actions";
 
 // atm this works for checking if the Token is valid, need to change/update it
 const protectedRoutes = [/^\/profile(\/.*)?$/]
-const publicRoutes = ["/", "/login", "/register"]
+const publicRoutes = ["/", "/login", "/register", /^\/movie(\/.*)?$/]
 
 export default async function middleware(req: NextRequest) {
     const path = req.nextUrl.pathname;
@@ -37,9 +37,9 @@ export default async function middleware(req: NextRequest) {
         return NextResponse.redirect(new URL("/login", req.nextUrl));
     }
 
-    if (isPublicRoute && isLogged) {
-        return NextResponse.redirect(new URL(`/profile/${userId}`, req.nextUrl));
-    }
+    // if (isPublicRoute && isLogged) {
+    //     return NextResponse.redirect(new URL(`/profile/${userId}`, req.nextUrl));
+    // }
 
     return NextResponse.next();
 };

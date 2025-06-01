@@ -134,7 +134,8 @@ export function MovieReviewsSection({
 
 export function MovieInfoSection(movie: MovieComponents) {
   const release_date = movie.fechaEstreno;
-  const release_year = release_date.split("-")[0];
+  const release_year = movie.fechaEstreno?.split("-")[0] || "Unknown";
+
   return (
     <section className="flex flex-col bg-[#001d3d] mb-5 justify-center items-center w-full mx-auto">
       <link
@@ -146,7 +147,7 @@ export function MovieInfoSection(movie: MovieComponents) {
           {/* eslint-disable-next-line @next/next/no-img-element*/}
           <img
             className="mx-auto rounded-sm w-full md:w-full md:h-full lg:w-full"
-            src="/MV5BMDAyY2FhYjctNDc5OS00MDNlLThi.png"
+            src={movie.urlImagen}
             alt="Movie's Poster"
           />
         </div>

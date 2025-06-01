@@ -18,6 +18,5 @@ export async function IsLogged() {
     const token = (await cookies()).get('auth_token')?.value;
     const isLogged = token ? true : false;
 
-    console.log(isLogged);
     return isLogged
 }

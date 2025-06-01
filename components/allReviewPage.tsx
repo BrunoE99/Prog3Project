@@ -3,6 +3,7 @@
 import { useState } from "react";
 import MovieReview from "./genericreview";
 import CreateReview from "./createreview";
+import Image from "next/image";
 
 interface MovieComponents {
   id: number;

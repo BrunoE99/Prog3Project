@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import MovieReview from "./genericreview";
 import CreateReview from "./createreview";
 import { useState } from "react";
@@ -69,15 +68,61 @@ interface ReviewComponents {
 }
 
 export function MovieReviewsSection({
-  id,
   reviews,
   title,
 }: {
-  id: number;
   reviews: ReviewComponents[];
   title: string;
 }) {
   const [isSidebarOpen, setOpen] = useState(false);
+  const [loadAllReviews, setMode] = useState(false);
+  const [filter, setFilter] = useState("all");
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const featuredReviews: ReviewComponents[] =
+    reviews.length === 1
+      ? [reviews[0]]
+      : reviews.length === 0
+      ? []
+      : [reviews[0], reviews[1]];
+
+  const handleModeChange = () => {
+    setMode((prev) => !prev);
+  };
+
+  const displayFeaturedReviews = () => {
+    return reviews.length > 0 ? (
+      featuredReviews.map((review, index) =>
+        review.puntuacion >= Number(filter) || filter === "all" ? (
+          <MovieReview key={index} {...review} />
+        ) : null
+      )
+    ) : (
+      <span className="flex justify-center p-10">
+        Congrats! You get to be the first to write a review.
+      </span>
+    );
+  };
+
+  const displayAllReviews = () => {
+    const pagedReviews = [];
+    const limit = 15;
+    const offset = limit * (pageNumber - 1);
+    for (let i = offset; i < offset + limit && i < reviews.length; i++) {
+      pagedReviews.push(reviews[i]);
+    }
+    return reviews.length > 0 ? (
+      pagedReviews.map((review, index) =>
+        review.puntuacion >= Number(filter) || filter === "all" ? (
+          <MovieReview key={index} {...review} />
+        ) : null
+      )
+    ) : (
+      <span className="flex justify-center p-10">
+        Congrats! You get to be the first to write a review.
+      </span>
+    );
+  };
 
   const handleSidebarToggle = () => {
     setOpen((prev) => !prev);
@@ -88,7 +133,7 @@ export function MovieReviewsSection({
     <section className="mx-auto py-20 px-6">
       <div className={`${isSidebarOpen ? "flex" : "hidden"}`}>
         <button
-          className="fixed top-3 right-3 text-4xl mr-5 self-end z-2"
+          className="fixed top-3 right-3 text-4xl mr-4 mt-0.5 z-2 justify-center dark:text-white text-black cursor-pointer rounded-full hover:bg-[#bdbcb968] h-10 w-10 transition-all delay-75 duration-100 ease-in-out"
           onClick={() => handleSidebarToggle()}
         >
           &times;
@@ -101,32 +146,88 @@ export function MovieReviewsSection({
         } inset-0 bg-black opacity-60`}
       ></div>
       <div className="flex flex-row justify-between items-center bg-[#001d3d] p-5">
-        <div className="flex flex-row items-center gap-2">
-          <h2 className="font-semibold text-xl before:content-[''] before:bg-[#f5c518] before:-ml-3 before:rounded-sm before:self-start before:absolute before:h-1/30 before:w-1">
-            User Reviews
-          </h2>
-          <Link
-            className="text-sm text-left after:content-['>'] after:ml-1 after:text-xl after:font-bold transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
-            href={`${id}/reviews`}
+        <div className="flex flex-col items-start gap-4">
+          <div className="flex flex-row items-center gap-6">
+            <button
+              onClick={() => handleModeChange()}
+              className={`text-xl ${
+                loadAllReviews
+                  ? "font-light transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
+                  : "font-semibold"
+              }`}
+            >
+              Featured Reviews
+            </button>
+            <button
+              className={`${
+                loadAllReviews
+                  ? "font-semibold"
+                  : "font-light transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
+              } text-xl text-left before:content-[''] before:bg-[#f5c518] before:-ml-3 before:rounded-sm before:-mt-1 before:absolute before:h-1/30 before:w-1 before:self-center`}
+              onClick={() => handleModeChange()}
+            >
+              All Reviews
+            </button>
+          </div>
+          <div
+            className={`${
+              loadAllReviews ? "flex" : "hidden"
+            } flex items-center gap-4`}
           >
-            All Reviews
-          </Link>
+            <span>Filter</span>
+            <select
+              className="[&>option]:text-black text-[#0e63be] rounded-sm transition-colors delay-75 duration-200 ease-in-out hover:bg-[#899fff]/20 [&>option]:bg-white"
+              name="review-filter"
+              id="filter-options"
+              onChange={(e) => setFilter(e.target.value)}
+            >
+              <option value="all">Show All</option>
+              <option value="1">1 star</option>
+              <option value="2">2 stars</option>
+              <option value="3">3 stars</option>
+              <option value="4">4 stars</option>
+              <option value="5">5 stars</option>
+              <option value="6">6 stars</option>
+              <option value="7">7 stars</option>
+              <option value="8">8 stars</option>
+              <option value="9">9 stars</option>
+              <option value="10">10 stars</option>
+            </select>
+          </div>
         </div>
         <button
           onClick={() => handleSidebarToggle()}
-          className="font-semibold before:content-['+'] before:mr-1 before:text-[#f5c518] before:text-xl transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
+          className="font-semibold cursor-pointer before:content-['+'] before:mr-1 before:text-[#f5c518] before:text-xl transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
         >
           Write Review
         </button>
       </div>
       <div id="reviewsPreview">
-        {reviews.length > 0 ? (
-          reviews.map((review, index) => (
-            <MovieReview key={index} {...review} />
-          ))
-        ) : (
-          <span className="flex justify-center p-10">Reviews go here</span>
-        )}
+        {loadAllReviews ? displayAllReviews() : displayFeaturedReviews()}
+      </div>
+      <div className="flex flex-row p-5 items-center">
+        <button
+          disabled={pageNumber <= 1}
+          className={`pr-2 text-2xl ${
+            pageNumber <= 1 ? "cursor-default" : "cursor-pointer"
+          }`}
+          onClick={() => setPageNumber(pageNumber - 1)}
+        >
+          &lt;
+        </button>
+        <span className="text-sm">Page {pageNumber}</span>
+        <button
+          className="pl-2 text-2xl cursor-pointer"
+          onClick={() => {
+            // Cambiar esto a cuando el response.next == null asi no permitimos pasar a paginas pasadas del limite, usando disabled = {}
+            // lo mismo con cursor-pointer a cursor-default
+            if (pageNumber >= 1) {
+              setPageNumber(pageNumber + 1);
+            }
+          }}
+        >
+          &gt;
+        </button>
       </div>
     </section>
   );
@@ -146,7 +247,7 @@ export function MovieInfoSection(movie: MovieComponents) {
           {/* eslint-disable-next-line @next/next/no-img-element*/}
           <img
             className="mx-auto rounded-sm w-full md:w-full md:h-full lg:w-full"
-            src="/MV5BMDAyY2FhYjctNDc5OS00MDNlLThi.png"
+            src={movie.urlImagen}
             alt="Movie's Poster"
           />
         </div>

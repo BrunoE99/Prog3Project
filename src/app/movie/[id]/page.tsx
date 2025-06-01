@@ -5,7 +5,7 @@ import {
   MovieReviewsSection,
 } from "../../../../components/moviesection";
 import NotFoundPage from "../../../../components/notFoundPage";
-import { getFeaturedReviews, getMovieById } from "./actions";
+import { getAllReviewsByMovie, getMovieById } from "./actions";
 
 interface MovieComponents {
   id: number;
@@ -72,7 +72,7 @@ interface ReviewComponents {
 
 export default async function Movie({ params }: { params: { id: string } }) {
   const { id } = await params;
-  const reviews = await getFeaturedReviews(Number(id));
+  const reviews = await getAllReviewsByMovie(Number(id));
   const movie = await getMovieById(Number(id));
 
   return (
@@ -81,11 +81,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
         {movie ? (
           <>
             <MovieInfoSection {...movie} />
-            <MovieReviewsSection
-              reviews={reviews}
-              id={Number(id)}
-              title={movie.nombre}
-            />
+            <MovieReviewsSection reviews={reviews} title={movie.nombre} />
           </>
         ) : (
           <NotFoundPage />

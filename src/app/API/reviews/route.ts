@@ -77,15 +77,10 @@ export async function reviewPost(
         status: answer.status,
         body: answerJson,
       };
-    } else if (answer.status == 400) {
+    } else if (answer.status >= 400) {
       return {
         status: answer.status,
-        message: answerJson.message || "Bad Request",
-      };
-    } else if (answer.status === 401) {
-      return {
-        status: answer.status,
-        message: answerJson.message || "Expired token",
+        message: answerJson.message,
       };
     } else {
       return {

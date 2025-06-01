@@ -20,17 +20,10 @@ export default function CreateReview({ title }: { title: string }) {
         if (index) {
           starButtons.forEach((btn) => {
             const btnIndex = btn.getAttribute("aria-label");
-            if (
-              btnIndex &&
-              Number(btnIndex) <= Number(index) &&
-              !scoreSelected.current
-            ) {
+            if (btnIndex && Number(btnIndex) <= Number(index)) {
               btn.querySelector("span")?.classList.add("fa-star");
               btn.querySelector("span")?.classList.remove("fa-star-o");
-            } else if (
-              Number(btnIndex) > Number(index) &&
-              !scoreSelected.current
-            ) {
+            } else if (Number(btnIndex) > Number(index)) {
               btn.querySelector("span")?.classList.add("fa-star-o");
               btn.querySelector("span")?.classList.remove("fa-star");
             }
@@ -42,10 +35,18 @@ export default function CreateReview({ title }: { title: string }) {
     document
       .getElementById("review-score")!
       .addEventListener("mouseleave", () => {
+        const score = document.getElementById("score")?.getAttribute("value");
         starButtons.forEach((btn) => {
           if (!scoreSelected.current) {
             btn.querySelector("span")?.classList.add("fa-star-o");
             btn.querySelector("span")?.classList.remove("fa-star");
+          } else if (Number(btn.getAttribute("aria-label")) > Number(score)) {
+            console.log(score);
+            btn.querySelector("span")?.classList.add("fa-star-o");
+            btn.querySelector("span")?.classList.remove("fa-star");
+          } else {
+            btn.querySelector("span")?.classList.add("fa-star");
+            btn.querySelector("span")?.classList.remove("fa-star-o");
           }
         });
       });
@@ -119,7 +120,7 @@ export default function CreateReview({ title }: { title: string }) {
               className="hidden"
               name="score"
               id="score"
-              defaultValue={"1"}
+              defaultValue="1"
             />
           </div>
         </div>
@@ -132,6 +133,13 @@ export default function CreateReview({ title }: { title: string }) {
             placeholder="Write you review here..."
           />
         </div>
+        <span
+          className={`${
+            state?.status && state.status >= 400 ? "block" : "hidden"
+          } text-red-500 justify-center items-center text-center`}
+        >
+          {state?.error}
+        </span>
         <input
           disabled={pending}
           type="submit"

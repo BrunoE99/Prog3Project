@@ -2,7 +2,8 @@
 
 import MovieReview from "./genericreview";
 import CreateReview from "./createreview";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getAuthToken } from "@/app/movie/[id]/actions";
 
 interface MovieComponents {
   id: number;
@@ -78,6 +79,15 @@ export function MovieReviewsSection({
   const [loadAllReviews, setMode] = useState(false);
   const [filter, setFilter] = useState("all");
   const [pageNumber, setPageNumber] = useState(1);
+  const [token, setToken] = useState<string | undefined>(undefined);
+
+  // Fetch token on mount
+  useEffect(() => {
+    (async () => {
+      const t = await getAuthToken();
+      setToken(t);
+    })();
+  }, []);
 
   const featuredReviews: ReviewComponents[] =
     reviews.length === 1
@@ -125,8 +135,10 @@ export function MovieReviewsSection({
   };
 
   const handleSidebarToggle = () => {
-    setOpen((prev) => !prev);
-    document.body.style.overflow = isSidebarOpen ? "unset" : "hidden";
+    if (token || isSidebarOpen) {
+      setOpen((prev) => !prev);
+      document.body.style.overflow = isSidebarOpen ? "unset" : "hidden";
+    }
   };
 
   return (
@@ -205,7 +217,11 @@ export function MovieReviewsSection({
       <div id="reviewsPreview">
         {loadAllReviews ? displayAllReviews() : displayFeaturedReviews()}
       </div>
-      <div className="flex flex-row p-5 items-center">
+      <div
+        className={`${
+          loadAllReviews ? "flex" : "hidden"
+        } flex-row p-5 items-center`}
+      >
         <button
           disabled={pageNumber <= 1}
           className={`pr-2 text-2xl ${

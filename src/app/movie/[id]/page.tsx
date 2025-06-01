@@ -75,6 +75,9 @@ export default async function Movie({ params }: { params: { id: string } }) {
   const reviews = await getAllReviewsByMovie(Number(id));
   const movie = await getMovieById(Number(id));
 
+  // actualizar toda esta seccion para que sea mobile-friendly
+  // la imagen se hace infinitamente chiquita
+  // las secciones no se separan de los margenes cuando se achica
   return (
     <div className="flex flex-col flex-1 bg-[#001d3d] px-0 py-0 md:px-7 md:py-7 w-full mx-auto justify-center">
       <div className="mx-auto w-full md:w-5/6">

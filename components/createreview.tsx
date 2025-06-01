@@ -9,7 +9,7 @@ export default function CreateReview({ title }: { title: string }) {
 
   useEffect(() => {
     if (state?.status === 401) {
-      //refresh token here
+      // refresh token here
       // redirecting to login for now
       redirect("/login");
     }

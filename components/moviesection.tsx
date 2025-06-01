@@ -4,6 +4,7 @@ import MovieReview from "./genericreview";
 import CreateReview from "./createreview";
 import { useEffect, useState } from "react";
 import { getAuthToken } from "@/app/movie/[id]/actions";
+import { redirect } from "next/navigation";
 
 interface MovieComponents {
   id: number;
@@ -138,6 +139,8 @@ export function MovieReviewsSection({
     if (token || isSidebarOpen) {
       setOpen((prev) => !prev);
       document.body.style.overflow = isSidebarOpen ? "unset" : "hidden";
+    } else if (!token) {
+      redirect("/login");
     }
   };
 

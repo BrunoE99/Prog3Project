@@ -9,7 +9,8 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Movie Review App",
-  description: "Meet people with similar interests and review your favorite moviews.",
+  description:
+    "Meet people with similar interests and review your favorite moviews.",
 };
 
 export default async function RootLayout({
@@ -17,14 +18,20 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const token = (await cookies()).get('auth_token')?.value;
+  const token = (await cookies()).get("auth_token")?.value;
 
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>
-        <header><Navbar token={token}/></header>
-        <main>{children}</main>
-        <footer><Footer /></footer>
+      <body
+        className={`${inter.className} antialiased min-h-full flex flex-col min-w-full`}
+      >
+        <header>
+          <Navbar token={token} />
+        </header>
+        <main className="flex-1 flex flex-col">{children}</main>
+        <footer>
+          <Footer />
+        </footer>
       </body>
     </html>
   );

@@ -1,11 +1,11 @@
 "use server";
 
-import { getMovie } from "@/app/API/movie/route";
 import {
   MovieInfoSection,
   MovieReviewsSection,
 } from "../../../../components/moviesection";
-import { getFeaturedReviews } from "./actions";
+import NotFoundPage from "../../../../components/notFoundPage";
+import { getAllReviewsByMovie, getMovieById } from "./actions";
 
 interface MovieComponents {
   id: number;
@@ -72,24 +72,23 @@ interface ReviewComponents {
 
 export default async function Movie({ params }: { params: { id: string } }) {
   const { id } = await params;
-  const reviews = await getFeaturedReviews(Number(id));
-  const response = await getMovie(Number(id));
-
-  const movie = response.body;
-
+  const reviews = await getAllReviewsByMovie(Number(id));
+  const movie = await getMovieById(Number(id));
 
   // actualizar toda esta seccion para que sea mobile-friendly
   // la imagen se hace infinitamente chiquita
   // las secciones no se separan de los margenes cuando se achica
   return (
-    <div className="bg-[#001d3d] px-0 py-0 md:px-7 md:py-7 w-full mx-auto">
+    <div className="flex flex-col flex-1 bg-[#001d3d] px-0 py-0 md:px-7 md:py-7 w-full mx-auto justify-center">
       <div className="mx-auto w-full md:w-5/6">
-        <MovieInfoSection {...movie} />
-        <MovieReviewsSection
-          reviews={reviews}
-          id={Number(id)}
-          title={movie.nombre}
-        />
+        {movie ? (
+          <>
+            <MovieInfoSection {...movie} />
+            <MovieReviewsSection reviews={reviews} title={movie.nombre} />
+          </>
+        ) : (
+          <NotFoundPage />
+        )}
       </div>
     </div>
   );

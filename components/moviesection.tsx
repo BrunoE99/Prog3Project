@@ -253,7 +253,6 @@ export function MovieReviewsSection({
 }
 
 export function MovieInfoSection(movie: MovieComponents) {
-  const release_date = movie.fechaEstreno;
   const release_year = movie.fechaEstreno?.split("-")[0] || "Unknown";
 
   return (
@@ -263,10 +262,10 @@ export function MovieInfoSection(movie: MovieComponents) {
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
       ></link>
       <div className="flex items-start flex-row flex-nowrap p-6 bg-[#003566] shadow-sm rounded-md">
-        <div className="relative mx-auto w-1/2 h-auto">
+        <div className="relative mx-auto w-1/2">
           {/* eslint-disable-next-line @next/next/no-img-element*/}
           <img
-            className="mx-auto rounded-sm w-full md:w-full md:h-full lg:w-full"
+            className="mx-auto rounded-sm"
             src={movie.urlImagen}
             alt="Movie's Poster"
           />

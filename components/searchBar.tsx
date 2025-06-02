@@ -25,7 +25,7 @@ export default function SearchBar() {
       setMovies(data!);
     }
     fetchMovies();
-  });
+  }, []);
 
   let filteredMovies = movies;
 
@@ -73,7 +73,9 @@ export default function SearchBar() {
         id="searchResults"
         className={`${
           hasSearched ? "flex flex-col" : "hidden"
-        } rounded-none bg-[#000814] w-full shadow-lg border border-[#545454b7]`}
+        } absolute top-5 rounded-none bg-[#000814] w-full shadow-lg ${
+          movies ? "border border-[#545454b7]" : "border-none"
+        }`}
       >
         {filteredMovies.map((movie, index) => (
           <SearchChip key={index} {...movie} />

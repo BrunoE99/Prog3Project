@@ -9,19 +9,17 @@ export async function userById(userId: number) {
     const token = (await cookies()).get('auth_token')?.value;
 
     if (token) {
-        const decoded = await DecodeToken(token);
-
         try {
-            const userInfo = await fetch(`${api_URL}/api/users/${decoded.sub}`, {
+            const userInfo = await fetch(`${api_URL}/api/users/${userId}`, {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
                 }
             })
 
-            const answer = userInfo;
-
-            console.log(answer);
+            const answer = await userInfo.json();
+            return answer;
         } catch (err) {
             console.error('Signup failed: ', err)
             return {
@@ -31,3 +29,5 @@ export async function userById(userId: number) {
         }
     }
 }
+
+// export async function updateProfilePicture()

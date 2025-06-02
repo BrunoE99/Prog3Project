@@ -4,11 +4,14 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { logOut } from '@/app/(auth)/actions';
 import Image from 'next/image';
+import { redirect } from 'next/navigation';
 
-export default function Navbar({ token }: { token?: string }) {
+export default function Navbar({ token, userId }: { token?: string | null, userId?: number | null}) {
     const [isNavOpen, setOpen] = useState(false);
     const [isProfileOpen, profOpen] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+    const clicked = () => redirect('/profile/' + userId)
 
     useEffect(() => {
         const session = token;
@@ -87,9 +90,14 @@ export default function Navbar({ token }: { token?: string }) {
                 </div>
 
                 {isLoggedIn ? 
-                    <form action={logOut}>
-                        <button type="submit" className="hover:bg-[#041b3d] p-1">Logout</button>
-                    </form>
+                    <div className="flex">
+                        <form action={logOut}>
+                            <button type="submit" className="hover:bg-[#041b3d] p-1 mr-3">Logout</button>
+                        </form>
+                        <button onClick={clicked}>
+                            <Image src="/profile-white.svg" alt="profile image" width={30} height={30} />
+                        </button>
+                    </div>
                 : 
                     <div className="flex gap-4">
                         <Link href="/login" className="hover:bg-[#041b3d] p-1">Log in</Link>

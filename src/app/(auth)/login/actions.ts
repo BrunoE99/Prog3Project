@@ -25,7 +25,7 @@ export async function logIn(_: any, formData: FormData) {
     // i need to add a message when the login is successfull
 
     if (duki.success == true) {
-        redirect('/');
+        redirect('/?login=success');
     } else {
         return {
             errors: duki.message,

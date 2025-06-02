@@ -41,7 +41,6 @@ export default function CreateReview({ title }: { title: string }) {
             btn.querySelector("span")?.classList.add("fa-star-o");
             btn.querySelector("span")?.classList.remove("fa-star");
           } else if (Number(btn.getAttribute("aria-label")) > Number(score)) {
-            console.log(score);
             btn.querySelector("span")?.classList.add("fa-star-o");
             btn.querySelector("span")?.classList.remove("fa-star");
           } else {

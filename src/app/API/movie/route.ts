@@ -1,6 +1,61 @@
 import "server-only";
 
+interface MovieComponents {
+  id: number;
+  nombre: string;
+  sinopsis: string;
+  genero: string;
+  fechaEstreno: string;
+  duracion: number;
+  urlImagen: string;
+  calificacion: number;
+}
+
 const api_URL = "http:localhost:3000/api/peliculas";
+
+export async function getAllMovies() {
+  try {
+    const movies: MovieComponents[] = [];
+    let request = await fetch(`${api_URL}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const status = request.status;
+    let response: MovieComponents[] = await request.json();
+    if (status === 200) {
+      response.forEach((movie) => {
+        movies.push(movie);
+      });
+    }
+
+    let i = 1;
+    while (request.status === 200) {
+      const params = new URLSearchParams({ page: String(i) });
+
+      request = await fetch(`${api_URL}?${params}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (request.status === 200) {
+        response = await request.json();
+        response.forEach((movie) => {
+          movies.push(movie);
+        });
+      }
+      i++;
+    }
+
+    return movies;
+  } catch (e) {
+    console.error(e);
+  }
+}
 
 export async function getMovie(pelicula_id: number) {
   try {

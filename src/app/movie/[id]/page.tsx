@@ -79,7 +79,11 @@ export default async function Movie({ params }: { params: { id: string } }) {
   // la imagen se hace infinitamente chiquita
   // las secciones no se separan de los margenes cuando se achica
   return (
-    <div className="flex flex-col flex-1 bg-[#001d3d] px-0 py-0 md:px-7 md:py-7 w-full mx-auto justify-center">
+    <div
+      className={`flex flex-col flex-1 ${
+        !movie ? "min-h-screen" : ""
+      } bg-[#001d3d] px-0 py-0 md:px-7 md:py-7 w-full mx-auto justify-center`}
+    >
       <div className="mx-auto w-full md:w-5/6">
         {movie ? (
           <>

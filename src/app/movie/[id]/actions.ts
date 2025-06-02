@@ -1,6 +1,6 @@
 "use server";
 
-import { getMovie } from "@/app/API/movie/route";
+import { getAllMovies, getMovie } from "@/app/API/movie/route";
 import { reviewGetAll, reviewPost } from "@/app/API/reviews/route";
 import { reviewFormSchema } from "@/app/lib/definitions";
 import { cookies } from "next/headers";
@@ -10,6 +10,12 @@ export async function getAuthToken() {
   const authToken = cookieStore.get("auth_token")?.value;
 
   return authToken;
+}
+
+export async function retrieveAllMovies() {
+  const response = await getAllMovies();
+
+  return response;
 }
 
 export async function getMovieById(pelicula_id: number) {

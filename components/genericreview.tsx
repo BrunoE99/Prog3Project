@@ -69,7 +69,7 @@ export default function MovieReview(review: ReviewComponents) {
       <div className="flex flex-row gap-2">
         <Image
           className="rounded-full"
-          // This is temporary until we figure out images
+          // This is temporary until we figure out images since the current default is in an ivalid format
           src={review.user.urlImagen.replace(".", "")}
           alt="User's Avatar"
           width={50}

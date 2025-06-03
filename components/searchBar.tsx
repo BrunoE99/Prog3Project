@@ -55,7 +55,7 @@ export default function SearchBar() {
   );
 
   return (
-    <div className="relative flex flex-col justify-center items-center rounded-full w-full max-w-md">
+    <div className="relative flex flex-col justify-center items-center rounded-sm w-full max-w-md">
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -63,7 +63,7 @@ export default function SearchBar() {
       <input
         type="search"
         id="search"
-        className="rounded-full border border-[#545454b7] w-full pl-10 py-2 bg-[#041b3db8]"
+        className="rounded-sm border border-[#545454b7] w-full pl-10 py-2 bg-[#041b3db8]"
         placeholder="Search..."
         onChange={debouncedChangeHandler}
         defaultValue=""
@@ -73,12 +73,17 @@ export default function SearchBar() {
         id="searchResults"
         className={`${
           hasSearched ? "flex flex-col" : "hidden"
-        } absolute top-5 rounded-none bg-[#000814] w-full shadow-lg ${
-          movies ? "border border-[#545454b7]" : "border-none"
-        }`}
+        } absolute top-11 rounded-none bg-[#0b244a] w-full shadow-lg`}
       >
         {filteredMovies.map((movie, index) => (
-          <SearchChip key={index} {...movie} />
+          <SearchChip
+            key={index}
+            movie={movie}
+            clearSearch={() => {
+              setSearch(false);
+              setSearchString("");
+            }}
+          />
         ))}
       </div>
     </div>

@@ -1,5 +1,5 @@
 import debounce from "lodash.debounce";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import SearchChip from "./searchChip";
 import { retrieveAllMovies } from "@/app/movie/[id]/actions";
 
@@ -18,6 +18,7 @@ export default function SearchBar() {
   const [hasSearched, setSearch] = useState(false);
   const [searchString, setSearchString] = useState<string>("");
   const [movies, setMovies] = useState<MovieComponents[]>([]);
+  const blurTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     async function fetchMovies() {
@@ -61,12 +62,21 @@ export default function SearchBar() {
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
       ></link>
       <input
+        autoComplete="off"
         type="search"
         id="search"
         className="rounded-sm border border-[#545454b7] w-full pl-10 py-2 bg-[#041b3db8]"
         placeholder="Search..."
         onChange={debouncedChangeHandler}
         defaultValue=""
+        onFocus={() => {
+          if (blurTimeout.current) {
+            clearTimeout(blurTimeout.current);
+          }
+        }}
+        onBlur={() => {
+          blurTimeout.current = setTimeout(() => setSearch(false), 100);
+        }}
       />
       <span className="fa fa-search absolute left-4 top-1/2 -translate-y-1/2"></span>
       <div

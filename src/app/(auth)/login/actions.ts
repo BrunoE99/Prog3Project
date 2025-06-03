@@ -14,6 +14,7 @@ export async function logIn(_: any, formData: FormData) {
     })
 
     if (!validateFields.success) {
+        console.log('hola');
         return {
             errors: validateFields.error.flatten().fieldErrors,
         }

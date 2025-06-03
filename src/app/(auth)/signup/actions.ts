@@ -25,10 +25,8 @@ export async function signUp(_: any, formData: FormData) {
 
     const response = await signUpPost(username, email, password);
 
-    console.log(response);
-
     if (response.status == 201 || response.status == 200) {
-        redirect('/login');
+        redirect('/login?signup=success');
     } else if (response.status == 400) {
         return {
             success: false,

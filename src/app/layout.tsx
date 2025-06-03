@@ -7,6 +7,7 @@ import LoginSuccessHandler from "./(auth)/login/loginHandler";
 import { cookies } from "next/headers";
 import { DecodeToken } from "@/actions";
 import { Suspense } from "react";
+import SignupSuccessHandler from "./(auth)/signup/signupHandler";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -49,6 +50,7 @@ export default async function RootLayout({
 
         <Suspense fallback={null}>
           <LoginSuccessHandler />
+          <SignupSuccessHandler />
         </Suspense>
       </body>
     </html>

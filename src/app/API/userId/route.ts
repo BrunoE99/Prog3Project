@@ -30,4 +30,6 @@ export async function userById(userId: number) {
     }
 }
 
-// export async function updateProfilePicture()
+// export async function updateProfilePicture() {
+
+// }

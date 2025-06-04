@@ -1,0 +1,95 @@
+"use server";
+
+import { findAllGroups } from "./actions";
+import { GroupPreviewCard } from "../../../components/groupComponents";
+import { redirect } from "next/navigation";
+
+interface MovieComponents {
+  id: number;
+  nombre: string;
+  sinopsis: string;
+  genero: string;
+  fechaEstreno: string;
+  duracion: number;
+  urlImagen: string;
+  calificacion: number;
+}
+
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  password: string;
+  rol: string;
+  fechaCreacion: Date;
+  nivel: number;
+  urlImagen: string;
+  reviews: ReviewComponents[];
+  deletedAt: Date;
+  gruposRelacionados: GroupMembership[];
+  comentarios: Comment[];
+}
+
+interface Reunion {
+  id: number;
+  fecha: Date;
+  link: string;
+  groupoId: number;
+  grupo: Group;
+}
+
+interface Group {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  createdAt: Date;
+  usuariosRelacionados: GroupMembership[];
+  reviews: ReviewComponents[];
+  reunionId: number;
+  reunion: Reunion;
+}
+
+interface GroupMembership {
+  id: number;
+  user: User;
+  grupo: Group;
+  rol: "miembro" | "lider";
+}
+
+interface Comment {
+  id: number;
+  texto: string;
+  userId: number;
+  user: User;
+  reviewId: number;
+  review: ReviewComponents;
+}
+
+interface ReviewComponents {
+  id: number;
+  userId: number;
+  texto: string;
+  puntuacion: number;
+  user: User;
+  peliculaId: number;
+  pelicula: MovieComponents;
+  grupo: Group | undefined;
+  comentarios: Comment[];
+}
+
+export default async function AllGroups() {
+  const groups: Group[] = await findAllGroups();
+
+  return (
+    <div className="flex flex-row gap-5 justify-between bg-[#001d3d] min-h-screen">
+      <div className="flex flex-col gap-5 justify-center items-center">
+        {groups.length > 0
+          ? groups.map((group, index) => (
+              <GroupPreviewCard key={index} {...group} />
+            ))
+          : redirect("/login")}
+      </div>
+      <div></div>
+    </div>
+  );
+}

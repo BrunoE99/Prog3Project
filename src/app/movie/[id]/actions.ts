@@ -1,6 +1,6 @@
 "use server";
 
-import { getAllMovies, getMovie } from "@/app/API/movie/route";
+import { getAllMoviesByName, getMovie } from "@/app/API/movie/route";
 import { reviewGetAll, reviewPost } from "@/app/API/reviews/route";
 import { reviewFormSchema } from "@/app/lib/definitions";
 import { cookies } from "next/headers";
@@ -12,8 +12,8 @@ export async function getAuthToken() {
   return authToken;
 }
 
-export async function retrieveAllMovies() {
-  const response = await getAllMovies();
+export async function retrieveFilteredMovies(name: string) {
+  const response = await getAllMoviesByName(name);
 
   return response;
 }

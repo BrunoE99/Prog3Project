@@ -13,6 +13,27 @@ interface MovieComponents {
 
 const api_URL = "http:localhost:3000/api/peliculas";
 
+export async function getAllMoviesByName(name: string) {
+  try {
+    const params = new URLSearchParams({ q: name });
+    const request = await fetch(`${api_URL}/search/name?${params}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return request.json();
+  } catch (e) {
+    console.error(e);
+    return {
+      success: false,
+      status: 500,
+      error: "An unexpected error ocurred",
+    };
+  }
+}
+
 export async function getAllMovies() {
   try {
     const movies: MovieComponents[] = [];

@@ -1,7 +1,7 @@
 import debounce from "lodash.debounce";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import SearchChip from "./searchChip";
-import { retrieveAllMovies } from "@/app/movie/[id]/actions";
+import { retrieveFilteredMovies } from "@/app/movie/[id]/actions";
 
 interface MovieComponents {
   id: number;
@@ -17,25 +17,22 @@ interface MovieComponents {
 export default function SearchBar() {
   const [hasSearched, setSearch] = useState(false);
   const [searchString, setSearchString] = useState<string>("");
-  const [movies, setMovies] = useState<MovieComponents[]>([]);
+  const [filteredMovies, setMovies] = useState<MovieComponents[]>([]);
   const blurTimeout = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     async function fetchMovies() {
-      const data = await retrieveAllMovies();
-      setMovies(data!);
+      if (searchString && searchString !== "") {
+        const data = await retrieveFilteredMovies(searchString);
+        if (data.length > 0) {
+          setMovies(data);
+        } else {
+          setMovies([]);
+        }
+      }
     }
     fetchMovies();
-  }, []);
-
-  let filteredMovies = movies;
-
-  if (searchString && searchString !== "") {
-    console.log(searchString);
-    filteredMovies = movies.filter((movie) => {
-      return movie.nombre.toLowerCase().includes(searchString.toLowerCase());
-    });
-  }
+  }, [searchString]);
 
   interface ChangeHandlerEvent {
     target: { value: string };

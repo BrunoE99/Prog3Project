@@ -1,5 +1,12 @@
 import { z } from "zod";
 
+export const groupJoinSchema = z.object({
+  id: z.coerce
+    .number()
+    .int({ message: "Grupo ID must be an integer" })
+    .positive({ message: "Grupo ID must be a positive number" }),
+});
+
 export const reviewFormSchema = z.object({
   puntuacion: z.coerce
     .number()
@@ -13,25 +20,33 @@ export const reviewFormSchema = z.object({
 });
 
 export const SignupFormSchema = z.object({
-    username: z.string().min(3, { message: 'Minimo 3 caracteres.' }).trim(),
-    email: z.string().email({ message: 'Porfavor ingrese un email valido.'}).min(1, { message: 'Debe tener mas caracteres' }).trim(),
-    password: z.string()
-    .min(8, { message: 'La password tiene que tener minimo 8 caracteres' })
-    .regex(/[a-zA-Z]/, { message: 'Debe contener por lo menos 1 letra.' })
-    .regex(/[0-9]/, { message: 'Debe contener por lo menos un numero.' })
+  username: z.string().min(3, { message: "Minimo 3 caracteres." }).trim(),
+  email: z
+    .string()
+    .email({ message: "Porfavor ingrese un email valido." })
+    .min(1, { message: "Debe tener mas caracteres" })
     .trim(),
-})
+  password: z
+    .string()
+    .min(8, { message: "La password tiene que tener minimo 8 caracteres" })
+    .regex(/[a-zA-Z]/, { message: "Debe contener por lo menos 1 letra." })
+    .regex(/[0-9]/, { message: "Debe contener por lo menos un numero." })
+    .trim(),
+});
 
 export const LogInFormSchema = z.object({
-    email: z.string().email({ message: 'Ingrese un formato de email valido.' }).trim(),
-    password: z.string().trim(),
-})
+  email: z
+    .string()
+    .email({ message: "Ingrese un formato de email valido." })
+    .trim(),
+  password: z.string().trim(),
+});
 
 export type FormState = {
-    errors?: {
-        username?: string[]
-        email?: string[]
-        password?: string[]
-    }
-    message?: string
-}
+  errors?: {
+    username?: string[];
+    email?: string[];
+    password?: string[];
+  };
+  message?: string;
+};

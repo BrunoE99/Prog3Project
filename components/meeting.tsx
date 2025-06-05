@@ -1,7 +1,3 @@
-"use server";
-
-import { findAllGroups } from "./actions";
-import { GroupPreviewCard } from "../../../components/groupComponents";
 import { redirect } from "next/navigation";
 
 interface MovieComponents {
@@ -77,19 +73,21 @@ interface ReviewComponents {
   comentarios: Comment[];
 }
 
-export default async function AllGroups() {
-  const groups: Group[] = await findAllGroups();
-
+export default function MeetingCard(meeting: Reunion) {
+  const meetingDate = meeting.fecha.split("T")[0].split("-");
+  const meetingInProgress = new Date(meeting.fecha).getTime() <= Date.now();
   return (
-    <div className="flex flex-row gap-5 justify-between bg-[#001d3d] min-h-screen">
-      <div className="flex flex-col gap-5 justify-center items-center">
-        {groups.length > 0
-          ? groups.map((group, index) => (
-              <GroupPreviewCard key={index} {...group} />
-            ))
-          : redirect("/login")}
-      </div>
-      <div></div>
+    <div
+      className={`font-semibold rounded-md cursor-pointer m-3 ${
+        meetingInProgress ? "bg-red-600" : "bg-[#003566]"
+      }`}
+      onClick={() => redirect(meeting.link)}
+    >
+      <span>
+        {meetingInProgress
+          ? "NOW"
+          : `${meetingDate[2]}/${meetingDate[1]}/${meetingDate[0]}`}
+      </span>
     </div>
   );
 }

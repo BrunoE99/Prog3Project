@@ -34,7 +34,7 @@ interface User {
 
 interface Reunion {
   id: number;
-  fecha: Date;
+  fecha: string;
   link: string;
   groupoId: number;
   grupo: Group;
@@ -44,7 +44,7 @@ interface Group {
   id: number;
   nombre: string;
   descripcion: string;
-  createdAt: Date;
+  createdAt: string;
   usuariosRelacionados: GroupMembership[];
   reviews: ReviewComponents[];
   reunionId: number;

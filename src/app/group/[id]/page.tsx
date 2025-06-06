@@ -90,14 +90,15 @@ export default async function Group({ params }: { params: { id: string } }) {
   const { id } = await params;
   const group: Group = await findGroupById(Number(id));
   const groupMembers = await findAllGroupMembers(Number(id));
-  const groupMemberCount: number = await findGroupMemberCount(Number(id));
-  console.log(groupMembers);
+  const groupMemberCount: { cantidad: number } = await findGroupMemberCount(
+    Number(id)
+  );
   return (
     <div className="min-h-screen bg-[#001d3d]">
       {group ? (
         <div>
           <GroupHeader {...group} />
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3 divide-x-1 divide-[#65686c] h-full">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-3 divide-x-1 divide-[#65686c]">
             <GroupMeetingColumn {...group.reunion} />
             <GroupReviews reviews={group.reviews} />
             <GroupMembersPreview

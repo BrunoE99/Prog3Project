@@ -13,6 +13,7 @@ export default function CreateReview({ title }: { title: string }) {
       // redirecting to login for now
       redirect("/login");
     }
+
     const starButtons = document.querySelectorAll("#review-sidebar button");
     starButtons.forEach((button) => {
       button.addEventListener("mouseover", () => {

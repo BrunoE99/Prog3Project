@@ -6,7 +6,7 @@ interface MovieComponents {
   id: number;
   nombre: string;
   sinopsis: string;
-  genero: string;
+  genero: { id: number; nombre: string };
   fechaEstreno: string;
   duracion: number;
   urlImagen: string;

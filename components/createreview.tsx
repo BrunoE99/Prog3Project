@@ -1,9 +1,10 @@
 import { createReview } from "@/app/movie/[id]/actions";
 import { redirect, useParams } from "next/navigation";
-import { useActionState, useEffect, useRef } from "react";
+import { useActionState, useEffect, useRef, useState } from "react";
 
 export default function CreateReview({ title }: { title: string }) {
   const scoreSelected = useRef(false);
+  const [score, setScore] = useState("1");
   const [state, action, pending] = useActionState(createReview, undefined);
   const params = useParams();
 
@@ -54,9 +55,7 @@ export default function CreateReview({ title }: { title: string }) {
     starButtons.forEach((button) => {
       button.addEventListener("click", () => {
         scoreSelected.current = true;
-        document
-          .getElementById("score")!
-          .setAttribute("value", button.getAttribute("aria-label")!);
+        setScore(button.getAttribute("aria-label")!);
       });
     });
   });
@@ -120,7 +119,8 @@ export default function CreateReview({ title }: { title: string }) {
               className="hidden"
               name="score"
               id="score"
-              defaultValue="1"
+              value={score}
+              readOnly
             />
           </div>
         </div>

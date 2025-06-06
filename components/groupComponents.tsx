@@ -2,8 +2,8 @@
 
 import { redirect, useParams } from "next/navigation";
 import MovieReview from "./genericreview";
-import { findRoleInGroup, joinGroup } from "@/app/group/actions";
-import { useActionState, useEffect, useRef } from "react";
+import { findRoleInGroup, joinGroup, leaveGroup } from "@/app/group/actions";
+import { useActionState, useEffect, useRef, useState } from "react";
 import MeetingCard from "./meeting";
 import Image from "next/image";
 
@@ -11,7 +11,7 @@ interface MovieComponents {
   id: number;
   nombre: string;
   sinopsis: string;
-  genero: string;
+  genero: { id: number; nombre: string };
   fechaEstreno: string;
   duracion: number;
   urlImagen: string;
@@ -54,8 +54,8 @@ interface Group {
 
 interface GroupMembership {
   id: number;
-  user: User;
-  grupo: Group;
+  nombre: string;
+  urlImagen: string;
   rol: "miembro" | "lider";
 }
 
@@ -96,30 +96,33 @@ export function GroupPreviewCard(group: Group) {
 
 export function GroupHeader(group: Group) {
   let creationDate: string[] = [];
-  const [state, action, pending] = useActionState(joinGroup, undefined);
-  const role = useRef(undefined);
+  const [role, setRole] = useState(undefined);
 
   if (group) {
     creationDate = group.createdAt.split("T")[0].split("-");
-  } else {
-    redirect("/login");
   }
 
   useEffect(() => {
     async function getRole() {
-      role.current = await findRoleInGroup(group.id);
+      const rol = await findRoleInGroup(group.id);
+      setRole(rol);
     }
     getRole();
   });
 
+  const joinLeaveFunc = role ? leaveGroup : joinGroup;
+
+  const [state, action, pending] = useActionState(joinLeaveFunc, undefined);
+
   return (
-    <div className="flex flex-col justify-between items-center m-6">
-      <div className="flex flex-row justify-between items-center w-full">
+    <div className="flex flex-col justify-between items-center">
+      <div className="flex flex-row justify-between items-center m-6">
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-0.5">
             <span className="text-6xl">{group.nombre}</span>
             <span className="flex text-base text-[#b0b3b8] align-middle">
-              Here since {creationDate[2]}/{creationDate[1]}/{creationDate[0]}
+              Reviewing since {creationDate[2]}/{creationDate[1]}/
+              {creationDate[0]}
             </span>
           </div>
           <p className="text-lg text-wrap w-2/3 pb-3">{group.descripcion}</p>
@@ -136,36 +139,48 @@ export function GroupHeader(group: Group) {
               disabled={pending}
               type="submit"
               name="submit"
-              className="shadow-sm cursor-pointer flex m-5 pb-1 pt-1 pr-4 pl-4 before:content-['+'] before:pr-2 before:text-xl text-lg text-center rounded-sm font-semibold bg-blue-700 hover:bg-blue-800 transition-colors delay-75 duration-100 ease-in-out"
+              className={`flex shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 ${
+                !role ? "before:content-['+']" : "before:content-['-']"
+              } before:pr-2 before:text-xl text-lg text-center rounded-sm font-semibold bg-blue-700 hover:bg-blue-800 transition-colors delay-75 duration-100 ease-in-out`}
             >
-              Join
+              {!role ? "Join" : "Leave"}
             </button>
           </form>
           <button
             className={`${
-              role.current === "lider" ? "flex" : "hidden"
+              role === "lider" ? "flex" : "hidden"
             } bg-[#1c1e21] shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 text-lg text-center rounded-sm font-semibold`}
           >
             Edit Group
           </button>
         </div>
       </div>
-      <div className="w-full mt-1 border-1 border-solid border-[#65686c] rounded-sm shadow-2xl m-1 z-2"></div>
+      <div className="w-full mt-1 border-1 border-solid border-[#65686c] rounded-sm shadow-2xl z-2"></div>
     </div>
   );
 }
 
-export function GroupMeetingColumn(meeting: Reunion) {
+export function GroupMeetingColumn({
+  meeting,
+  role,
+}: {
+  meeting: Reunion;
+  role: string;
+}) {
   const meetingDate = meeting ? new Date(meeting.fecha) : undefined;
   return (
     <div className="col-span-1 ml-6 h-full">
-      <div className="flex flex-row justify-between items-center">
+      <div className="flex flex-row justify-between items-center mr-3 pt-4">
         <h2 className="font-semibold text-xl">Meetings</h2>
-        <button className="shadow-sm cursor-pointer flex text-center self-center items-center justify-center pb-1 pt-1 pr-4 pl-4 mr-3 before:content-['+'] before:pr-2 before:text-xl text-lg rounded-sm font-semibold bg-blue-700 hover:bg-blue-800 transition-colors delay-75 duration-100 ease-in-out">
+        <button
+          className={`${
+            role && role === "lider" ? "flex" : "hidden"
+          } shadow-sm cursor-pointer text-center self-center items-center justify-center pb-1 pt-1 pr-4 pl-4 before:content-['+'] before:pr-2 before:text-xl text-lg rounded-sm font-semibold bg-blue-700 hover:bg-blue-800 transition-colors delay-75 duration-100 ease-in-out`}
+        >
           Schedule Meeting
         </button>
       </div>
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center mr-3">
         {meetingDate && meetingDate.getTime() <= Date.now() ? (
           <MeetingCard {...meeting} />
         ) : (
@@ -178,7 +193,7 @@ export function GroupMeetingColumn(meeting: Reunion) {
 
 export function GroupReviews({ reviews }: { reviews: ReviewComponents[] }) {
   return (
-    <div className="flex flex-col col-span-2 items-center h-full">
+    <div className="flex flex-col col-span-2 items-center h-full pt-4">
       <div>
         <h2 className="text-4xl">Reviews</h2>
       </div>
@@ -214,12 +229,11 @@ export function GroupMembersPreview({
     unit = "m";
   }
   return (
-    <div className="flex flex-col col-span-1 items-start mr-6 h-full w-full">
-      <div></div>
+    <div className="flex flex-col col-span-1 items-start mr-6 h-full w-full pt-4 pl-6">
       <div className="flex flex-col mb-2">
         <span
           onClick={() => redirect(`/group/${params.id}/members`)}
-          className="text-lg hover:font-semibold cursor-pointer transition-all delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
+          className="font-semibold text-xl hover:font-bold cursor-pointer transition-all delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
         >
           Members
         </span>
@@ -234,7 +248,7 @@ export function GroupMembersPreview({
             <div key={index} className="flex flex-row items-center gap-2 pt-3">
               <Image
                 src={/*member.user.urlImagen ||*/ "/default-user.png"}
-                alt={member.nombre}
+                alt={member.urlImagen}
                 width={32}
                 height={32}
                 className="rounded-full"

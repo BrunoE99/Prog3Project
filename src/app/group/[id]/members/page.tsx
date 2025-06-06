@@ -1,11 +1,12 @@
-import { findAllGroupMembers } from "../../actions";
+import { findAllGroupMembers, findGroupMemberCount } from "../../actions";
 import Image from "next/image";
+import GroupMembersHeader from "../../../../../components/groupMembers";
 
 interface MovieComponents {
   id: number;
   nombre: string;
   sinopsis: string;
-  genero: string;
+  genero: { id: number; nombre: string };
   fechaEstreno: string;
   duracion: number;
   urlImagen: string;
@@ -49,6 +50,7 @@ interface Group {
 interface GroupMembership {
   id: number;
   nombre: string;
+  urlImagen: string;
   rol: "miembro" | "lider";
 }
 
@@ -76,17 +78,15 @@ interface ReviewComponents {
 export default async function Members({ params }: { params: { id: string } }) {
   const { id } = await params;
   const groupMembers: GroupMembership[] = await findAllGroupMembers(Number(id));
-  console.log(groupMembers);
-  const groupMemberCount = await findAllGroupMembers(Number(id));
+  const groupMemberCount = await findGroupMemberCount(Number(id));
 
   return (
     <div className="bg-[#001d3d] min-h-screen">
       <div className="m-6">
-        <div className="flex flex-row gap-3">
-          <span className="text-xl opacity-60 hover:opacity-100">&larr;</span>
-          <h1 className="text-2xl font-semibold">Members</h1>
-          <span className="opacity-60">{groupMemberCount.cantidad}</span>
-        </div>
+        <GroupMembersHeader
+          id={id}
+          groupMemberCount={groupMemberCount.cantidad}
+        />
         <div className="grid grid-cols-1 grid-rows-2 gap-5">
           <div>
             <h2 className="text-4xl">Admins</h2>
@@ -98,7 +98,7 @@ export default async function Members({ params }: { params: { id: string } }) {
                 >
                   <Image
                     src={/*member.user.urlImagen ||*/ "/default-user.png"}
-                    alt={member.nombre}
+                    alt={member.urlImagen}
                     width={32}
                     height={32}
                     className="rounded-full"
@@ -110,7 +110,27 @@ export default async function Members({ params }: { params: { id: string } }) {
           </div>
           <div>
             <h2 className="text-4xl">Members</h2>
-            <div></div>
+            <div className="flex flex-row gap-3">
+              {groupMembers.map((member, index) =>
+                member.rol === "miembro" ? (
+                  <div
+                    key={index}
+                    className="inline-flex flex-row items-center gap-2 pt-3"
+                  >
+                    <Image
+                      src={/*member.user.urlImagen ||*/ "/default-user.png"}
+                      alt={member.urlImagen}
+                      width={32}
+                      height={32}
+                      className="rounded-full"
+                    />
+                    <span className="text-lg font-semibold">
+                      {member.nombre}
+                    </span>
+                  </div>
+                ) : null
+              )}
+            </div>
           </div>
         </div>
       </div>

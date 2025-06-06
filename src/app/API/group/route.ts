@@ -1,3 +1,4 @@
+import { DecodeToken } from "@/actions";
 import { cookies } from "next/headers";
 import "server-only";
 
@@ -49,8 +50,8 @@ export async function groupJoinPost(id: number) {
   try {
     const userCookie = await cookies();
     const token = userCookie.get("auth_token")?.value;
-    const request = await fetch(`${api_URL}/${id}/members`, {
-      method: "GET",
+    const request = await fetch(`${api_URL}/${id}`, {
+      method: "POST",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
@@ -68,18 +69,48 @@ export async function groupJoinPost(id: number) {
   }
 }
 
-export async function getRoleInGroup(grupoId: number) {
+export async function groupLeavePost(id: number) {
   try {
     const userCookie = await cookies();
     const token = userCookie.get("auth_token")?.value;
-
-    const request = await fetch(`${api_URL}/${grupoId}/members`, {
-      method: "GET",
+    const request = await fetch(`${api_URL}/${id}/leave`, {
+      method: "DELETE",
       headers: {
         Authorization: "Bearer " + token,
         "Content-Type": "application/json",
       },
     });
+
+    return await request.json();
+  } catch (e) {
+    console.error(e);
+    return {
+      success: false,
+      status: 500,
+      message: "Internal Server Error",
+    };
+  }
+}
+
+export async function getUserInGroup(grupoId: number) {
+  try {
+    const userCookie = await cookies();
+    const token = userCookie.get("auth_token")?.value;
+    let decoded;
+    if (token) {
+      decoded = await DecodeToken(token);
+    }
+
+    const request = await fetch(
+      `${api_URL}/${grupoId}/membership/${decoded?.sub}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     return await request.json();
   } catch (e) {

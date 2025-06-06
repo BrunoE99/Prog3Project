@@ -4,7 +4,7 @@ interface MovieComponents {
   id: number;
   nombre: string;
   sinopsis: string;
-  genero: string;
+  genero: { id: number; nombre: string };
   fechaEstreno: string;
   duracion: number;
   urlImagen: string;
@@ -47,8 +47,8 @@ interface Group {
 
 interface GroupMembership {
   id: number;
-  user: User;
-  grupo: Group;
+  nombre: string;
+  urlImagen: string;
   rol: "miembro" | "lider";
 }
 

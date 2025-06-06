@@ -11,13 +11,14 @@ import {
   findAllGroupMembers,
   findGroupById,
   findGroupMemberCount,
+  findRoleInGroup,
 } from "../actions";
 
 interface MovieComponents {
   id: number;
   nombre: string;
   sinopsis: string;
-  genero: string;
+  genero: { id: number; nombre: string };
   fechaEstreno: string;
   duracion: number;
   urlImagen: string;
@@ -60,8 +61,8 @@ interface Group {
 
 interface GroupMembership {
   id: number;
-  user: User;
-  grupo: Group;
+  nombre: string;
+  urlImagen: string;
   rol: "miembro" | "lider";
 }
 
@@ -93,13 +94,15 @@ export default async function Group({ params }: { params: { id: string } }) {
   const groupMemberCount: { cantidad: number } = await findGroupMemberCount(
     Number(id)
   );
+  const userRole = await findRoleInGroup(Number(id));
+
   return (
     <div className="min-h-screen bg-[#001d3d]">
       {group ? (
         <div>
           <GroupHeader {...group} />
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 divide-x-1 divide-[#65686c]">
-            <GroupMeetingColumn {...group.reunion} />
+            <GroupMeetingColumn meeting={group.reunion} role={userRole} />
             <GroupReviews reviews={group.reviews} />
             <GroupMembersPreview
               members={groupMembers}

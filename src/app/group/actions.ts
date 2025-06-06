@@ -6,8 +6,9 @@ import {
   getAllGroups,
   getGroupById,
   getGroupMemberCount,
-  getRoleInGroup,
+  getUserInGroup,
   groupJoinPost,
+  groupLeavePost,
 } from "../API/group/route";
 import { groupJoinSchema } from "../lib/definitions";
 
@@ -56,8 +57,30 @@ export async function joinGroup(_: any, formData: FormData) {
   return response;
 }
 
+export async function leaveGroup(_: any, formData: FormData) {
+  const id = formData.get("grupoId") as string;
+
+  const validateFields = groupJoinSchema.safeParse({ id: id });
+
+  if (!validateFields.success) {
+    return {
+      error: validateFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const response = await groupLeavePost(Number(id));
+
+  return response;
+}
+
+export async function isUserInGroup(id: number) {
+  const response = await getUserInGroup(Number(id));
+
+  return response.enGrupo;
+}
+
 export async function findRoleInGroup(groupId: number) {
-  const response = await getRoleInGroup(groupId);
+  const response = await getUserInGroup(groupId);
 
   return response.rol;
 }

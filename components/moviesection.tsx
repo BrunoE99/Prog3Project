@@ -10,7 +10,7 @@ interface MovieComponents {
   id: number;
   nombre: string;
   sinopsis: string;
-  genero: string;
+  genero: { id: number; nombre: string };
   fechaEstreno: string;
   duracion: number;
   urlImagen: string;
@@ -53,8 +53,8 @@ interface Group {
 
 interface GroupMembership {
   id: number;
-  user: User;
-  grupo: Group;
+  nombre: string;
+  urlImagen: string;
   rol: "miembro" | "lider";
 }
 
@@ -331,7 +331,7 @@ export function MovieInfoSection(movie: MovieComponents) {
               <span className="text-start mr-1 opacity-90 font-semibold text-xs md:text-sm">
                 Genre
               </span>
-              <span className="p-1 text-end w-full">{movie.genero}</span>
+              <span className="p-1 text-end w-full">{movie.genero.nombre}</span>
             </div>
           </div>
         </div>

@@ -11,7 +11,7 @@ interface MovieComponents {
   id: number;
   title: string;
   description: string;
-  genre: string;
+  genre: { id: number; nombre: string };
   release_date: Date;
   length: number;
   image_url: string;
@@ -44,8 +44,8 @@ interface Group {
 
 interface GroupMembership {
   id: number;
-  user: User;
-  group: Group;
+  nombre: string;
+  urlImagen: string;
   role: string;
 }
 

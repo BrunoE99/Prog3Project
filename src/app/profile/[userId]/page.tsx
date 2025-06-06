@@ -1,6 +1,6 @@
-import { cookies } from "next/headers";
-import Profile from "../../../../components/profile"
-import { DecodeToken, IsLogged } from "@/actions";
+'use client'
+
+import { useState } from "react"
 
 type UserData = {
     username: string,
@@ -10,18 +10,27 @@ type UserData = {
     nivel: number
 }
 
-export default async function UserInformation() {
-    const token = (await cookies()).get("auth_token")?.value;
-
-    if (!token) {
-        throw new Error("No auth token found");
-    }
-
-    const decoded = DecodeToken(token);
+export default function UserInformation() {
+    // I need to make a GET with the ID of the user I want to display, and show that information on the profile page.
+    const [userData, setUserData] = useState<UserData | null>(null)
 
     return (
-        <div>
-            <Profile userId={(await decoded).sub} />
+        <div className="">
+            <div className="p-3">
+                <p>Username:</p>
+            </div>
+            <div className="p-3">
+                <p>Mail:</p>
+            </div>
+            <div className="p-3">
+                <p>Rol:</p>
+            </div>
+            <div className="p-3">
+                <p>Nivel:</p>
+            </div>
+            <div className="p-3">
+                <p>Created:</p>
+            </div>
         </div>
     )
 }

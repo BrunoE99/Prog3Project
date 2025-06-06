@@ -5,17 +5,14 @@ import Link from "next/link";
 import { logOut } from "@/app/(auth)/actions";
 import Image from "next/image";
 import SearchBar from "./searchBar";
-import { redirect } from 'next/navigation';
 
-export default function Navbar({ token, userId }: { token?: string | null, userId?: number | null}) {
-    const [isNavOpen, setOpen] = useState(false);
-    const [isProfileOpen, profOpen] = useState(false);
-    const [isLoggedIn, setIsLoggedIn] = useState(false);
+export default function Navbar({ token }: { token?: string }) {
+  const [isNavOpen, setOpen] = useState(false);
+  const [isProfileOpen, profOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    const clicked = () => redirect('/profile/' + userId)
-
-    useEffect(() => {
-        const session = token;
+  useEffect(() => {
+    const session = token;
 
     if (session) {
       setIsLoggedIn(true);

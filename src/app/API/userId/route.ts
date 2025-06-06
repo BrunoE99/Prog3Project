@@ -1,33 +1,56 @@
 "use server";
 
-import { DecodeToken } from "@/actions";
 import { cookies } from "next/headers";
 
-const api_URL = "http:localhost:3000"; // change URL to env variable
+const api_URL = 'http:localhost:3000/api/users/'; // change URL to env variable
 
 export async function userById(userId: number) {
   const token = (await cookies()).get("auth_token")?.value;
 
-  if (token) {
-    const decoded = await DecodeToken(token);
+    if (token) {
+        try {
+            const userInfo = await fetch(`${api_URL}${userId}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                }
+            })
 
-    try {
-      const userInfo = await fetch(`${api_URL}/api/users/${decoded.sub}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const answer = userInfo;
-
-      console.log(answer);
-    } catch (err) {
-      console.error("Signup failed: ", err);
-      return {
-        success: false,
-        message: "Unexpected error.",
-      };
+            const answer = await userInfo.json();
+            return answer;
+        } catch (err) {
+            console.error('Signup failed: ', err)
+            return {
+                success: false,
+                message: 'Unexpected error.'
+            }
+        }
     }
-  }
+}
+
+export async function updateProfilePicture(file: File): Promise<any> {
+    const token = (await cookies()).get('auth_token')?.value;
+    const formData = new FormData();
+    formData.append("file", file);
+
+    console.log('formData: ', formData);
+
+    if (token) {
+        try {
+            const success = await fetch(`${api_URL}profile-image`, {
+                method: 'PATCH',
+                body: formData,
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            })
+
+            console.log(success);
+            return success.json();
+        } catch (err) {
+            console.error('Upload failed: ', err)
+            return err;
+        }
+    }
 }

@@ -14,6 +14,7 @@ export async function logIn(_: any, formData: FormData) {
     })
 
     if (!validateFields.success) {
+        console.log('hola');
         return {
             errors: validateFields.error.flatten().fieldErrors,
         }
@@ -25,7 +26,7 @@ export async function logIn(_: any, formData: FormData) {
     // i need to add a message when the login is successfull
 
     if (duki.success == true) {
-        redirect('/');
+        redirect('/?login=success');
     } else {
         return {
             errors: duki.message,

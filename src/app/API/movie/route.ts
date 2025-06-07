@@ -79,8 +79,10 @@ export async function getMovie(pelicula_id: number) {
 }
 
 export async function movieByGenre(genre: string) {
+  const pagination = 0;
+
     try {
-        const userInfo = await fetch(`${api_URL}/generos/${genre}`, {
+        const userInfo = await fetch(`${api_URL}/generos/${genre}?page=${pagination}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json'

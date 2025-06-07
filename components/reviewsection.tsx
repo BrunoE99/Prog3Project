@@ -5,7 +5,7 @@ export interface Movie {
     id: number;
     nombre: string;
     sinopsis: string;
-    genero: string;
+    genero: number;
     fechaEstreno: string;
     duracion: number;
     urlImagen: any;

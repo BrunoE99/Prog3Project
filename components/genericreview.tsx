@@ -4,7 +4,7 @@ interface MovieComponents {
   id: number;
   nombre: string;
   sinopsis: string;
-  genero: string;
+  genero: { id: number; nombre: string };
   fechaEstreno: string;
   duracion: number;
   urlImagen: string;
@@ -16,35 +16,45 @@ interface User {
   username: string;
   email: string;
   password: string;
-  role: string;
-  date: Date;
-  level: number;
+  rol: string;
+  fechaCreacion: Date;
+  nivel: number;
   urlImagen: string;
   reviews: ReviewComponents[];
   deletedAt: Date;
-  relatedGroups: GroupMembership[];
-  comments: Comment[];
+  gruposRelacionados: GroupMembership[];
+  comentarios: Comment[];
+}
+
+interface Reunion {
+  id: number;
+  fecha: string;
+  link: string;
+  groupoId: number;
+  grupo: Group;
 }
 
 interface Group {
   id: number;
-  name: string;
-  description: string;
-  createdAt: Date;
-  relatedUsers: GroupMembership[];
+  nombre: string;
+  descripcion: string;
+  createdAt: string;
+  usuariosRelacionados: GroupMembership[];
   reviews: ReviewComponents[];
+  reunionId: number;
+  reunion: Reunion;
 }
 
 interface GroupMembership {
   id: number;
-  user: User;
-  group: Group;
-  role: string;
+  nombre: string;
+  urlImagen: string;
+  rol: "miembro" | "lider";
 }
 
 interface Comment {
   id: number;
-  content: string;
+  texto: string;
   userId: number;
   user: User;
   reviewId: number;
@@ -69,7 +79,7 @@ export default function MovieReview(review: ReviewComponents) {
       <div className="flex flex-row gap-2">
         <Image
           className="rounded-full"
-          // This is temporary until we figure out images
+          // This is temporary until we figure out images since the current default is in an ivalid format
           src={review.user.urlImagen.replace(".", "")}
           alt="User's Avatar"
           width={50}
@@ -78,7 +88,7 @@ export default function MovieReview(review: ReviewComponents) {
         <div className="p-2 flex flex-col w-full">
           <h3 className="text-2xl font-semibold">{review.user.username}</h3>
           <h4 className="text-sm font-medium opacity-60">
-            {review.grupo?.name}
+            {review.grupo?.nombre}
           </h4>
         </div>
         <div>

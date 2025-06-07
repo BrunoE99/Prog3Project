@@ -10,7 +10,7 @@ interface MovieComponents {
   id: number;
   nombre: string;
   sinopsis: string;
-  genero: string;
+  genero: { id: number; nombre: string };
   fechaEstreno: string;
   duracion: number;
   urlImagen: string;
@@ -22,35 +22,45 @@ interface User {
   username: string;
   email: string;
   password: string;
-  role: string;
-  date: Date;
-  level: number;
+  rol: string;
+  fechaCreacion: Date;
+  nivel: number;
   urlImagen: string;
   reviews: ReviewComponents[];
   deletedAt: Date;
-  relatedGroups: GroupMembership[];
-  comments: Comment[];
+  gruposRelacionados: GroupMembership[];
+  comentarios: Comment[];
+}
+
+interface Reunion {
+  id: number;
+  fecha: string;
+  link: string;
+  groupoId: number;
+  grupo: Group;
 }
 
 interface Group {
   id: number;
-  name: string;
-  description: string;
-  createdAt: Date;
-  relatedUsers: GroupMembership[];
+  nombre: string;
+  descripcion: string;
+  createdAt: string;
+  usuariosRelacionados: GroupMembership[];
   reviews: ReviewComponents[];
+  reunionId: number;
+  reunion: Reunion;
 }
 
 interface GroupMembership {
   id: number;
-  user: User;
-  group: Group;
-  role: string;
+  nombre: string;
+  urlImagen: string;
+  rol: "miembro" | "lider";
 }
 
 interface Comment {
   id: number;
-  content: string;
+  texto: string;
   userId: number;
   user: User;
   reviewId: number;
@@ -321,7 +331,7 @@ export function MovieInfoSection(movie: MovieComponents) {
               <span className="text-start mr-1 opacity-90 font-semibold text-xs md:text-sm">
                 Genre
               </span>
-              <span className="p-1 text-end w-full">{movie.genero}</span>
+              <span className="p-1 text-end w-full">{movie.genero.nombre}</span>
             </div>
           </div>
         </div>

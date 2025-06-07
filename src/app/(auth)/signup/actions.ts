@@ -1,8 +1,8 @@
-'use server'
+"use server";
 
-import { redirect } from 'next/navigation';
-import { SignupFormSchema } from '@/app/lib/definitions';
-import { signUpPost } from '@/app/API/signup/route';
+import { redirect } from "next/navigation";
+import { SignupFormSchema } from "@/app/lib/definitions";
+import { signUpPost } from "@/app/API/signup/route";
 
 export async function signUp(_: any, formData: FormData) {
     const username = formData.get('username') as string

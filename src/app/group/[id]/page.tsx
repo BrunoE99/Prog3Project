@@ -11,6 +11,7 @@ import {
   findAllGroupMembers,
   findGroupById,
   findGroupMemberCount,
+  findMeeting,
   findRoleInGroup,
 } from "../actions";
 
@@ -95,6 +96,7 @@ export default async function Group({ params }: { params: { id: string } }) {
     Number(id)
   );
   const userRole = await findRoleInGroup(Number(id));
+  const meeting = await findMeeting();
 
   return (
     <div className="min-h-screen bg-[#001d3d]">
@@ -102,7 +104,7 @@ export default async function Group({ params }: { params: { id: string } }) {
         <div>
           <GroupHeader {...group} />
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 divide-x-1 divide-[#65686c]">
-            <GroupMeetingColumn meeting={group.reunion} role={userRole} />
+            <GroupMeetingColumn meeting={meeting} role={userRole} />
             <GroupReviews reviews={group.reviews} />
             <GroupMembersPreview
               members={groupMembers}

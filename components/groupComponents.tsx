@@ -3,9 +3,10 @@
 import { redirect, useParams } from "next/navigation";
 import MovieReview from "./genericreview";
 import { findRoleInGroup, joinGroup, leaveGroup } from "@/app/group/actions";
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import MeetingCard from "./meeting";
 import Image from "next/image";
+import ScheduleMeeting from "./scheduleMeeting";
 
 interface MovieComponents {
   id: number;
@@ -115,8 +116,8 @@ export function GroupHeader(group: Group) {
   const [state, action, pending] = useActionState(joinLeaveFunc, undefined);
 
   return (
-    <div className="flex flex-col justify-between items-center">
-      <div className="flex flex-row justify-between items-center m-6">
+    <div className="flex flex-col justify-between items-center m-6">
+      <div className="flex flex-row justify-between items-center w-full">
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-0.5">
             <span className="text-6xl">{group.nombre}</span>
@@ -149,7 +150,7 @@ export function GroupHeader(group: Group) {
           <button
             className={`${
               role === "lider" ? "flex" : "hidden"
-            } bg-[#1c1e21] shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 text-lg text-center rounded-sm font-semibold`}
+            } bg-[#1c1e21] shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 text-lg text-center rounded-sm font-semibold text-nowrap`}
           >
             Edit Group
           </button>
@@ -167,12 +168,36 @@ export function GroupMeetingColumn({
   meeting: Reunion;
   role: string;
 }) {
+  const [isSidebarOpen, setOpen] = useState(false);
+
   const meetingDate = meeting ? new Date(meeting.fecha) : undefined;
+  const meetingInProgress = new Date(meeting.fecha).getTime() <= Date.now();
+  const handleSidebarToggle = () => {
+    if (isSidebarOpen) {
+      setOpen((prev) => !prev);
+      document.body.style.overflow = isSidebarOpen ? "unset" : "hidden";
+    }
+  };
   return (
-    <div className="col-span-1 ml-6 h-full">
-      <div className="flex flex-row justify-between items-center mr-3 pt-4">
-        <h2 className="font-semibold text-xl">Meetings</h2>
+    <div className="col-span-1 ml-6 bg-[#003566]">
+      <div className={`${isSidebarOpen ? "flex" : "hidden"}`}>
         <button
+          className="fixed top-3 left-3 text-4xl mr-4 mt-0.5 z-4 justify-center dark:text-white text-black cursor-pointer rounded-full hover:bg-[#bdbcb968] h-10 w-10 transition-all delay-75 duration-100 ease-in-out"
+          onClick={() => handleSidebarToggle()}
+        >
+          &times;
+        </button>
+        <ScheduleMeeting />
+      </div>
+      <div
+        className={`${
+          isSidebarOpen ? "fixed" : "hidden"
+        } inset-0 bg-black opacity-60`}
+      ></div>
+      <div className="flex flex-row justify-between items-center mr-3 pt-4">
+        <h2 className="font-semibold text-xl">Meeting</h2>
+        <button
+          onClick={() => setOpen((prev) => !prev)}
           className={`${
             role && role === "lider" ? "flex" : "hidden"
           } shadow-sm cursor-pointer text-center self-center items-center justify-center pb-1 pt-1 pr-4 pl-4 before:content-['+'] before:pr-2 before:text-xl text-lg rounded-sm font-semibold bg-blue-700 hover:bg-blue-800 transition-colors delay-75 duration-100 ease-in-out`}
@@ -180,8 +205,12 @@ export function GroupMeetingColumn({
           Schedule Meeting
         </button>
       </div>
-      <div className="flex flex-col items-center mr-3">
-        {meetingDate && meetingDate.getTime() <= Date.now() ? (
+      <div
+        className={`flex flex-col items-center mr-3 ${
+          meetingInProgress ? "bg-red-600" : ""
+        }`}
+      >
+        {meeting ? (
           <MeetingCard {...meeting} />
         ) : (
           <span className="mt-5">No meetings scheduled</span>
@@ -229,7 +258,7 @@ export function GroupMembersPreview({
     unit = "m";
   }
   return (
-    <div className="flex flex-col col-span-1 items-start mr-6 h-full w-full pt-4 pl-6">
+    <div className="flex flex-col col-span-1 items-start mr-6 h-full w-full">
       <div className="flex flex-col mb-2">
         <span
           onClick={() => redirect(`/group/${params.id}/members`)}

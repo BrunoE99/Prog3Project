@@ -10,7 +10,8 @@ import {
   groupJoinPost,
   groupLeavePost,
 } from "../API/group/route";
-import { groupJoinSchema } from "../lib/definitions";
+import { groupJoinSchema, MeetingFormSchema } from "../lib/definitions";
+import { meetingGet, meetingPost } from "../API/meeting/route";
 
 export async function findAllGroups() {
   const response = await getAllGroups();
@@ -83,4 +84,42 @@ export async function findRoleInGroup(groupId: number) {
   const response = await getUserInGroup(groupId);
 
   return response.rol;
+}
+
+export async function scheduleMeeting(_: any, formData: FormData) {
+  const fecha = new Date(formData.get("date") as string);
+  const link = formData.get("link") as string;
+
+  const validateFields = MeetingFormSchema.safeParse({
+    fecha: fecha.toISOString(),
+    link: link,
+  });
+
+  if (!validateFields.success) {
+    return {
+      error: validateFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const response = await meetingPost(fecha, link);
+
+  console.log(response);
+
+  if (response.status === 201) {
+    return {
+      success: true,
+      message: response.message || "Review created successfully",
+    };
+  } else {
+    return {
+      status: response.status,
+      error: response.message || "An unexpected error occurred",
+    };
+  }
+}
+
+export async function findMeeting() {
+  const response = await meetingGet();
+
+  return response;
 }

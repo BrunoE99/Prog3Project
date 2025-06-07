@@ -1,4 +1,5 @@
 import { redirect } from "next/navigation";
+import Button from "./button";
 
 interface MovieComponents {
   id: number;
@@ -78,16 +79,17 @@ export default function MeetingCard(meeting: Reunion) {
   const meetingInProgress = new Date(meeting.fecha).getTime() <= Date.now();
   return (
     <div
-      className={`font-semibold rounded-md cursor-pointer m-3 ${
-        meetingInProgress ? "bg-red-600" : "bg-[#003566]"
-      }`}
-      onClick={() => redirect(meeting.link)}
+      className={`flex flex-row justify-between items-center font-semibold rounded-md cursor-pointer m-3 w-full`}
     >
-      <span>
+      <span className="tex-2xl">
         {meetingInProgress
           ? "NOW"
           : `${meetingDate[2]}/${meetingDate[1]}/${meetingDate[0]}`}
       </span>
+      <Button
+        text="Go to Meeting"
+        onClick={() => window.location.replace(meeting.link)}
+      />
     </div>
   );
 }

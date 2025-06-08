@@ -2,7 +2,12 @@
 
 import { redirect, useParams } from "next/navigation";
 import MovieReview from "./genericreview";
-import { findRoleInGroup, joinGroup, leaveGroup } from "@/app/group/actions";
+import {
+  findMeeting,
+  findRoleInGroup,
+  joinGroup,
+  leaveGroup,
+} from "@/app/group/actions";
 import { useActionState, useEffect, useState } from "react";
 import MeetingCard from "./meeting";
 import Image from "next/image";
@@ -116,8 +121,8 @@ export function GroupHeader(group: Group) {
   const [state, action, pending] = useActionState(joinLeaveFunc, undefined);
 
   return (
-    <div className="flex flex-col justify-between items-center m-6">
-      <div className="flex flex-row justify-between items-center w-full">
+    <div className="flex flex-col justify-between items-center pt-6">
+      <div className="flex flex-row justify-between items-center w-full pl-6 pr-6">
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-0.5">
             <span className="text-6xl">{group.nombre}</span>
@@ -161,25 +166,33 @@ export function GroupHeader(group: Group) {
   );
 }
 
-export function GroupMeetingColumn({
-  meeting,
-  role,
-}: {
-  meeting: Reunion;
-  role: string;
-}) {
+export function GroupMeetingColumn(props: { meeting?: Reunion; role: string }) {
+  const { role } = props;
   const [isSidebarOpen, setOpen] = useState(false);
-
-  const meetingDate = meeting ? new Date(meeting.fecha) : undefined;
-  const meetingInProgress = new Date(meeting.fecha).getTime() <= Date.now();
+  const [meeting, setMeeting] = useState(props.meeting);
+  console.log(meeting);
+  const [submitted, setSubmit] = useState(false);
+  const meetingInProgress = meeting
+    ? new Date(meeting.fecha).getTime() <= Date.now()
+    : false;
   const handleSidebarToggle = () => {
     if (isSidebarOpen) {
       setOpen((prev) => !prev);
       document.body.style.overflow = isSidebarOpen ? "unset" : "hidden";
     }
   };
+
+  useEffect(() => {
+    if (submitted) {
+      findMeeting().then((newMeeting) => {
+        setMeeting(newMeeting);
+        setOpen(false);
+      });
+    }
+  }, [submitted]);
+
   return (
-    <div className="col-span-1 ml-6 bg-[#003566]">
+    <div className="col-span-1 pl-6 bg-[#003566] h-full shadow-2xl rounded-br-md">
       <div className={`${isSidebarOpen ? "flex" : "hidden"}`}>
         <button
           className="fixed top-3 left-3 text-4xl mr-4 mt-0.5 z-4 justify-center dark:text-white text-black cursor-pointer rounded-full hover:bg-[#bdbcb968] h-10 w-10 transition-all delay-75 duration-100 ease-in-out"
@@ -187,7 +200,11 @@ export function GroupMeetingColumn({
         >
           &times;
         </button>
-        <ScheduleMeeting />
+        <ScheduleMeeting
+          onSubmit={() => {
+            setSubmit(true);
+          }}
+        />
       </div>
       <div
         className={`${
@@ -210,8 +227,11 @@ export function GroupMeetingColumn({
           meetingInProgress ? "bg-red-600" : ""
         }`}
       >
-        {meeting ? (
-          <MeetingCard {...meeting} />
+        {meeting !== undefined ? (
+          <MeetingCard
+            meeting={meeting}
+            onDelete={() => setMeeting(undefined)}
+          />
         ) : (
           <span className="mt-5">No meetings scheduled</span>
         )}
@@ -258,8 +278,8 @@ export function GroupMembersPreview({
     unit = "m";
   }
   return (
-    <div className="flex flex-col col-span-1 items-start mr-6 h-full w-full">
-      <div className="flex flex-col mb-2">
+    <div className="flex flex-col col-span-1 items-start mr-6 h-full w-full pt-4 bg-[#003566] shadow-2xl rounded-bl-md">
+      <div className="flex flex-col mb-2 ml-3">
         <span
           onClick={() => redirect(`/group/${params.id}/members`)}
           className="font-semibold text-xl hover:font-bold cursor-pointer transition-all delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
@@ -271,7 +291,7 @@ export function GroupMembersPreview({
           {unit}
         </span>
       </div>
-      <div className="flex flex-col gap-2 w-full">
+      <div className="flex flex-col gap-2 w-full ml-3">
         {members.map((member, index) =>
           member.rol === "lider" ? (
             <div key={index} className="flex flex-row items-center gap-2 pt-3">

@@ -11,7 +11,7 @@ import {
   groupLeavePost,
 } from "../API/group/route";
 import { groupJoinSchema, MeetingFormSchema } from "../lib/definitions";
-import { meetingGet, meetingPost } from "../API/meeting/route";
+import { meetingDelete, meetingGet, meetingPost } from "../API/meeting/route";
 
 export async function findAllGroups() {
   const response = await getAllGroups();
@@ -103,8 +103,6 @@ export async function scheduleMeeting(_: any, formData: FormData) {
 
   const response = await meetingPost(fecha, link);
 
-  console.log(response);
-
   if (response.status === 201) {
     return {
       success: true,
@@ -120,6 +118,12 @@ export async function scheduleMeeting(_: any, formData: FormData) {
 
 export async function findMeeting() {
   const response = await meetingGet();
+
+  return response;
+}
+
+export async function deleteMeeting() {
+  const response = await meetingDelete();
 
   return response;
 }

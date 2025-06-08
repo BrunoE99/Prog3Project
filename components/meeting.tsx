@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+import { deleteMeeting } from "@/app/group/actions";
 import Button from "./button";
 
 interface MovieComponents {
@@ -74,22 +74,38 @@ interface ReviewComponents {
   comentarios: Comment[];
 }
 
-export default function MeetingCard(meeting: Reunion) {
+export default function MeetingCard({
+  meeting,
+  onDelete,
+}: {
+  meeting: Reunion;
+  onDelete: () => void;
+}) {
   const meetingDate = meeting.fecha.split("T")[0].split("-");
+
   const meetingInProgress = new Date(meeting.fecha).getTime() <= Date.now();
   return (
     <div
-      className={`flex flex-row justify-between items-center font-semibold rounded-md cursor-pointer m-3 w-full`}
+      className={`flex flex-col justify-between items-center font-semibold rounded-md cursor-pointer m-3 w-full gap-4`}
     >
       <span className="tex-2xl">
         {meetingInProgress
           ? "NOW"
           : `${meetingDate[2]}/${meetingDate[1]}/${meetingDate[0]}`}
       </span>
-      <Button
-        text="Go to Meeting"
-        onClick={() => window.location.replace(meeting.link)}
-      />
+      <div className="flex flex-row gap-2">
+        <Button
+          text="Go to Meeting"
+          onClick={() => window.location.replace(meeting.link)}
+        />
+        <Button
+          text="Delete"
+          onClick={async () => {
+            await deleteMeeting();
+            onDelete();
+          }}
+        />
+      </div>
     </div>
   );
 }

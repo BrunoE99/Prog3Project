@@ -1,8 +1,23 @@
 import { scheduleMeeting } from "@/app/group/actions";
 import { useActionState } from "react";
 
-export default function ScheduleMeeting() {
-  const [state, action, pending] = useActionState(scheduleMeeting, undefined);
+export default function ScheduleMeeting({
+  onSubmit,
+}: {
+  onSubmit: () => void;
+}) {
+  const wrappedScheduleMeeting = async (_state: any, formData: FormData) => {
+    const result = await scheduleMeeting(_state, formData);
+    if (result.success) {
+      onSubmit();
+    }
+    return result;
+  };
+
+  const [state, action, pending] = useActionState(
+    wrappedScheduleMeeting,
+    undefined
+  );
 
   return (
     <div

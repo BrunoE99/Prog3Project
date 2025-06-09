@@ -2,7 +2,7 @@
 
 import { editGroup } from "@/app/group/actions";
 import { redirect } from "next/navigation";
-import { useActionState, useCallback, useState } from "react";
+import { useActionState, useState } from "react";
 
 interface MovieComponents {
   id: number;
@@ -76,9 +76,6 @@ interface ReviewComponents {
   grupo: Group | undefined;
   comentarios: Comment[];
 }
-interface ChangeHandlerEvent {
-  target: { value: string };
-}
 
 export function GroupEditHeader({ id }: { id: number }) {
   return (
@@ -94,7 +91,13 @@ export function GroupEditHeader({ id }: { id: number }) {
   );
 }
 
-export function GroupEditForm(group: Group) {
+export function GroupEditForm({
+  group,
+  authorized,
+}: {
+  group: Group;
+  authorized: boolean;
+}) {
   const [fieldsEdited, setFieldsEdited] = useState([false, false]);
   const [fields, setFields] = useState([group.nombre, group.descripcion]);
   const [state, action, pending] = useActionState(editGroup, undefined);
@@ -113,6 +116,7 @@ export function GroupEditForm(group: Group) {
         <div className="flex flex-col items-start justify-center gap-2">
           <span className="font-semibold text-2xl">Name</span>
           <input
+            disabled={!authorized}
             className="border border-[#545454b7] w-full mb-1"
             type="text"
             id="group-name"
@@ -127,6 +131,7 @@ export function GroupEditForm(group: Group) {
         <div className="flex flex-col items-start justify-center gap-2">
           <span className="font-semibold text-2xl">Description</span>
           <textarea
+            disabled={!authorized}
             className="w-full border border-[#545454b7] mb-1"
             name="group-description"
             id="group-description"
@@ -140,11 +145,13 @@ export function GroupEditForm(group: Group) {
       </div>
       <div className="flex justify-end items-center">
         <input
-          className="bg-blue-700 hover:bg-blue-600 rounded-md text-xl m-5 p-1"
+          className={`bg-blue-700 rounded-md text-xl m-5 p-1 ${
+            pending || !authorized ? "" : "cursor-pointer hover:bg-blue-600"
+          }`}
           type="submit"
           id="submit"
           name="submit"
-          disabled={pending}
+          disabled={pending || !authorized}
         />
       </div>
     </form>

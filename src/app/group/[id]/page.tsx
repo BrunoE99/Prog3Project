@@ -99,7 +99,7 @@ export default async function Group({ params }: { params: { id: string } }) {
   const meeting = userRole ? await findMeeting() : undefined;
 
   return (
-    <div className="min-h-screen bg-[#001d3d]">
+    <div className="min-h-screen bg-[#001d3d] w-full overflow-x-hidden">
       {group ? (
         <div>
           <GroupHeader {...group} />

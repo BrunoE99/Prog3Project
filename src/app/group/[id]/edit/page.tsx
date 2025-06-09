@@ -87,20 +87,25 @@ export default async function GroupEdit({
   const userRole = await findRoleInGroup(Number(id));
 
   return (
-    <div
-      className={`min-h-screen ${
-        !userRole || userRole !== "lider"
-          ? "flex justify-center items-center"
-          : ""
-      }`}
-    >
+    <div className={`min-h-screen`}>
       <GroupEditHeader id={group.id} />
-      <GroupEditForm {...group} />
+      <div
+        className={`${
+          userRole && userRole === "lider" ? "" : "blur-sm overflow-y-hidden"
+        }`}
+      >
+        <GroupEditForm
+          group={group}
+          authorized={userRole && userRole === "lider"}
+        />
+      </div>
       {userRole && userRole === "lider" ? null : (
-        <div className="flex flex-row justify-center items-center">
-          <span className="bg-black rounded-sm text-3xl font-bold z-2">
-            Sorry, you must be a group admin to view this page
-          </span>
+        <div className="flex justify-center items-center">
+          <div className="fixed justify-center items-center blur-none">
+            <span className="rounded-sm text-3xl font-bold z-2">
+              Sorry, you must be a group admin to view this page
+            </span>
+          </div>
         </div>
       )}
     </div>

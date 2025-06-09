@@ -38,7 +38,7 @@ export default function SearchBar() {
   }
 
   const changeHandler = useCallback((event: ChangeHandlerEvent): void => {
-    const value = event.target.value.trim();
+    const value = event.target.value;
     setSearchString(value);
     if (value.length > 2) {
       setTimeout(() => {

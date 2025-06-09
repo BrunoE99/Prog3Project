@@ -170,7 +170,6 @@ export function GroupMeetingColumn(props: { meeting?: Reunion; role: string }) {
   const { role } = props;
   const [isSidebarOpen, setOpen] = useState(false);
   const [meeting, setMeeting] = useState(props.meeting);
-  console.log(meeting);
   const [submitted, setSubmit] = useState(false);
   const meetingInProgress = meeting
     ? new Date(meeting.fecha).getTime() <= Date.now()
@@ -186,7 +185,7 @@ export function GroupMeetingColumn(props: { meeting?: Reunion; role: string }) {
     if (submitted) {
       findMeeting().then((newMeeting) => {
         setMeeting(newMeeting);
-        setOpen(false);
+        handleSidebarToggle();
       });
     }
   }, [submitted]);

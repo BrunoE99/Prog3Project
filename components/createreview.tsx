@@ -2,10 +2,26 @@ import { createReview } from "@/app/movie/[id]/actions";
 import { redirect, useParams } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
 
-export default function CreateReview({ title }: { title: string }) {
+export default function CreateReview({
+  title,
+  onSubmit,
+}: {
+  title: string;
+  onSubmit: () => void;
+}) {
   const scoreSelected = useRef(false);
   const [score, setScore] = useState("1");
-  const [state, action, pending] = useActionState(createReview, undefined);
+  const wrappedCreateReview = async (_state: any, formData: FormData) => {
+    const result = await createReview(_state, formData);
+    if (result.success) {
+      onSubmit();
+    }
+    return result;
+  };
+  const [state, action, pending] = useActionState(
+    wrappedCreateReview,
+    undefined
+  );
   const params = useParams();
 
   useEffect(() => {

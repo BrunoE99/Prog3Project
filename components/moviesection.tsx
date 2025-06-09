@@ -3,8 +3,8 @@
 import MovieReview from "./genericreview";
 import CreateReview from "./createreview";
 import { useEffect, useState } from "react";
-import { getAuthToken } from "@/app/movie/[id]/actions";
-import { redirect } from "next/navigation";
+import { getAllReviewsByMovie, getAuthToken } from "@/app/movie/[id]/actions";
+import { redirect, useParams } from "next/navigation";
 
 interface MovieComponents {
   id: number;
@@ -88,9 +88,20 @@ export function MovieReviewsSection({
 }) {
   const [isSidebarOpen, setOpen] = useState(false);
   const [loadAllReviews, setMode] = useState(false);
+  const [submitted, setSubmit] = useState(false);
+  const [reviewsState, setReviews] = useState(reviews);
   const [filter, setFilter] = useState("all");
   const [pageNumber, setPageNumber] = useState(1);
   const [token, setToken] = useState<string | undefined>(undefined);
+  const params = useParams();
+  const handleSidebarToggle = () => {
+    if (token || isSidebarOpen) {
+      setOpen((prev) => !prev);
+      document.body.style.overflow = isSidebarOpen ? "unset" : "hidden";
+    } else if (!token) {
+      redirect("/login");
+    }
+  };
 
   // Fetch token on mount
   useEffect(() => {
@@ -98,21 +109,27 @@ export function MovieReviewsSection({
       const t = await getAuthToken();
       setToken(t);
     })();
-  }, []);
+    if (submitted) {
+      getAllReviewsByMovie(Number(params.id)).then((newReviews) => {
+        setReviews(newReviews);
+        handleSidebarToggle();
+      });
+    }
+  }, [submitted]);
 
   const featuredReviews: ReviewComponents[] =
-    reviews.length === 1
-      ? [reviews[0]]
-      : reviews.length === 0
+    reviewsState.length === 1
+      ? [reviewsState[0]]
+      : reviewsState.length === 0
       ? []
-      : [reviews[0], reviews[1]];
+      : [reviewsState[0], reviewsState[1]];
 
   const handleModeChange = () => {
     setMode((prev) => !prev);
   };
 
   const displayFeaturedReviews = () => {
-    return reviews.length > 0 ? (
+    return reviewsState.length > 0 ? (
       featuredReviews.map((review, index) =>
         review.puntuacion >= Number(filter) || filter === "all" ? (
           <MovieReview key={index} {...review} />
@@ -129,10 +146,10 @@ export function MovieReviewsSection({
     const pagedReviews = [];
     const limit = 15;
     const offset = limit * (pageNumber - 1);
-    for (let i = offset; i < offset + limit && i < reviews.length; i++) {
-      pagedReviews.push(reviews[i]);
+    for (let i = offset; i < offset + limit && i < reviewsState.length; i++) {
+      pagedReviews.push(reviewsState[i]);
     }
-    return reviews.length > 0 ? (
+    return reviewsState.length > 0 ? (
       pagedReviews.map((review, index) =>
         review.puntuacion >= Number(filter) || filter === "all" ? (
           <MovieReview key={index} {...review} />
@@ -145,15 +162,6 @@ export function MovieReviewsSection({
     );
   };
 
-  const handleSidebarToggle = () => {
-    if (token || isSidebarOpen) {
-      setOpen((prev) => !prev);
-      document.body.style.overflow = isSidebarOpen ? "unset" : "hidden";
-    } else if (!token) {
-      redirect("/login");
-    }
-  };
-
   return (
     <section className="mx-auto py-20 px-6">
       <div className={`${isSidebarOpen ? "flex" : "hidden"}`}>
@@ -163,7 +171,7 @@ export function MovieReviewsSection({
         >
           &times;
         </button>
-        <CreateReview title={title} />
+        <CreateReview title={title} onSubmit={() => setSubmit(true)} />
       </div>
       <div
         className={`${

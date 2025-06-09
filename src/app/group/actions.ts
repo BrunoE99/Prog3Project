@@ -9,8 +9,13 @@ import {
   getUserInGroup,
   groupJoinPost,
   groupLeavePost,
+  groupUpdate,
 } from "../API/group/route";
-import { groupJoinSchema, MeetingFormSchema } from "../lib/definitions";
+import {
+  groupEditSchema,
+  groupJoinSchema,
+  MeetingFormSchema,
+} from "../lib/definitions";
 import { meetingDelete, meetingGet, meetingPost } from "../API/meeting/route";
 
 export async function findAllGroups() {
@@ -126,4 +131,44 @@ export async function deleteMeeting() {
   const response = await meetingDelete();
 
   return response;
+}
+
+export async function editGroup(_: any, formData: FormData) {
+  const id = formData.get("id") as string;
+  const nombre = formData.get("group-name") as string;
+  const descripcion = formData.get("group-description") as string;
+  const editedFields = formData.get("changedFields") as string;
+  const [nameChanged, descriptionChanged] = editedFields.split(",");
+  console.log(formData);
+
+  const validateFields = groupEditSchema.safeParse({
+    nombre: nameChanged === "true" ? nombre : undefined,
+    descripcion: descriptionChanged === "true" ? descripcion : undefined,
+  });
+
+  console.log(validateFields);
+
+  if (!validateFields.success) {
+    return {
+      error: validateFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const response = await groupUpdate(
+    Number(id),
+    nameChanged === "true" ? nombre : undefined,
+    descriptionChanged === "true" ? descripcion : undefined
+  );
+
+  if (response.status === 201) {
+    return {
+      success: true,
+      message: response.message || "Review created successfully",
+    };
+  } else {
+    return {
+      status: response.status,
+      error: response.message || "An unexpected error occurred",
+    };
+  }
 }

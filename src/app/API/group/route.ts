@@ -146,3 +146,51 @@ export async function getGroupMemberCount(id: number) {
     };
   }
 }
+
+export async function groupUpdate(
+  id: number,
+  nombre?: string,
+  descripcion?: string
+) {
+  try {
+    const userCookie = await cookies();
+    const token = userCookie.get("auth_token")?.value;
+
+    const body: Record<string, string> = {};
+    if (nombre !== undefined) body.nombre = nombre;
+    if (descripcion !== undefined) body.descripcion = descripcion;
+
+    const request = await fetch(`${api_URL}/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify(body),
+    });
+
+    const answer = request;
+    const answerJson = await request.json();
+
+    console.log(answer);
+
+    if (answer.status == 201) {
+      return {
+        status: answer.status,
+        body: answerJson,
+      };
+    } else {
+      return {
+        status: answer.status,
+        message: answerJson.message || "An unexpected error ocurred",
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      status: 500,
+      message: "Internal Server Error",
+    };
+  }
+}

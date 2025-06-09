@@ -1,0 +1,152 @@
+"use client";
+
+import { editGroup } from "@/app/group/actions";
+import { redirect } from "next/navigation";
+import { useActionState, useCallback, useState } from "react";
+
+interface MovieComponents {
+  id: number;
+  nombre: string;
+  sinopsis: string;
+  genero: { id: number; nombre: string };
+  fechaEstreno: string;
+  duracion: number;
+  urlImagen: string;
+  calificacion: number;
+}
+
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  password: string;
+  rol: string;
+  fechaCreacion: Date;
+  nivel: number;
+  urlImagen: string;
+  reviews: ReviewComponents[];
+  deletedAt: Date;
+  gruposRelacionados: GroupMembership[];
+  comentarios: Comment[];
+}
+
+interface Reunion {
+  id: number;
+  fecha: string;
+  link: string;
+  groupoId: number;
+  grupo: Group;
+}
+
+interface Group {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  createdAt: string;
+  usuariosRelacionados: GroupMembership[];
+  reviews: ReviewComponents[];
+  reunionId: number;
+  reunion: Reunion;
+}
+
+interface GroupMembership {
+  id: number;
+  nombre: string;
+  urlImagen: string;
+  rol: "miembro" | "lider";
+}
+
+interface Comment {
+  id: number;
+  texto: string;
+  userId: number;
+  user: User;
+  reviewId: number;
+  review: ReviewComponents;
+}
+
+interface ReviewComponents {
+  id: number;
+  userId: number;
+  texto: string;
+  puntuacion: number;
+  user: User;
+  peliculaId: number;
+  pelicula: MovieComponents;
+  grupo: Group | undefined;
+  comentarios: Comment[];
+}
+interface ChangeHandlerEvent {
+  target: { value: string };
+}
+
+export function GroupEditHeader({ id }: { id: number }) {
+  return (
+    <div className="flex flex-row gap-3 m-6 items-center">
+      <span
+        className="text-4xl font-semibold opacity-60 hover:opacity-100 cursor-pointer"
+        onClick={() => redirect(`/group/${id}`)}
+      >
+        &lt;
+      </span>
+      <h1 className="text-4xl font-semibold">Edit Group</h1>
+    </div>
+  );
+}
+
+export function GroupEditForm(group: Group) {
+  const [fieldsEdited, setFieldsEdited] = useState([false, false]);
+  const [fields, setFields] = useState([group.nombre, group.descripcion]);
+  const [state, action, pending] = useActionState(editGroup, undefined);
+
+  return (
+    <form action={action} className="m-6">
+      <div className="flex flex-col gap-10">
+        <input className="hidden" name="id" id="id" defaultValue={group.id} />
+        <input
+          className="hidden"
+          name="changedFields"
+          id="changedFields"
+          readOnly
+          value={fieldsEdited?.toString() ?? "true,true"}
+        />
+        <div className="flex flex-col items-start justify-center gap-2">
+          <span className="font-semibold text-2xl">Name</span>
+          <input
+            className="border border-[#545454b7] w-full mb-1"
+            type="text"
+            id="group-name"
+            name="group-name"
+            onChange={(e) => {
+              setFields([e.target.value, fields[1]]);
+              setFieldsEdited([true, fieldsEdited[1]]);
+            }}
+            value={fields[0]}
+          />
+        </div>
+        <div className="flex flex-col items-start justify-center gap-2">
+          <span className="font-semibold text-2xl">Description</span>
+          <textarea
+            className="w-full border border-[#545454b7] mb-1"
+            name="group-description"
+            id="group-description"
+            onChange={(e) => {
+              setFields([fields[0], e.target.value]);
+              setFieldsEdited([fieldsEdited[0], true]);
+            }}
+            value={fields[1]}
+          ></textarea>
+        </div>
+      </div>
+      <div className="flex justify-end items-center">
+        <input
+          className="bg-blue-700 hover:bg-blue-600 rounded-md text-xl m-5 p-1"
+          type="submit"
+          id="submit"
+          name="submit"
+          disabled={pending}
+        />
+      </div>
+    </form>
+  );
+}

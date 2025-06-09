@@ -153,6 +153,7 @@ export function GroupHeader(group: Group) {
             </button>
           </form>
           <button
+            onClick={() => redirect(`/group/${group.id}/edit`)}
             className={`${
               role === "lider" ? "flex" : "hidden"
             } bg-[#1c1e21] shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 text-lg text-center rounded-sm font-semibold text-nowrap`}

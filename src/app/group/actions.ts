@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import {
+  deleteMember,
   findAllGroupsByName,
   getAllGroupMembers,
   getAllGroups,
@@ -173,6 +174,12 @@ export async function editGroup(_: any, formData: FormData) {
 
 export async function retrieveFilteredGroups(name: string) {
   const response = await findAllGroupsByName(name);
+
+  return response;
+}
+
+export async function kickMember(userId: number, groupId: number) {
+  const response = await deleteMember(userId, groupId);
 
   return response;
 }

@@ -213,3 +213,26 @@ export async function findAllGroupsByName(name: string) {
     };
   }
 }
+
+export async function deleteMember(userId: number, groupId: number) {
+  try {
+    const userCookie = await cookies();
+    const token = userCookie.get("auth_token")?.value;
+    const request = await fetch(`${api_URL}/${groupId}/kick/${userId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    });
+
+    return await request.json();
+  } catch (e) {
+    console.error(e);
+    return {
+      success: false,
+      status: 500,
+      message: "Internal Server Error",
+    };
+  }
+}

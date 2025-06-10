@@ -44,7 +44,8 @@ export async function reviewGetAll(pelicula_id: number) {
 export async function reviewPost(
   puntuacion: number,
   texto: string,
-  pelicula_id: number
+  pelicula_id: number,
+  grupo_id?: number
 ) {
   try {
     const userCookie = await cookies();
@@ -65,7 +66,7 @@ export async function reviewPost(
       body: JSON.stringify({
         puntuacion: Number(puntuacion),
         texto: String(texto),
-        grupoId: undefined,
+        grupoId: grupo_id,
       }),
     });
 

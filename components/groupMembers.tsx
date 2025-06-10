@@ -105,6 +105,7 @@ export function GroupMembersBody({
 }) {
   const [groupMembers, setMembers] = useState(members);
   const [selectedMember, setMember] = useState<number | undefined>(undefined);
+  const [selectedMemberName, setName] = useState<string | undefined>(undefined);
   const [kicked, setKicked] = useState(false);
   const [modalOpen, setOpen] = useState(false);
   const [token, setToken] = useState<string | undefined>(undefined);
@@ -125,6 +126,7 @@ export function GroupMembersBody({
       if (kicked && selectedMember) {
         await kickMember(selectedMember, groupId);
         setMember(undefined);
+        setName(undefined);
       }
     }
     kickSelected();
@@ -140,7 +142,7 @@ export function GroupMembersBody({
     <div className="grid grid-cols-1 grid-rows-2 gap-5">
       {modalOpen ? (
         <ModalConfirmation
-          message="Are you sure you want to kick this member?"
+          message={`Are you sure you want to kick ${selectedMemberName}?`}
           onAccept={() => {
             setOpen(false);
             document.body.style.overflow = "unset";
@@ -150,6 +152,7 @@ export function GroupMembersBody({
             setOpen(false);
             document.body.style.overflow = "unset";
             setMember(undefined);
+            setName(undefined);
           }}
         />
       ) : null}
@@ -166,8 +169,10 @@ export function GroupMembersBody({
               <div
                 key={index}
                 className="inline-flex flex-row items-center pt-3 gap-1 cursor-pointer"
-                onClick={() => setMember(member.id)}
-                onBlur={() => setMember(undefined)}
+                onClick={() => {
+                  setMember(member.id);
+                  setName(member.nombre);
+                }}
               >
                 <div className="flex flex-row justify-center items-center gap-2">
                   <Image
@@ -183,8 +188,8 @@ export function GroupMembersBody({
                 selectedMember === member.id &&
                 role &&
                 role === "lider" ? (
-                  <div className="flex flex-row items-center justify-center gap-1 bg-black shadow-md border border-[#545454b7] text-red-800 text-lg">
-                    <i className="fa fa-trash-o pl-1"></i>
+                  <div className="flex flex-row items-center justify-center gap-1 rounded-sm bg-black shadow-md border border-[#545454b7] text-gray-300 text-sm p-1">
+                    <i className="fa fa-trash-o pl-1 text-red-800"></i>
                     <button className="pr-1 cursor-pointer">Kick member</button>
                   </div>
                 ) : null}
@@ -205,9 +210,11 @@ export function GroupMembersBody({
             member.rol === "miembro" ? (
               <div
                 key={index}
-                className="inline-flex flex-row items-center pt-3 cursor-pointer"
-                onClick={() => setMember(member.id)}
-                onBlur={() => setMember(undefined)}
+                className="inline-flex flex-row items-center pt-3 cursor-pointer gap-1"
+                onClick={() => {
+                  setMember(member.id);
+                  setName(member.nombre);
+                }}
               >
                 <div className="flex flex-row justify-center items-center gap-2">
                   <Image
@@ -225,9 +232,9 @@ export function GroupMembersBody({
                 role === "lider" ? (
                   <div
                     onClick={handleModalOpen}
-                    className="flex flex-row items-center justify-center gap-1 bg-black shadow-md border border-[#545454b7] text-red-700 text-lg"
+                    className="flex flex-row items-center justify-center gap-1 rounded-sm bg-black shadow-md border border-[#545454b7] text-gray-300 text-sm p-1"
                   >
-                    <i className="fa fa-trash-o pl-1"></i>
+                    <i className="fa fa-trash-o pl-1 text-red-800"></i>
                     <span
                       className="pr-1 cursor-pointer"
                       onClick={handleModalOpen}

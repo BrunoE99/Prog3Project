@@ -1,14 +1,86 @@
 import { createReview } from "@/app/movie/[id]/actions";
-import { redirect, useParams } from "next/navigation";
+import { redirect } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
 
-export default function CreateReview({
-  title,
-  onSubmit,
-}: {
-  title: string;
+interface MovieComponents {
+  id: number;
+  nombre: string;
+  sinopsis: string;
+  genero: { id: number; nombre: string };
+  fechaEstreno: string;
+  duracion: number;
+  urlImagen: string;
+  calificacion: number;
+}
+
+interface User {
+  id: number;
+  username: string;
+  email: string;
+  password: string;
+  rol: string;
+  fechaCreacion: Date;
+  nivel: number;
+  urlImagen: string;
+  reviews: ReviewComponents[];
+  deletedAt: Date;
+  gruposRelacionados: GroupMembership[];
+  comentarios: Comment[];
+}
+
+interface Reunion {
+  id: number;
+  fecha: string;
+  link: string;
+  groupoId: number;
+  grupo: Group;
+}
+
+interface Group {
+  id: number;
+  nombre: string;
+  descripcion: string;
+  createdAt: string;
+  usuariosRelacionados: GroupMembership[];
+  reviews: ReviewComponents[];
+  reunionId: number;
+  reunion: Reunion;
+}
+
+interface GroupMembership {
+  id: number;
+  nombre: string;
+  urlImagen: string;
+  rol: "miembro" | "lider";
+}
+
+interface Comment {
+  id: number;
+  texto: string;
+  userId: number;
+  user: User;
+  reviewId: number;
+  review: ReviewComponents;
+}
+
+interface ReviewComponents {
+  id: number;
+  userId: number;
+  texto: string;
+  puntuacion: number;
+  user: User;
+  peliculaId: number;
+  pelicula: MovieComponents;
+  grupo: Group | undefined;
+  comentarios: Comment[];
+}
+
+export default function CreateReview(props: {
+  movie: MovieComponents;
   onSubmit: () => void;
+  groupId?: string;
 }) {
+  const { movie, onSubmit, groupId } = props;
   const scoreSelected = useRef(false);
   const [score, setScore] = useState("1");
   const wrappedCreateReview = async (_state: any, formData: FormData) => {
@@ -22,7 +94,6 @@ export default function CreateReview({
     wrappedCreateReview,
     undefined
   );
-  const params = useParams();
 
   useEffect(() => {
     if (state?.status === 401) {
@@ -85,7 +156,7 @@ export default function CreateReview({
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
       ></link>
-      <div className="text-2xl p-4 ml-2 font-semibold">{title}</div>
+      <div className="text-2xl p-4 ml-2 font-semibold">{movie.nombre}</div>
       <form
         name="create-review"
         action={action}
@@ -94,9 +165,18 @@ export default function CreateReview({
         <input
           type="text"
           className="hidden"
+          id="grupo_id"
+          name="grupo_id"
+          readOnly
+          defaultValue={groupId}
+        />
+        <input
+          type="text"
+          className="hidden"
           id="pelicula_id"
           name="pelicula_id"
-          defaultValue={params.id}
+          readOnly
+          defaultValue={movie.id}
         />
         <div className="flex flex-col gap-2">
           <span>Your score</span>

@@ -139,18 +139,21 @@ export function GroupHeader(group: Group) {
               className="hidden"
               name="grupoId"
               id="grupoId"
+              readOnly
               defaultValue={group.id}
             />
-            <button
-              disabled={pending}
-              type="submit"
-              name="submit"
-              className={`flex shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 ${
-                !role ? "before:content-['+']" : "before:content-['-']"
-              } before:pr-2 before:text-xl text-lg text-center rounded-sm font-semibold bg-blue-700 hover:bg-blue-800 transition-colors delay-75 duration-100 ease-in-out`}
-            >
-              {!role ? "Join" : "Leave"}
-            </button>
+            <div className="flex flex-col">
+              <button
+                disabled={pending}
+                type="submit"
+                name="submit"
+                className={`flex shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 ${
+                  !role ? "before:content-['+']" : "before:content-['-']"
+                } before:pr-2 before:text-xl text-lg text-center rounded-sm font-semibold bg-blue-700 hover:bg-blue-800 transition-colors delay-75 duration-100 ease-in-out`}
+              >
+                {!role ? "Join" : "Leave"}
+              </button>
+            </div>
           </form>
           <button
             onClick={() => redirect(`/group/${group.id}/edit`)}

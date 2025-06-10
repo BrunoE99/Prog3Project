@@ -46,11 +46,15 @@ export async function createReview(_: any, formData: FormData) {
   const score = formData.get("score") as string;
   const content = formData.get("content") as string;
   const pelicula_id = formData.get("pelicula_id") as string;
+  const grupoId = formData.get("grupo_id") as string;
+
+  console.log(grupoId);
 
   const validateFields = reviewFormSchema.safeParse({
     puntuacion: score,
     texto: content,
     pelicula_id: pelicula_id,
+    grupo_id: grupoId ? grupoId : undefined,
   });
 
   if (!validateFields.success) {
@@ -62,7 +66,8 @@ export async function createReview(_: any, formData: FormData) {
   const response = await reviewPost(
     Number(score),
     content,
-    Number(pelicula_id)
+    Number(pelicula_id),
+    grupoId ? Number(grupoId) : undefined
   );
 
   if (response.status === 201) {

@@ -81,10 +81,10 @@ interface ReviewComponents {
 
 export function MovieReviewsSection({
   reviews,
-  title,
+  movie,
 }: {
   reviews: ReviewComponents[];
-  title: string;
+  movie: MovieComponents;
 }) {
   const [isSidebarOpen, setOpen] = useState(false);
   const [loadAllReviews, setMode] = useState(false);
@@ -171,7 +171,11 @@ export function MovieReviewsSection({
         >
           &times;
         </button>
-        <CreateReview title={title} onSubmit={() => setSubmit(true)} />
+        <CreateReview
+          movie={movie}
+          onSubmit={() => setSubmit(true)}
+          groupId={undefined}
+        />
       </div>
       <div
         className={`${

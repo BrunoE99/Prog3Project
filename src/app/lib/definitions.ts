@@ -25,6 +25,11 @@ export const reviewFormSchema = z.object({
     .number()
     .int({ message: "Pelicula ID must be an integer" })
     .positive({ message: "Pelicula ID must be a positive number" }),
+  grupo_id: z
+    .number()
+    .int({ message: "Grupo ID must be an integer" })
+    .positive({ message: "Grupo ID must be a positive number" })
+    .optional(),
 });
 
 export const SignupFormSchema = z.object({

@@ -77,15 +77,24 @@ interface ReviewComponents {
   comentarios: Comment[];
 }
 
-export function GroupEditHeader({ id }: { id: number }) {
+export function GroupEditHeader({
+  id,
+  authorized,
+}: {
+  id: number;
+  authorized: boolean;
+}) {
   return (
     <div className="flex flex-row gap-3 m-6 items-center">
-      <span
-        className="text-4xl font-semibold opacity-60 hover:opacity-100 cursor-pointer"
+      <button
+        disabled={!authorized}
+        className={`text-4xl font-semibold opacity-60  ${
+          authorized ? "cursor-pointer hover:opacity-100" : ""
+        }`}
         onClick={() => redirect(`/group/${id}`)}
       >
         &lt;
-      </span>
+      </button>
       <h1 className="text-4xl font-semibold">Edit Group</h1>
     </div>
   );

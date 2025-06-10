@@ -88,12 +88,12 @@ export default async function GroupEdit({
 
   return (
     <div className={`min-h-screen`}>
-      <GroupEditHeader id={group.id} />
-      <div
-        className={`${
-          userRole && userRole === "lider" ? "" : "blur-sm overflow-y-hidden"
-        }`}
-      >
+      <div className={`${userRole && userRole === "lider" ? "" : "blur-sm"}`}>
+        <GroupEditHeader
+          id={group.id}
+          authorized={userRole && userRole === "lider"}
+        />
+
         <GroupEditForm
           group={group}
           authorized={userRole && userRole === "lider"}

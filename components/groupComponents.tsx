@@ -89,12 +89,12 @@ interface ReviewComponents {
 export function GroupPreviewCard(group: Group) {
   return (
     <div
-      className="rounded-sm cursor-pointer bg-[#003566] shadow-lg"
+      className="rounded-sm cursor-pointer bg-[#003566] shadow-lg p-3 w-full"
       onClick={() => redirect(`group/${group.id}`)}
     >
       <div className="flex flex-col">
         <span className="text-2xl">{group.nombre}</span>
-        <span className="text-base">{group.descripcion}</span>
+        <span className="text-base text-ellipsis">{group.descripcion}</span>
       </div>
     </div>
   );

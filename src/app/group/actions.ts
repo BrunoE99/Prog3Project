@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import {
+  findAllGroupsByName,
   getAllGroupMembers,
   getAllGroups,
   getGroupById,
@@ -111,7 +112,7 @@ export async function scheduleMeeting(_: any, formData: FormData) {
   if (response.status === 201) {
     return {
       success: true,
-      message: response.message || "Review created successfully",
+      message: response.message || "Meeting created successfully",
     };
   } else {
     return {
@@ -139,14 +140,11 @@ export async function editGroup(_: any, formData: FormData) {
   const descripcion = formData.get("group-description") as string;
   const editedFields = formData.get("changedFields") as string;
   const [nameChanged, descriptionChanged] = editedFields.split(",");
-  console.log(formData);
 
   const validateFields = groupEditSchema.safeParse({
     nombre: nameChanged === "true" ? nombre : undefined,
     descripcion: descriptionChanged === "true" ? descripcion : undefined,
   });
-
-  console.log(validateFields);
 
   if (!validateFields.success) {
     return {
@@ -163,7 +161,7 @@ export async function editGroup(_: any, formData: FormData) {
   if (response.status === 201) {
     return {
       success: true,
-      message: response.message || "Review created successfully",
+      message: response.message || "Group updated created successfully",
     };
   } else {
     return {
@@ -171,4 +169,10 @@ export async function editGroup(_: any, formData: FormData) {
       error: response.message || "An unexpected error occurred",
     };
   }
+}
+
+export async function retrieveFilteredGroups(name: string) {
+  const response = await findAllGroupsByName(name);
+
+  return response;
 }

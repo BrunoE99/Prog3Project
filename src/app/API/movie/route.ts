@@ -23,7 +23,7 @@ export async function getAllMoviesByName(name: string) {
       },
     });
 
-    return request.json();
+    return await request.json();
   } catch (e) {
     console.error(e);
     return {

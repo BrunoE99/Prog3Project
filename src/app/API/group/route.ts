@@ -172,8 +172,6 @@ export async function groupUpdate(
     const answer = request;
     const answerJson = await request.json();
 
-    console.log(answer);
-
     if (answer.status == 201) {
       return {
         status: answer.status,
@@ -191,6 +189,27 @@ export async function groupUpdate(
       success: false,
       status: 500,
       message: "Internal Server Error",
+    };
+  }
+}
+
+export async function findAllGroupsByName(name: string) {
+  try {
+    const params = new URLSearchParams({ q: name });
+    const request = await fetch(`${api_URL}/search/name?${params}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return await request.json();
+  } catch (e) {
+    console.error(e);
+    return {
+      success: false,
+      status: 500,
+      error: "An unexpected error ocurred",
     };
   }
 }

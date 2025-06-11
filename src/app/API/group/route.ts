@@ -236,3 +236,48 @@ export async function deleteMember(userId: number, groupId: number) {
     };
   }
 }
+
+export async function groupPost(nombre: string, descripcion?: string) {
+  try {
+    const userCookie = await cookies();
+    const token = userCookie.get("auth_token")?.value;
+
+    const body: Record<string, string> = {};
+    body.nombre = nombre;
+    if (descripcion !== undefined) body.descripcion = descripcion;
+
+    const request = await fetch(`${api_URL}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        nombre: nombre,
+        descripcion: descripcion,
+      }),
+    });
+
+    const answer = request;
+    const answerJson = await request.json();
+
+    if (answer.status == 201) {
+      return {
+        status: answer.status,
+        body: answerJson,
+      };
+    } else {
+      return {
+        status: answer.status,
+        message: answerJson.message || "An unexpected error ocurred",
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      status: 500,
+      message: "Internal Server Error",
+    };
+  }
+}

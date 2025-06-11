@@ -11,9 +11,11 @@ import {
   getUserInGroup,
   groupJoinPost,
   groupLeavePost,
+  groupPost,
   groupUpdate,
 } from "../API/group/route";
 import {
+  groupCreateSchema,
   groupEditSchema,
   groupJoinSchema,
   MeetingFormSchema,
@@ -192,4 +194,38 @@ export async function findAllGroupReviews(groupId: number, page: number = 0) {
   }
 
   return [];
+}
+
+export async function createGroup(_: any, formData: FormData) {
+  const nombre = formData.get("group-name") as string;
+  const descripcion = formData.get("group-description") as string;
+  const descriptionGiven = formData.get("descriptionGiven") as string;
+
+  const validateFields = groupCreateSchema.safeParse({
+    nombre: nombre,
+    descripcion: descriptionGiven === "true" ? descripcion : undefined,
+  });
+
+  if (!validateFields.success) {
+    return {
+      error: validateFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const response = await groupPost(
+    nombre,
+    descriptionGiven === "true" ? descripcion : undefined
+  );
+
+  if (response.status === 201) {
+    return {
+      success: true,
+      message: response.message || "Group updated created successfully",
+    };
+  } else {
+    return {
+      status: response.status,
+      error: response.message || "An unexpected error occurred",
+    };
+  }
 }

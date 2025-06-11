@@ -130,6 +130,7 @@ export function GroupHeader(group: Group) {
   const wrappedJoinLeave = (_state: any, formData: FormData) => {
     if (token) {
       joinLeaveFunc(_state, formData);
+      if (role) redirect("/group");
     } else {
       redirect("/login");
     }

@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { eraseComment } from "@/app/API/comment/actions";
+import { useEffect, useState } from "react";
 
 interface MovieComponents {
   id: number;
@@ -76,23 +77,56 @@ interface ReviewComponents {
 export default function Comment({
   comment,
   onDelete,
+  authorized,
 }: {
   comment: Comment;
   onDelete: () => void;
+  authorized: boolean;
 }) {
   const [deleteOpen, setOpen] = useState(false);
+  const [deleteClicked, setClicked] = useState(false);
+  useEffect(() => {
+    async function deleteThis() {
+      if (deleteClicked) {
+        await eraseComment(comment.id);
+        onDelete();
+      }
+    }
+    deleteThis();
+  }, [deleteClicked]);
+
   return (
     <div className="flex flex-col bg-[#001d3d] justify-start items-center">
       <div className="flex flex-row justify-between items-center">
-        <span>{comment.user.username}</span>
-        <div className="inline-block cursor-pointer">
-          <button>Delete</button>
-          <div className="bg-white h-0.5 w-0.5 rounded-full mt-1"></div>
-          <div className="bg-white h-0.5 w-0.5 rounded-full mt-1"></div>
-          <div className="bg-white h-0.5 w-0.5 rounded-full mt-1"></div>
-        </div>
+        <span className="text-2xl">{comment.user.username}</span>
+        {authorized ? (
+          <div className="flex flex-row justify-end items-center">
+            {deleteOpen && authorized ? (
+              <div
+                className="flex flex-row items-center justify-center gap-1 rounded-sm bg-black shadow-md border border-[#545454b7] text-gray-300 text-sm p-1"
+                onClick={() => {
+                  setClicked(true);
+                  onDelete();
+                }}
+              >
+                <i className="fa fa-trash-o pl-1 text-red-800"></i>
+                <button className="pr-1 cursor-pointer">Delete</button>
+              </div>
+            ) : null}
+            <div
+              className="inline-block cursor-pointer"
+              onClick={() => {
+                setOpen((prev) => !prev);
+              }}
+            >
+              <div className="bg-white h-0.5 w-0.5 rounded-full mt-1"></div>
+              <div className="bg-white h-0.5 w-0.5 rounded-full mt-1"></div>
+              <div className="bg-white h-0.5 w-0.5 rounded-full mt-1"></div>
+            </div>
+          </div>
+        ) : null}
       </div>
-      <p>{comment.texto}</p>
+      <p className="text-lg">{comment.texto}</p>
     </div>
   );
 }

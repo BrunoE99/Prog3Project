@@ -3,6 +3,8 @@
 import { findAllGroups, retrieveFilteredGroups } from "./actions";
 import { GroupPreviewCard } from "../../../components/groupComponents";
 import { useCallback, useEffect, useState } from "react";
+import { redirect } from "next/navigation";
+import { getAuthToken } from "../movie/[id]/actions";
 
 interface MovieComponents {
   id: number;
@@ -81,7 +83,12 @@ export default function AllGroups() {
   const [hasSearched, setSearch] = useState(false);
   const [searchString, setSearchString] = useState("");
   const [filteredGroups, setGroups] = useState<Group[]>([]);
+  const [token, setToken] = useState<string | undefined>(undefined);
   useEffect(() => {
+    (async () => {
+      const t = await getAuthToken();
+      setToken(t);
+    })();
     async function fetchGroups() {
       if (searchString && searchString !== "" && hasSearched) {
         const data = await retrieveFilteredGroups(searchString);
@@ -116,7 +123,21 @@ export default function AllGroups() {
 
   return (
     <div className="flex flex-col gap-5 bg-[#001d3d] min-h-screen p-6">
-      <span className="text-4xl">Browse Groups</span>
+      <div className="flex flex-row justify-between items-center">
+        <span className="text-4xl">Browse Groups</span>
+        <button
+          onClick={() => {
+            if (!token) {
+              redirect("/login");
+            } else {
+              redirect("/group/create");
+            }
+          }}
+          className="font-semibold cursor-pointer before:content-['+'] before:mr-1 before:text-[#f5c518] before:text-xl transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
+        >
+          Create Group
+        </button>
+      </div>
       <div className="flex flex-row justify-between">
         <div className="flex flex-col gap-4 justify-center items-start w-2/5">
           {filteredGroups.length > 0

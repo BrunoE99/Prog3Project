@@ -146,7 +146,6 @@ export default function CreateReview(props: {
       });
     });
   });
-
   return (
     <div
       id="review-sidebar"

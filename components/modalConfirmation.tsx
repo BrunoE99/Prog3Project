@@ -10,7 +10,7 @@ export function ModalConfirmation({
   return (
     <div className="fixed">
       <div className="fixed inset-0 bg-black opacity-60 z-1"></div>
-      <div className="fixed top-1/3 left-1/3 right-1/3 flex justify-center items-center rounded-lg bg-[#001d3d] shadow-lg z-2 w-auto">
+      <div className="fixed top-1/3 left-1/3 right-1/3 flex justify-center items-center rounded-lg bg-[#001d3d] shadow-lg z-2 pt-5 pb-5">
         <div className="flex flex-col h-full pt-6 pb-6 gap-5">
           <div>
             <span className="font-semibold text-lg text-wrap">{message}</span>
@@ -18,13 +18,13 @@ export function ModalConfirmation({
           <div className="flex flex-row justify-between items-center">
             <button
               onClick={onAccept}
-              className="rounded-lg shadow-md bg-green-800 p-1 pl-2 pr-2 cursor-pointer"
+              className="rounded-lg shadow-md bg-green-800 p-2 pl-3 pr-3 cursor-pointer"
             >
               Yes
             </button>
             <button
               onClick={onCancel}
-              className="rounded-lg shadow-md bg-red-800 p-1 pl-2 pr-2 cursor-pointer"
+              className="rounded-lg shadow-md bg-red-800 p-2 pl-3 pr-3 cursor-pointer"
             >
               No
             </button>

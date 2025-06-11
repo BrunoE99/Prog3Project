@@ -9,6 +9,7 @@ import {
 import NotFoundPage from "../../../../components/notFoundPage";
 import {
   findAllGroupMembers,
+  findAllGroupReviews,
   findGroupById,
   findGroupMemberCount,
   findMeeting,
@@ -97,6 +98,7 @@ export default async function Group({ params }: { params: { id: string } }) {
   );
   const userRole = await findRoleInGroup(Number(id));
   const meeting = userRole ? await findMeeting() : undefined;
+  const reviews = await findAllGroupReviews(Number(id));
 
   return (
     <div className="min-h-screen bg-[#001d3d] w-full overflow-x-hidden">
@@ -108,7 +110,7 @@ export default async function Group({ params }: { params: { id: string } }) {
               meeting={meeting && meeting.statusCode ? undefined : meeting}
               role={userRole}
             />
-            <GroupReviews reviews={group.reviews} />
+            <GroupReviews reviews={reviews} userRole={userRole} />
             <GroupMembersPreview
               members={groupMembers}
               memberCount={groupMemberCount}

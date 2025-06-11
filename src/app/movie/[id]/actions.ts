@@ -27,6 +27,9 @@ export async function getMovieById(pelicula_id: number) {
 export async function getFeaturedReviews(pelicula_id: number) {
   const allReviews = await reviewGetAllPaged(pelicula_id);
   const featuredReviews = [];
+  if (!allReviews.body) {
+    return [];
+  }
   const numberOfReviews: number =
     2 > allReviews.body.length ? allReviews.body.length : 2;
   for (let i = 0; i < numberOfReviews; i++) {
@@ -38,8 +41,11 @@ export async function getFeaturedReviews(pelicula_id: number) {
 
 export async function getAllReviewsByMovie(pelicula_id: number, page: number) {
   const response = await reviewGetAllPaged(pelicula_id, page);
+  if (response.body) {
+    return response.body;
+  }
 
-  return response.body;
+  return [];
 }
 
 export async function createReview(_: any, formData: FormData) {
@@ -52,7 +58,7 @@ export async function createReview(_: any, formData: FormData) {
     puntuacion: score,
     texto: content,
     pelicula_id: pelicula_id,
-    grupo_id: grupoId ? grupoId : undefined,
+    grupo_id: grupoId ? Number(grupoId) : undefined,
   });
 
   if (!validateFields.success) {

@@ -126,7 +126,6 @@ export function MovieReviewsSection({
         setModeChange(false);
       }
       if (loadAllReviews) {
-        console.log("LOADING EVERYTHING");
         const previousReviews = reviewsState;
         getAllReviewsByMovie(Number(params.id), pageNumber - 1).then(
           (newReviews) => {
@@ -143,7 +142,6 @@ export function MovieReviewsSection({
           }
         );
       } else {
-        console.log("LOADING FEATURED");
         getFeaturedReviews(Number(params.id)).then((newReviews) => {
           setReviews(newReviews);
           if (isSidebarOpen) {
@@ -297,10 +295,9 @@ export function MovieReviewsSection({
           onClick={() => {
             // Cambiar esto a cuando el response.next == null asi no permitimos pasar a paginas pasadas del limite, usando disabled = {}
             // lo mismo con cursor-pointer a cursor-default
-            if (pageNumber >= 1) {
-              setPageNumber(pageNumber + 1);
-              setPaging(true);
-            }
+
+            setPageNumber(pageNumber + 1);
+            setPaging(true);
           }}
         >
           &gt;

@@ -113,7 +113,7 @@ export function GroupEditForm({
 
   return (
     <form action={action} className="m-6">
-      <div className="flex flex-col gap-10">
+      <div className="flex flex-col gap-10 justify-center">
         <input className="hidden" name="id" id="id" defaultValue={group.id} />
         <input
           className="hidden"
@@ -126,7 +126,7 @@ export function GroupEditForm({
           <span className="font-semibold text-2xl">Name</span>
           <input
             disabled={!authorized}
-            className="border border-[#545454b7] w-full mb-1"
+            className="border border-[#545454b7] w-full mb-1 p-1"
             type="text"
             id="group-name"
             name="group-name"
@@ -141,7 +141,7 @@ export function GroupEditForm({
           <span className="font-semibold text-2xl">Description</span>
           <textarea
             disabled={!authorized}
-            className="w-full border border-[#545454b7] mb-1"
+            className="w-full border border-[#545454b7] mb-1 p-1"
             name="group-description"
             id="group-description"
             onChange={(e) => {

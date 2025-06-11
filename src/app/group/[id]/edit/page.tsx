@@ -87,7 +87,7 @@ export default async function GroupEdit({
   const userRole = await findRoleInGroup(Number(id));
 
   return (
-    <div className={`min-h-screen`}>
+    <div className={`min-h-screen bg-[#001d3d]`}>
       <div className={`${userRole && userRole === "lider" ? "" : "blur-sm"}`}>
         <GroupEditHeader
           id={group.id}

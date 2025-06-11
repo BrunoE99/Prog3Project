@@ -1,5 +1,4 @@
-import { deleteMeeting } from "@/app/group/actions";
-import Button from "./button";
+import { useState } from "react";
 
 interface MovieComponents {
   id: number;
@@ -74,42 +73,26 @@ interface ReviewComponents {
   comentarios: Comment[];
 }
 
-export default function MeetingCard({
-  meeting,
-  role,
+export default function Comment({
+  comment,
   onDelete,
 }: {
-  meeting: Reunion;
-  role: string;
+  comment: Comment;
   onDelete: () => void;
 }) {
-  const meetingDate = meeting.fecha.split("T")[0].split("-");
-
-  const meetingInProgress = new Date(meeting.fecha).getTime() <= Date.now();
+  const [deleteOpen, setOpen] = useState(false);
   return (
-    <div
-      className={`flex flex-col justify-between items-center font-semibold rounded-md m-3 w-full gap-4`}
-    >
-      <span className="tex-2xl">
-        {meetingInProgress
-          ? "NOW"
-          : `${meetingDate[2]}/${meetingDate[1]}/${meetingDate[0]}`}
-      </span>
-      <div className="flex flex-row gap-2">
-        <Button
-          text="Go to Meeting"
-          onClick={() => window.location.replace(meeting.link)}
-        />
-        <div className={role && role === "lider" ? "" : "hidden"}>
-          <Button
-            text="Delete"
-            onClick={async () => {
-              await deleteMeeting();
-              onDelete();
-            }}
-          />
+    <div className="flex flex-col bg-[#001d3d] justify-start items-center">
+      <div className="flex flex-row justify-between items-center">
+        <span>{comment.user.username}</span>
+        <div className="inline-block cursor-pointer">
+          <button>Delete</button>
+          <div className="bg-white h-0.5 w-0.5 rounded-full mt-1"></div>
+          <div className="bg-white h-0.5 w-0.5 rounded-full mt-1"></div>
+          <div className="bg-white h-0.5 w-0.5 rounded-full mt-1"></div>
         </div>
       </div>
+      <p>{comment.texto}</p>
     </div>
   );
 }

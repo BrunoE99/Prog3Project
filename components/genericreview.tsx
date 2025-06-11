@@ -75,7 +75,7 @@ interface ReviewComponents {
 
 export default function MovieReview(review: ReviewComponents) {
   return (
-    <div className="flex flex-col gap-3 p-5 bg-[#003566] px-2 py-2 m-3 rounded-sm shadow-lg">
+    <div className="flex flex-col gap-3 p-5 bg-[#003566] px-2 py-2 m-3 rounded-sm shadow-lg w-full">
       <div className="flex flex-row gap-2">
         <Image
           className="rounded-full"

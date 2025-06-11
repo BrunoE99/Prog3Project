@@ -99,3 +99,45 @@ export async function reviewPost(
     };
   }
 }
+
+export async function groupReviewsGetAllPaged(
+  grupoId: number,
+  page: number = 0
+) {
+  try {
+    const params = new URLSearchParams({ page: String(page) });
+    const request = await fetch(`${api_URL}/grupo/${grupoId}?${params}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const response = request;
+    const responseJson = await request.json();
+
+    if (response.status === 200) {
+      return {
+        status: response.status,
+        body: responseJson,
+      };
+    } else if (response.status === 400) {
+      return {
+        status: response.status,
+        message: responseJson.message || "Bad request",
+      };
+    } else {
+      return {
+        status: response.status,
+        message: "An unexpected error ocurred",
+      };
+    }
+  } catch (e) {
+    console.error(e);
+    return {
+      success: false,
+      status: 500,
+      message: "Internal server error",
+    };
+  }
+}

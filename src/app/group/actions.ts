@@ -19,6 +19,7 @@ import {
   MeetingFormSchema,
 } from "../lib/definitions";
 import { meetingDelete, meetingGet, meetingPost } from "../API/meeting/route";
+import { groupReviewsGetAllPaged } from "../API/reviews/route";
 
 export async function findAllGroups() {
   const response = await getAllGroups();
@@ -184,8 +185,11 @@ export async function kickMember(userId: number, groupId: number) {
   return response;
 }
 
-export async function findAllGroupReviews(groupId: number) {
-  const group = await findGroupById(groupId);
+export async function findAllGroupReviews(groupId: number, page: number = 0) {
+  const response = await groupReviewsGetAllPaged(groupId, page);
+  if (response.body) {
+    return response.body;
+  }
 
-  return group.reviews;
+  return [];
 }

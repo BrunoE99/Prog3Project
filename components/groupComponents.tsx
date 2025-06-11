@@ -15,6 +15,7 @@ import Image from "next/image";
 import ScheduleMeeting from "./scheduleMeeting";
 import CreateReview from "./createreview";
 import { MovieSelectModal } from "./movieSelectModal";
+import { getAuthToken } from "@/app/movie/[id]/actions";
 
 interface MovieComponents {
   id: number;
@@ -106,12 +107,17 @@ export function GroupPreviewCard(group: Group) {
 export function GroupHeader(group: Group) {
   let creationDate: string[] = [];
   const [role, setRole] = useState(undefined);
+  const [token, setToken] = useState<string | undefined>(undefined);
 
   if (group) {
     creationDate = group.createdAt.split("T")[0].split("-");
   }
 
   useEffect(() => {
+    (async () => {
+      const t = await getAuthToken();
+      setToken(t);
+    })();
     async function getRole() {
       const rol = await findRoleInGroup(group.id);
       setRole(rol);
@@ -121,7 +127,15 @@ export function GroupHeader(group: Group) {
 
   const joinLeaveFunc = role ? leaveGroup : joinGroup;
 
-  const [state, action, pending] = useActionState(joinLeaveFunc, undefined);
+  const wrappedJoinLeave = (_state: any, formData: FormData) => {
+    if (token) {
+      joinLeaveFunc(_state, formData);
+    } else {
+      redirect("/login");
+    }
+  };
+
+  const [state, action, pending] = useActionState(wrappedJoinLeave, undefined);
 
   return (
     <div className="flex flex-col justify-between items-center pt-6">
@@ -168,7 +182,7 @@ export function GroupHeader(group: Group) {
           </button>
         </div>
       </div>
-      <div className="w-full mt-1 border-1 border-solid border-[#65686c] rounded-sm shadow-2xl z-2"></div>
+      <div className="w-full mt-1 border-1 border-solid border-[#65686c] rounded-sm shadow-2xl"></div>
     </div>
   );
 }
@@ -236,6 +250,7 @@ export function GroupMeetingColumn(props: { meeting?: Reunion; role: string }) {
         >
           {meeting !== undefined ? (
             <MeetingCard
+              role={role}
               meeting={meeting}
               onDelete={() => setMeeting(undefined)}
             />
@@ -248,7 +263,13 @@ export function GroupMeetingColumn(props: { meeting?: Reunion; role: string }) {
   );
 }
 
-export function GroupReviews({ reviews }: { reviews: ReviewComponents[] }) {
+export function GroupReviews({
+  reviews,
+  userRole,
+}: {
+  reviews: ReviewComponents[];
+  userRole: string | undefined;
+}) {
   const [groupReviews, setReviews] = useState(reviews);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -256,14 +277,16 @@ export function GroupReviews({ reviews }: { reviews: ReviewComponents[] }) {
     undefined
   );
   const [submitted, setSubmit] = useState(false);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageChanged, setPaging] = useState(false);
   const params = useParams();
   const groupId: string = String(params.id);
   const handleSidebarToggle = () => {
     if (isSidebarOpen) {
-      setSidebarOpen((prev) => !prev);
       setMovie(undefined);
-      document.body.style.overflow = isSidebarOpen ? "unset" : "hidden";
     }
+    setSidebarOpen((prev) => !prev);
+    document.body.style.overflow = isSidebarOpen ? "unset" : "hidden";
   };
   const handleModalToggle = () => {
     setModalOpen((prev) => !prev);
@@ -271,13 +294,32 @@ export function GroupReviews({ reviews }: { reviews: ReviewComponents[] }) {
   };
 
   useEffect(() => {
-    if (submitted) {
-      findAllGroupReviews(Number(params.id)).then((newReviews) => {
-        setReviews(newReviews);
-        handleSidebarToggle();
-      });
+    if (submitted || pageChanged) {
+      if (submitted) {
+        setSubmit(false);
+      }
+      if (pageChanged) {
+        setPaging(false);
+      }
+      const previousReviews = groupReviews;
+      findAllGroupReviews(Number(params.id), pageNumber - 1).then(
+        (newReviews) => {
+          if (!newReviews && pageNumber > 1) {
+            setPageNumber(pageNumber - 1);
+            newReviews = previousReviews;
+          } else if (!newReviews && pageNumber === 1) {
+            newReviews = [];
+          }
+          setReviews(newReviews);
+          if (isSidebarOpen) {
+            handleSidebarToggle();
+          }
+        }
+      );
+      setSubmit(false);
     }
-  }, [submitted]);
+  }, [submitted, pageChanged]);
+
   return (
     <div className="flex flex-col col-span-2 items-center h-full pt-4 gap-3">
       {modalOpen ? (
@@ -297,7 +339,7 @@ export function GroupReviews({ reviews }: { reviews: ReviewComponents[] }) {
         <div>
           <div className="flex">
             <button
-              className="fixed top-3 right-3 text-4xl mr-4 mt-0.5 z-2 justify-center dark:text-white text-black cursor-pointer rounded-full hover:bg-[#bdbcb968] h-10 w-10 transition-all delay-75 duration-100 ease-in-out"
+              className="fixed top-3 right-3 text-4xl mr-4 mt-0.5 z-3 justify-center dark:text-white text-black cursor-pointer rounded-full hover:bg-[#bdbcb968] h-10 w-10 transition-all delay-75 duration-100 ease-in-out"
               onClick={() => handleSidebarToggle()}
             >
               &times;
@@ -308,26 +350,58 @@ export function GroupReviews({ reviews }: { reviews: ReviewComponents[] }) {
               groupId={groupId}
             />
           </div>
-          <div className="$fixed inset-0 bg-black opacity-60"></div>
+          <div className="fixed inset-0 bg-black opacity-60"></div>
         </div>
       ) : null}
-      <div className="flex flex-row justify-between items-center w-full pl-5 pr-5">
+      <div
+        className={`flex flex-row ${
+          userRole && userRole === "lider"
+            ? "justify-between"
+            : "justify-center"
+        } items-center w-full pl-5 pr-5`}
+      >
         <h2 className="text-4xl">Reviews</h2>
         <button
           onClick={() => handleModalToggle()}
-          className="font-semibold cursor-pointer before:content-['+'] before:mr-1 before:text-[#f5c518] before:text-xl transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
+          className={`${
+            userRole && userRole === "lider" ? "" : "hidden"
+          } font-semibold cursor-pointer before:content-['+'] before:mr-1 before:text-[#f5c518] before:text-xl transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]`}
         >
           Write Review
         </button>
       </div>
-      <div className="flex flex-col justify-center items-center gap-2">
-        {groupReviews ? (
+      <div className="flex flex-col justify-center items-center gap-2 w-full">
+        {groupReviews && groupReviews.length > 0 ? (
           groupReviews.map((review, index) => (
             <MovieReview key={index} {...review} />
           ))
         ) : (
           <span className="mt-5">This group has no reviews yet.</span>
         )}
+      </div>
+      <div className={`flex flex-row p-5 items-center`}>
+        <button
+          disabled={pageNumber <= 1}
+          className={`pr-2 text-2xl ${
+            pageNumber <= 1 ? "cursor-default" : "cursor-pointer"
+          }`}
+          onClick={() => {
+            setPageNumber(pageNumber - 1);
+            setPaging(true);
+          }}
+        >
+          &lt;
+        </button>
+        <span className="text-sm">Page {pageNumber}</span>
+        <button
+          className="pl-2 text-2xl cursor-pointer"
+          onClick={() => {
+            setPageNumber(pageNumber + 1);
+            setPaging(true);
+          }}
+        >
+          &gt;
+        </button>
       </div>
     </div>
   );

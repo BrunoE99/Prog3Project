@@ -1,5 +1,6 @@
 import { retrieveFilteredMovies } from "@/app/movie/[id]/actions";
 import { useCallback, useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 interface MovieComponents {
   id: number;
@@ -91,7 +92,9 @@ export function MovieSelectModal({
   const [searchString, setSearchString] = useState("");
   const [filteredMovies, setMovies] = useState<MovieComponents[]>([]);
   const blurTimeout = useRef<NodeJS.Timeout | null>(null);
-  const selectedMovie = useRef<MovieComponents | undefined>(undefined);
+  const [selectedMovie, setMovie] = useState<MovieComponents | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     async function fetchMovies() {
@@ -127,13 +130,81 @@ export function MovieSelectModal({
           <div>
             <span className="font-semibold text-lg text-wrap">{message}</span>
           </div>
-          <div></div>
+          <div className="flex flex-row items-center justify-center relative w-1/2">
+            <link
+              rel="stylesheet"
+              href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+            ></link>
+            {!selectedMovie ? (
+              <i className="fa fa-search absolute left-4 top-1/2 -translate-y-1/2"></i>
+            ) : null}
+            {selectedMovie ? (
+              <Image
+                src={selectedMovie.urlImagen}
+                alt="Movie's poster"
+                width={36}
+                height={36}
+                className="absolute left-2 top-1/2 -translate-y-1/2 rounded"
+              />
+            ) : null}
+            <input
+              autoComplete="off"
+              type="search"
+              id="search"
+              className={`rounded-sm border border-[#545454b7] w-full bg-[#041b3db8] ${
+                selectedMovie ? "pl-12 py-5" : "pl-10 py-2"
+              }`}
+              placeholder="Search..."
+              onChange={changeHandler}
+              value={searchString}
+              onFocus={() => {
+                if (blurTimeout.current) {
+                  clearTimeout(blurTimeout.current);
+                }
+              }}
+              onBlur={() => {
+                blurTimeout.current = setTimeout(() => setSearch(false), 100);
+              }}
+            />
+
+            <div
+              id="searchResults"
+              className={`${
+                hasSearched ? "flex flex-col" : "hidden"
+              } absolute top-11 rounded-none bg-[#0b244a] w-full shadow-lg`}
+            >
+              {filteredMovies.map((movie, index) => (
+                <div
+                  key={index}
+                  className="flex flex-row gap-1 cursor-pointer"
+                  onClick={() => {
+                    setSearchString(movie.nombre);
+                    setMovie(movie);
+                    setSearch(false);
+                  }}
+                >
+                  <Image
+                    src={movie.urlImagen}
+                    alt="Movie's poster"
+                    width={50}
+                    height={50}
+                  />
+                  <div className="flex flex-col gap-1">
+                    <span className="text-lg">{movie.nombre}</span>
+                    <span className="text-xs">
+                      {movie.fechaEstreno?.split("-")[0] || "Unknown"}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
           <div className="flex flex-row justify-between items-center">
             <button
-              disabled={!selectedMovie.current}
-              onClick={() => onConfirm(selectedMovie.current!)}
+              disabled={!selectedMovie}
+              onClick={() => onConfirm(selectedMovie!)}
               className={`rounded-lg shadow-md p-1 pl-2 pr-2 ${
-                selectedMovie.current
+                !selectedMovie
                   ? "bg-gray-600 text-black"
                   : "bg-green-800 hover:bg-green-700 cursor-pointer"
               }`}

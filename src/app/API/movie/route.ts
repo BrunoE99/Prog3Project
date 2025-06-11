@@ -52,7 +52,7 @@ export async function getAllMovies(pagination: number) {
     return {
       success: false,
       status: 500,
-      message: "Internal server error",
+      error: "An unexpected error ocurred",
     };
   }
 }

@@ -153,11 +153,9 @@ export default function Navbar({
             About
           </Link>
         </div>
-
         <div>
           <SearchBar />
         </div>
-
         {isLoggedIn ? (
           <div className="flex">
             <form action={logOut}>

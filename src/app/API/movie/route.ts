@@ -1,82 +1,42 @@
 import "server-only";
 
-interface MovieComponents {
-  id: number;
-  nombre: string;
-  sinopsis: string;
-  genero: { id: number; nombre: string };
-  fechaEstreno: string;
-  duracion: number;
-  urlImagen: string;
-  calificacion: number;
-}
-
 const api_URL = "http:localhost:3000/api/peliculas";
 
-export async function getAllMoviesByName(name: string) {
+
+export async function getAllMovies(pagination: number) {
+  const params = new URLSearchParams ({
+    page: pagination.toString(),
+  });
+
   try {
-    const params = new URLSearchParams({ q: name });
-    const request = await fetch(`${api_URL}/search/name?${params}`, {
+    const request = await fetch(`${api_URL}?${params.toString()}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
 
-    return await request.json();
+    const response = request;
+    const responseJson = await request.json();
+
+    if (response.status === 200) {
+      return responseJson;
+    } else if (response.status === 400) {
+      return {
+        status: response.status,
+        message: responseJson.message || "Bad request",
+      };
+    }
   } catch (e) {
     console.error(e);
     return {
       success: false,
       status: 500,
-      error: "An unexpected error ocurred",
+      message: "Internal server error",
     };
   }
 }
 
-export async function getAllMovies() {
-  try {
-    const movies: MovieComponents[] = [];
-    let request = await fetch(`${api_URL}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-
-    const status = request.status;
-    let response: MovieComponents[] = await request.json();
-    if (status === 200) {
-      response.forEach((movie) => {
-        movies.push(movie);
-      });
-    }
-
-    let i = 1;
-    while (request.status === 200) {
-      const params = new URLSearchParams({ page: String(i) });
-
-      request = await fetch(`${api_URL}?${params}`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (request.status === 200) {
-        response = await request.json();
-        response.forEach((movie) => {
-          movies.push(movie);
-        });
-      }
-      i++;
-    }
-
-    return movies;
-  } catch (e) {
-    console.error(e);
-  }
-}
 
 export async function getMovie(pelicula_id: number) {
   try {
@@ -114,4 +74,28 @@ export async function getMovie(pelicula_id: number) {
       message: "Internal server error",
     };
   }
+}
+
+export async function movieByGenre(genre: string) {
+  const pagination = 0;
+
+    try {
+        const userInfo = await fetch(`${api_URL}/generos/${genre}?page=${pagination}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+
+        
+        const data = await userInfo.json();
+        return data;
+
+    } catch (err) {
+        console.error('Signup failed: ', err)
+        return {
+            success: false,
+            message: 'Unexpected error.'
+        }
+    }
 }

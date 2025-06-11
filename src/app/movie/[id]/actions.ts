@@ -1,7 +1,7 @@
 "use server";
 
 import { getAllMoviesByName, getMovie } from "@/app/API/movie/route";
-import { reviewGetAll, reviewPost } from "@/app/API/reviews/route";
+import { reviewGetAllPaged, reviewPost } from "@/app/API/reviews/route";
 import { reviewFormSchema } from "@/app/lib/definitions";
 import { cookies } from "next/headers";
 
@@ -25,7 +25,7 @@ export async function getMovieById(pelicula_id: number) {
 }
 
 export async function getFeaturedReviews(pelicula_id: number) {
-  const allReviews = await reviewGetAll(pelicula_id);
+  const allReviews = await reviewGetAllPaged(pelicula_id);
   const featuredReviews = [];
   const numberOfReviews: number =
     2 > allReviews.body.length ? allReviews.body.length : 2;
@@ -36,8 +36,8 @@ export async function getFeaturedReviews(pelicula_id: number) {
   return featuredReviews;
 }
 
-export async function getAllReviewsByMovie(pelicula_id: number) {
-  const response = await reviewGetAll(pelicula_id);
+export async function getAllReviewsByMovie(pelicula_id: number, page: number) {
+  const response = await reviewGetAllPaged(pelicula_id, page);
 
   return response.body;
 }
@@ -47,8 +47,6 @@ export async function createReview(_: any, formData: FormData) {
   const content = formData.get("content") as string;
   const pelicula_id = formData.get("pelicula_id") as string;
   const grupoId = formData.get("grupo_id") as string;
-
-  console.log(grupoId);
 
   const validateFields = reviewFormSchema.safeParse({
     puntuacion: score,

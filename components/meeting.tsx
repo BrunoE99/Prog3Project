@@ -86,7 +86,7 @@ export default function MeetingCard({
   const meetingInProgress = new Date(meeting.fecha).getTime() <= Date.now();
   return (
     <div
-      className={`flex flex-col justify-between items-center font-semibold rounded-md cursor-pointer m-3 w-full gap-4`}
+      className={`flex flex-col justify-between items-center font-semibold rounded-md m-3 w-full gap-4`}
     >
       <span className="tex-2xl">
         {meetingInProgress

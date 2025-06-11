@@ -183,3 +183,9 @@ export async function kickMember(userId: number, groupId: number) {
 
   return response;
 }
+
+export async function findAllGroupReviews(groupId: number) {
+  const group = await findGroupById(groupId);
+
+  return group.reviews;
+}

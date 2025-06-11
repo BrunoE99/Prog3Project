@@ -3,9 +3,10 @@ import "server-only";
 
 const api_URL = "http:localhost:3000/api/reviews";
 
-export async function reviewGetAll(pelicula_id: number) {
+export async function reviewGetAllPaged(pelicula_id: number, page: number = 0) {
   try {
-    const request = await fetch(`${api_URL}/${pelicula_id}`, {
+    const params = new URLSearchParams({ page: String(page) });
+    const request = await fetch(`${api_URL}/${pelicula_id}?${params}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

@@ -3,7 +3,11 @@
 import MovieReview from "./genericreview";
 import CreateReview from "./createreview";
 import { useEffect, useState } from "react";
-import { getAllReviewsByMovie, getAuthToken } from "@/app/movie/[id]/actions";
+import {
+  getAllReviewsByMovie,
+  getAuthToken,
+  getFeaturedReviews,
+} from "@/app/movie/[id]/actions";
 import { redirect, useParams } from "next/navigation";
 
 interface MovieComponents {
@@ -92,6 +96,8 @@ export function MovieReviewsSection({
   const [reviewsState, setReviews] = useState(reviews);
   const [filter, setFilter] = useState("all");
   const [pageNumber, setPageNumber] = useState(1);
+  const [pageChanged, setPaging] = useState(false);
+  const [modeChanged, setModeChange] = useState(false);
   const [token, setToken] = useState<string | undefined>(undefined);
   const params = useParams();
   const handleSidebarToggle = () => {
@@ -109,13 +115,44 @@ export function MovieReviewsSection({
       const t = await getAuthToken();
       setToken(t);
     })();
-    if (submitted) {
-      getAllReviewsByMovie(Number(params.id)).then((newReviews) => {
-        setReviews(newReviews);
-        handleSidebarToggle();
-      });
+    if (submitted || pageChanged || modeChanged) {
+      if (submitted) {
+        setSubmit(false);
+      }
+      if (pageChanged) {
+        setPaging(false);
+      }
+      if (modeChanged) {
+        setModeChange(false);
+      }
+      if (loadAllReviews) {
+        console.log("LOADING EVERYTHING");
+        const previousReviews = reviewsState;
+        getAllReviewsByMovie(Number(params.id), pageNumber - 1).then(
+          (newReviews) => {
+            if (!newReviews && pageNumber > 1) {
+              setPageNumber(pageNumber - 1);
+              newReviews = previousReviews;
+            } else if (!newReviews && pageNumber === 1) {
+              newReviews = [];
+            }
+            setReviews(newReviews);
+            if (isSidebarOpen) {
+              handleSidebarToggle();
+            }
+          }
+        );
+      } else {
+        console.log("LOADING FEATURED");
+        getFeaturedReviews(Number(params.id)).then((newReviews) => {
+          setReviews(newReviews);
+          if (isSidebarOpen) {
+            handleSidebarToggle();
+          }
+        });
+      }
     }
-  }, [submitted]);
+  }, [submitted, pageChanged, modeChanged]);
 
   const featuredReviews: ReviewComponents[] =
     reviewsState.length === 1
@@ -126,6 +163,7 @@ export function MovieReviewsSection({
 
   const handleModeChange = () => {
     setMode((prev) => !prev);
+    setModeChange(true);
   };
 
   const displayFeaturedReviews = () => {
@@ -143,14 +181,8 @@ export function MovieReviewsSection({
   };
 
   const displayAllReviews = () => {
-    const pagedReviews = [];
-    const limit = 15;
-    const offset = limit * (pageNumber - 1);
-    for (let i = offset; i < offset + limit && i < reviewsState.length; i++) {
-      pagedReviews.push(reviewsState[i]);
-    }
     return reviewsState.length > 0 ? (
-      pagedReviews.map((review, index) =>
+      reviewsState.map((review, index) =>
         review.puntuacion >= Number(filter) || filter === "all" ? (
           <MovieReview key={index} {...review} />
         ) : null
@@ -252,7 +284,10 @@ export function MovieReviewsSection({
           className={`pr-2 text-2xl ${
             pageNumber <= 1 ? "cursor-default" : "cursor-pointer"
           }`}
-          onClick={() => setPageNumber(pageNumber - 1)}
+          onClick={() => {
+            setPageNumber(pageNumber - 1);
+            setPaging(true);
+          }}
         >
           &lt;
         </button>
@@ -264,6 +299,7 @@ export function MovieReviewsSection({
             // lo mismo con cursor-pointer a cursor-default
             if (pageNumber >= 1) {
               setPageNumber(pageNumber + 1);
+              setPaging(true);
             }
           }}
         >

@@ -3,6 +3,7 @@
 import { redirect, useParams } from "next/navigation";
 import MovieReview from "./genericreview";
 import {
+  findAllGroupReviews,
   findMeeting,
   findRoleInGroup,
   joinGroup,
@@ -12,6 +13,8 @@ import { useActionState, useEffect, useState } from "react";
 import MeetingCard from "./meeting";
 import Image from "next/image";
 import ScheduleMeeting from "./scheduleMeeting";
+import CreateReview from "./createreview";
+import { MovieSelectModal } from "./movieSelectModal";
 
 interface MovieComponents {
   id: number;
@@ -214,44 +217,112 @@ export function GroupMeetingColumn(props: { meeting?: Reunion; role: string }) {
           isSidebarOpen ? "fixed" : "hidden"
         } inset-0 bg-black opacity-60`}
       ></div>
-      <div className="flex flex-row justify-between items-center mr-3 pt-4">
-        <h2 className="font-semibold text-xl">Meeting</h2>
-        <button
-          onClick={() => setOpen((prev) => !prev)}
-          className={`${
-            role && role === "lider" ? "flex" : "hidden"
-          } shadow-sm cursor-pointer text-center self-center items-center justify-center pb-1 pt-1 pr-4 pl-4 before:content-['+'] before:pr-2 before:text-xl text-lg rounded-sm font-semibold bg-blue-700 hover:bg-blue-800 transition-colors delay-75 duration-100 ease-in-out`}
+      <div className="flex flex-col gap-2">
+        <div className="flex flex-row justify-between items-center mr-3 pt-4">
+          <h2 className="font-semibold text-xl">Meeting</h2>
+          <button
+            onClick={() => setOpen((prev) => !prev)}
+            className={`${
+              role && role === "lider" ? "flex" : "hidden"
+            } shadow-sm cursor-pointer text-center self-center items-center justify-center pb-1 pt-1 pr-4 pl-4 before:content-['+'] before:pr-2 before:text-xl text-lg rounded-sm font-semibold bg-blue-700 hover:bg-blue-800 transition-colors delay-75 duration-100 ease-in-out`}
+          >
+            Schedule Meeting
+          </button>
+        </div>
+        <div
+          className={`flex flex-col items-center mr-3 ${
+            meetingInProgress ? "bg-red-600" : ""
+          }`}
         >
-          Schedule Meeting
-        </button>
-      </div>
-      <div
-        className={`flex flex-col items-center mr-3 ${
-          meetingInProgress ? "bg-red-600" : ""
-        }`}
-      >
-        {meeting !== undefined ? (
-          <MeetingCard
-            meeting={meeting}
-            onDelete={() => setMeeting(undefined)}
-          />
-        ) : (
-          <span className="mt-5">No meetings scheduled</span>
-        )}
+          {meeting !== undefined ? (
+            <MeetingCard
+              meeting={meeting}
+              onDelete={() => setMeeting(undefined)}
+            />
+          ) : (
+            <span className="mt-5">No meetings scheduled</span>
+          )}
+        </div>
       </div>
     </div>
   );
 }
 
 export function GroupReviews({ reviews }: { reviews: ReviewComponents[] }) {
+  const [groupReviews, setReviews] = useState(reviews);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedMovie, setMovie] = useState<MovieComponents | undefined>(
+    undefined
+  );
+  const [submitted, setSubmit] = useState(false);
+  const params = useParams();
+  const groupId: string = String(params.id);
+  const handleSidebarToggle = () => {
+    if (isSidebarOpen) {
+      setSidebarOpen((prev) => !prev);
+      setMovie(undefined);
+      document.body.style.overflow = isSidebarOpen ? "unset" : "hidden";
+    }
+  };
+  const handleModalToggle = () => {
+    setModalOpen((prev) => !prev);
+    document.body.style.overflow = modalOpen ? "unset" : "hidden";
+  };
+
+  useEffect(() => {
+    if (submitted) {
+      findAllGroupReviews(Number(params.id)).then((newReviews) => {
+        setReviews(newReviews);
+        handleSidebarToggle();
+      });
+    }
+  }, [submitted]);
   return (
-    <div className="flex flex-col col-span-2 items-center h-full pt-4">
-      <div>
+    <div className="flex flex-col col-span-2 items-center h-full pt-4 gap-3">
+      {modalOpen ? (
+        <MovieSelectModal
+          message="Select a movie"
+          onConfirm={(movie: MovieComponents) => {
+            setMovie(movie);
+            handleModalToggle();
+            handleSidebarToggle();
+          }}
+          onCancel={() => {
+            handleModalToggle();
+          }}
+        />
+      ) : null}
+      {isSidebarOpen ? (
+        <div>
+          <div className="flex">
+            <button
+              className="fixed top-3 right-3 text-4xl mr-4 mt-0.5 z-2 justify-center dark:text-white text-black cursor-pointer rounded-full hover:bg-[#bdbcb968] h-10 w-10 transition-all delay-75 duration-100 ease-in-out"
+              onClick={() => handleSidebarToggle()}
+            >
+              &times;
+            </button>
+            <CreateReview
+              movie={selectedMovie!}
+              onSubmit={() => setSubmit(true)}
+              groupId={groupId}
+            />
+          </div>
+          <div className="$fixed inset-0 bg-black opacity-60"></div>
+        </div>
+      ) : null}
+      <div className="flex flex-row justify-between items-center w-full pl-5 pr-5">
         <h2 className="text-4xl">Reviews</h2>
+        <button
+          onClick={() => handleModalToggle()}
+          className="font-semibold cursor-pointer before:content-['+'] before:mr-1 before:text-[#f5c518] before:text-xl transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
+        >
+          Write Review
+        </button>
       </div>
       <div className="flex flex-col justify-center items-center gap-2">
-        {reviews ? (
-          reviews.map((review, index) => (
+        {groupReviews ? (
+          groupReviews.map((review, index) => (
             <MovieReview key={index} {...review} />
           ))
         ) : (

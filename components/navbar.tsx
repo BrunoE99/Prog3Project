@@ -42,7 +42,7 @@ export default function Navbar({
 
   return (
     <nav className="relative bg-[#000814] text-white">
-      <div className="lg:hidden p-5 flex justify-between">
+      <div className="lg:hidden p-5 flex gap-3 justify-between">
         <button
           className="space-y-2"
           onClick={hamburguerHandler}
@@ -53,6 +53,7 @@ export default function Navbar({
           <span className="block h-0.5 w-8 bg-gray-600"></span>
           <span className="block h-0.5 w-8 bg-gray-600"></span>
         </button>
+        <SearchBar />
         <button
           className="space-y-2"
           onClick={profileHandler}
@@ -86,6 +87,11 @@ export default function Navbar({
           <li role="menuitem">
             <Link href="/genres" className="hover:bg-[#041b3d]">
               Genres
+            </Link>
+          </li>
+          <li role="menuitem">
+            <Link href="/group" className="hover:bg-[#041b3d]">
+              Groups
             </Link>
           </li>
           <li role="menuitem">
@@ -139,6 +145,9 @@ export default function Navbar({
           </Link>
           <Link href="/genres" className="hover:bg-[#041b3d] p-1">
             Genres
+          </Link>
+          <Link href="/group" className="hover:bg-[#041b3d] p-1">
+            Groups
           </Link>
           <Link href="/about" className="hover:bg-[#041b3d] p-1">
             About

@@ -199,7 +199,7 @@ export function MovieSelectModal({
               ))}
             </div>
           </div>
-          <div className="flex flex-row justify-between items-center">
+          <div className="flex flex-row justify-between items-center w-1/2">
             <button
               disabled={!selectedMovie}
               onClick={() => onConfirm(selectedMovie!)}

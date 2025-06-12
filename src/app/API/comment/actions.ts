@@ -1,5 +1,6 @@
 "use server";
 
+import { commentSchema } from "@/app/lib/definitions";
 import { deleteComment, getAllCommentsForReview, postComment } from "./route";
 
 export async function eraseComment(commentId: number) {
@@ -18,7 +19,19 @@ export async function findAllCommentsForReview(
 }
 
 export async function createComment(reviewId: number, texto: string) {
+  const validateFields = commentSchema.safeParse({
+    texto: texto,
+  });
+
+  if (!validateFields.success) {
+    return {
+      error: validateFields.error.flatten().fieldErrors,
+    };
+  }
+
   const response = await postComment(reviewId, texto);
+
+  console.log(response);
 
   return response;
 }

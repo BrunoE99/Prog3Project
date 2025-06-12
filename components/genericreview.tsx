@@ -1,4 +1,7 @@
-import { findAllCommentsForReview } from "@/app/API/comment/actions";
+import {
+  createComment,
+  findAllCommentsForReview,
+} from "@/app/API/comment/actions";
 import { eraseReview } from "@/app/reviews/actions";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -6,6 +9,7 @@ import Comment from "./comment";
 import { getDecodedToken } from "@/app/movie/[id]/actions";
 import { ModalConfirmation } from "./modalConfirmation";
 import { redirect } from "next/navigation";
+import Button from "./button";
 
 interface MovieComponents {
   id: number;
@@ -102,11 +106,22 @@ export default function MovieReview({
   const [commentRefresh, setRefresh] = useState(true);
   const [token, setToken] = useState<JwtBody | undefined>(undefined);
   const [modalOpen, setModalOpen] = useState(false);
+  const [newComment, setNewComment] = useState("");
   const handleModalOpen = () => {
     if (authorized) {
       setModalOpen(true);
       document.body.style.overflow = "hidden";
     } else {
+      redirect("/login");
+    }
+  };
+  const handleCommentPost = () => {
+    if (token && newComment !== "") {
+      console.log("here");
+      createComment(review.id, newComment);
+      setNewComment("");
+      setRefresh(true);
+    } else if (!token) {
       redirect("/login");
     }
   };
@@ -250,18 +265,31 @@ export default function MovieReview({
           </div>
         ) : null}
       </div>
-      {comments && commentsOpen ? (
+      {commentsOpen ? (
         <div className="flex flex-col">
-          {comments.map((comment, index) => (
-            <Comment
-              key={index}
-              comment={comment}
-              onDelete={() => setRefresh(true)}
-              authorized={
-                comment.userId === token?.sub || token?.role === "admin"
-              }
+          <div className="flex flex-row gap-2 justify-center items-center p-2">
+            <input
+              className="w-full"
+              type="text"
+              placeholder="Write comment..."
+              id="comment-post"
+              autoComplete="off"
+              onChange={(e) => setNewComment(e.target.value)}
+              value={newComment}
             />
-          ))}
+            <Button text="Post" onClick={handleCommentPost} />
+          </div>
+          {comments &&
+            comments.map((comment, index) => (
+              <Comment
+                key={index}
+                comment={comment}
+                onDelete={() => setRefresh(true)}
+                authorized={
+                  comment.userId === token?.sub || token?.role === "admin"
+                }
+              />
+            ))}
         </div>
       ) : null}
     </div>

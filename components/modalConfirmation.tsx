@@ -9,8 +9,8 @@ export function ModalConfirmation({
 }) {
   return (
     <div className="fixed">
-      <div className="fixed inset-0 bg-black opacity-60 z-1"></div>
-      <div className="fixed top-1/3 left-1/3 right-1/3 flex justify-center items-center rounded-lg bg-[#001d3d] shadow-lg z-2 pt-5 pb-5">
+      <div className="fixed inset-0 bg-black opacity-60 z-4"></div>
+      <div className="fixed top-1/3 left-1/3 right-1/3 flex justify-center items-center rounded-lg bg-[#001d3d] shadow-lg z-5 pt-5 pb-5">
         <div className="flex flex-col h-full pt-6 pb-6 gap-5">
           <div>
             <span className="font-semibold text-lg text-wrap">{message}</span>

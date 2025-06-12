@@ -3,13 +3,29 @@
 import { getAllMoviesByName, getMovie } from "@/app/API/movie/route";
 import { reviewGetAllPaged, reviewPost } from "@/app/API/reviews/route";
 import { reviewFormSchema } from "@/app/lib/definitions";
+import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
+
+type JwtBody = {
+  sub: number;
+  role: "user" | "admin";
+  iat: number;
+  exp: number;
+};
 
 export async function getAuthToken() {
   const cookieStore = await cookies();
   const authToken = cookieStore.get("auth_token")?.value;
 
   return authToken;
+}
+
+export async function getDecodedToken() {
+  const token = await getAuthToken();
+  if (!token) return undefined;
+  const decoded = jwtDecode<JwtBody>(token);
+
+  return decoded;
 }
 
 export async function retrieveFilteredMovies(name: string) {

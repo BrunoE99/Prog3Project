@@ -32,6 +32,19 @@ export const reviewFormSchema = z.object({
     .optional(),
 });
 
+export const reviewEditSchema = z.object({
+  puntuacion: z.coerce
+    .number()
+    .gte(1, { message: "Score must be at least 1" })
+    .lte(10, { message: "Score must be at most 10" })
+    .optional(),
+  texto: z
+    .string()
+    .min(1, "Review content must not be empty")
+    .trim()
+    .optional(),
+});
+
 export const SignupFormSchema = z.object({
   username: z.string().min(3, { message: "Minimo 3 caracteres." }).trim(),
   email: z
@@ -73,6 +86,13 @@ export const groupCreateSchema = z.object({
     .min(3, { message: "El nombre debe tener al menos 3 caracteres" })
     .trim(),
   descripcion: z.string().optional(),
+});
+
+export const commentSchema = z.object({
+  texto: z
+    .string()
+    .min(1, { message: "El texto debe tener al menos 1 caracter" })
+    .trim(),
 });
 
 export type FormState = {

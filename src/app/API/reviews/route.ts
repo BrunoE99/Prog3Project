@@ -141,3 +141,86 @@ export async function groupReviewsGetAllPaged(
     };
   }
 }
+
+export async function reviewUpdate(
+  id: number,
+  puntuacion?: number,
+  texto?: string
+) {
+  try {
+    const userCookie = await cookies();
+    const token = userCookie.get("auth_token")?.value;
+
+    const body: { puntuacion?: number; texto?: string } = {};
+    if (puntuacion !== undefined) body.puntuacion = puntuacion;
+    if (texto !== undefined) body.texto = texto;
+
+    const request = await fetch(`${api_URL}/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify(body),
+    });
+
+    const answer = request;
+    const answerJson = await request.json();
+
+    if (answer.status == 201) {
+      return {
+        status: answer.status,
+        body: answerJson,
+      };
+    } else {
+      return {
+        status: answer.status,
+        message: answerJson.message || "An unexpected error ocurred",
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      status: 500,
+      message: "Internal Server Error",
+    };
+  }
+}
+
+export async function reviewDelete(id: number) {
+  try {
+    const userCookie = await cookies();
+    const token = userCookie.get("auth_token")?.value;
+
+    const request = await fetch(`${api_URL}/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    });
+
+    const answer = request;
+    const answerJson = await request.json();
+
+    if (answer.status == 201) {
+      return {
+        status: answer.status,
+        body: answerJson,
+      };
+    } else {
+      return {
+        status: answer.status,
+        message: answerJson.message || "An unexpected error ocurred",
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      status: 500,
+      message: "Internal Server Error",
+    };
+  }
+}

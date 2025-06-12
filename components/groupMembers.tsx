@@ -176,7 +176,7 @@ export function GroupMembersBody({
               >
                 <div className="flex flex-row justify-center items-center gap-2">
                   <Image
-                    src={/*member.user.urlImagen ||*/ "/default-user.png"}
+                    src={member.urlImagen || "/default-user.png"}
                     alt={member.urlImagen}
                     width={32}
                     height={32}
@@ -218,7 +218,7 @@ export function GroupMembersBody({
               >
                 <div className="flex flex-row justify-center items-center gap-2">
                   <Image
-                    src={/*member.user.urlImagen ||*/ "/default-user.png"}
+                    src={member.urlImagen || "/default-user.png"}
                     alt={member.urlImagen}
                     width={32}
                     height={32}

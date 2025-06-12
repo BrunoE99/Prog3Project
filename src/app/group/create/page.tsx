@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useEffect, useState } from "react";
 import { createGroup } from "../actions";
 import { redirect } from "next/navigation";
 
@@ -80,6 +80,12 @@ interface ReviewComponents {
 export default function GroupCreate() {
   const [descriptionGiven, setGiven] = useState(false);
   const [state, action, pending] = useActionState(createGroup, undefined);
+
+  useEffect(() => {
+    if (state) {
+      redirect(`/group/${state.id}`);
+    }
+  });
 
   return (
     <div className="min-h-screen bg-[#001d3d]">

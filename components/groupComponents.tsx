@@ -374,7 +374,12 @@ export function GroupReviews({
       <div className="flex flex-col justify-center items-center gap-2 w-full">
         {groupReviews && groupReviews.length > 0 ? (
           groupReviews.map((review, index) => (
-            <MovieReview key={index} {...review} />
+            <MovieReview
+              key={index}
+              review={review}
+              authorized={userRole && userRole === "lider" ? true : false}
+              onEditDelete={() => setSubmit(true)}
+            />
           ))
         ) : (
           <span className="mt-5">This group has no reviews yet.</span>
@@ -445,7 +450,7 @@ export function GroupMembersPreview({
           member.rol === "lider" ? (
             <div key={index} className="flex flex-row items-center gap-2 pt-3">
               <Image
-                src={/*member.user.urlImagen ||*/ "/default-user.png"}
+                src={member.urlImagen || "/default-user.png"}
                 alt={member.urlImagen}
                 width={32}
                 height={32}

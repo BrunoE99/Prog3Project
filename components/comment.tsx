@@ -1,5 +1,8 @@
 import { eraseComment } from "@/app/API/comment/actions";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import Image from "next/image";
+import { ModalConfirmation } from "./modalConfirmation";
+import { redirect } from "next/navigation";
 
 interface MovieComponents {
   id: number;
@@ -84,49 +87,79 @@ export default function Comment({
   authorized: boolean;
 }) {
   const [deleteOpen, setOpen] = useState(false);
-  const [deleteClicked, setClicked] = useState(false);
-  useEffect(() => {
-    async function deleteThis() {
-      if (deleteClicked) {
-        await eraseComment(comment.id);
-        onDelete();
-      }
+  const [modalOpen, setModalOpen] = useState(false);
+  const handleModalOpen = () => {
+    if (authorized) {
+      setModalOpen(true);
+      document.body.style.overflow = "hidden";
+    } else {
+      redirect("/login");
     }
-    deleteThis();
-  }, [deleteClicked]);
+  };
+  const handleDelete = () => {
+    eraseComment(comment.id);
+    onDelete();
+  };
 
   return (
-    <div className="flex flex-col bg-[#001d3d] justify-start items-center">
+    <div className="flex flex-col bg-[#001d3d] rounded-sm">
+      {modalOpen ? (
+        <ModalConfirmation
+          message={`Are you sure you want to delete this comment?`}
+          onAccept={() => {
+            handleDelete();
+            setModalOpen(false);
+            document.body.style.overflow = "unset";
+          }}
+          onCancel={() => {
+            setOpen(false);
+            setModalOpen(false);
+            document.body.style.overflow = "unset";
+          }}
+        />
+      ) : null}
       <div className="flex flex-row justify-between items-center">
-        <span className="text-2xl">{comment.user.username}</span>
+        <div className="flex flex-col w-full p-1.5">
+          <div className="flex flex-row gap-3 items-center justify-start">
+            <Image
+              src={comment.user.urlImagen}
+              alt="Commenter's Profile Picture"
+              width={25}
+              height={25}
+              className="rounded-full"
+            />
+            <span className="text-xl font-semibold">
+              {comment.user.username}
+            </span>
+          </div>
+          <p className="text-xs p-2 pl-0 lg:pl-15 w-3/4 wrap-balanced md:text-base">
+            {comment.texto}
+          </p>
+        </div>
         {authorized ? (
-          <div className="flex flex-row justify-end items-center">
+          <div className="flex flex-row items-center gap-2">
             {deleteOpen && authorized ? (
               <div
-                className="flex flex-row items-center justify-center gap-1 rounded-sm bg-black shadow-md border border-[#545454b7] text-gray-300 text-sm p-1"
-                onClick={() => {
-                  setClicked(true);
-                  onDelete();
-                }}
+                className="flex flex-row items-center justify-center gap-1 rounded-sm bg-[#eeeeee] shadow-md text-[#000814] text-sm p-1.5 hover:bg-[#cccccc] cursor-pointer transition-colors delay-75 duration-200 ease-in-out"
+                onClick={handleModalOpen}
               >
-                <i className="fa fa-trash-o pl-1 text-red-800"></i>
+                <i className="fa fa-trash-o pl-1 text-orange-500"></i>
                 <button className="pr-1 cursor-pointer">Delete</button>
               </div>
             ) : null}
             <div
-              className="inline-block cursor-pointer"
+              className="inline-block cursor-pointer pr-3 opacity-100 hover:opacity-60"
               onClick={() => {
                 setOpen((prev) => !prev);
               }}
             >
-              <div className="bg-white h-0.5 w-0.5 rounded-full mt-1"></div>
-              <div className="bg-white h-0.5 w-0.5 rounded-full mt-1"></div>
-              <div className="bg-white h-0.5 w-0.5 rounded-full mt-1"></div>
+              <div className="bg-white h-1 w-1 rounded-full mt-1"></div>
+              <div className="bg-white h-1 w-1 rounded-full mt-1"></div>
+              <div className="bg-white h-1 w-1 rounded-full mt-1"></div>
             </div>
           </div>
         ) : null}
       </div>
-      <p className="text-lg">{comment.texto}</p>
     </div>
   );
 }

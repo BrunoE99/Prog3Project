@@ -5,10 +5,11 @@ import CreateReview from "./createreview";
 import { useEffect, useState } from "react";
 import {
   getAllReviewsByMovie,
-  getAuthToken,
+  getDecodedToken,
   getFeaturedReviews,
 } from "@/app/movie/[id]/actions";
 import { redirect, useParams } from "next/navigation";
+import Image from "next/image";
 
 interface MovieComponents {
   id: number;
@@ -83,6 +84,13 @@ interface ReviewComponents {
   comentarios: Comment[];
 }
 
+type JwtBody = {
+  sub: number;
+  role: "user" | "admin";
+  iat: number;
+  exp: number;
+};
+
 export function MovieReviewsSection({
   reviews,
   movie,
@@ -98,7 +106,7 @@ export function MovieReviewsSection({
   const [pageNumber, setPageNumber] = useState(1);
   const [pageChanged, setPaging] = useState(false);
   const [modeChanged, setModeChange] = useState(false);
-  const [token, setToken] = useState<string | undefined>(undefined);
+  const [token, setToken] = useState<JwtBody | undefined>(undefined);
   const params = useParams();
   const handleSidebarToggle = () => {
     if (token || isSidebarOpen) {
@@ -112,7 +120,7 @@ export function MovieReviewsSection({
   // Fetch token on mount
   useEffect(() => {
     (async () => {
-      const t = await getAuthToken();
+      const t = await getDecodedToken();
       setToken(t);
     })();
     if (submitted || pageChanged || modeChanged) {
@@ -166,11 +174,18 @@ export function MovieReviewsSection({
 
   const displayFeaturedReviews = () => {
     return reviewsState.length > 0 ? (
-      featuredReviews.map((review, index) =>
-        review.puntuacion >= Number(filter) || filter === "all" ? (
-          <MovieReview key={index} {...review} />
-        ) : null
-      )
+      featuredReviews
+        .filter(
+          (review) => filter === "all" || review.puntuacion >= Number(filter)
+        )
+        .map((review, index) => (
+          <MovieReview
+            key={index}
+            review={review}
+            authorized={token?.role === "admin" || token?.sub === review.userId}
+            onEditDelete={() => setSubmit(true)}
+          />
+        ))
     ) : (
       <span className="flex justify-center p-10">
         Congrats! You get to be the first to write a review.
@@ -180,11 +195,18 @@ export function MovieReviewsSection({
 
   const displayAllReviews = () => {
     return reviewsState.length > 0 ? (
-      reviewsState.map((review, index) =>
-        review.puntuacion >= Number(filter) || filter === "all" ? (
-          <MovieReview key={index} {...review} />
-        ) : null
-      )
+      reviewsState
+        .filter(
+          (review) => filter === "all" || review.puntuacion >= Number(filter)
+        )
+        .map((review, index) => (
+          <MovieReview
+            key={index}
+            review={review}
+            authorized={token?.role === "admin" || token?.sub === review.userId}
+            onEditDelete={() => setSubmit(true)}
+          />
+        ))
     ) : (
       <span className="flex justify-center p-10">
         Congrats! You get to be the first to write a review.
@@ -219,7 +241,7 @@ export function MovieReviewsSection({
               onClick={() => handleModeChange()}
               className={`text-xl ${
                 loadAllReviews
-                  ? "font-light transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
+                  ? "font-light transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518] cursor-pointer"
                   : "font-semibold"
               }`}
             >
@@ -229,7 +251,7 @@ export function MovieReviewsSection({
               className={`${
                 loadAllReviews
                   ? "font-semibold"
-                  : "font-light transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
+                  : "font-light transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518] cursor-pointer"
               } text-xl text-left before:content-[''] before:bg-[#f5c518] before:-ml-3 before:rounded-sm before:-mt-1 before:absolute before:h-1/30 before:w-1 before:self-center`}
               onClick={() => handleModeChange()}
             >
@@ -317,11 +339,14 @@ export function MovieInfoSection(movie: MovieComponents) {
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
       ></link>
       <div className="flex items-start flex-row flex-nowrap p-6 bg-[#003566] shadow-sm rounded-md">
-        <div className="relative mx-auto w-1/2">
-          {/* eslint-disable-next-line @next/next/no-img-element*/}
-          <img
+        <div className="relative mx-auto w-1/2 aspect-[2/3] min-w-32 max-w-56">
+          <Image
             className="mx-auto rounded-sm"
             src={movie.urlImagen}
+            fill
+            priority
+            style={{ objectFit: "cover" }}
+            sizes="(max-width: 640px) 128px, 224px"
             alt="Movie's Poster"
           />
         </div>

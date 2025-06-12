@@ -49,11 +49,6 @@ export default function SearchBar() {
     }
   }, []);
 
-  // const debouncedChangeHandler = useMemo(
-  //   () => debounce(changeHandler, 50),
-  //   [changeHandler]
-  // );
-
   return (
     <div className="relative flex flex-col justify-center items-center rounded-sm w-full max-w-md">
       <link

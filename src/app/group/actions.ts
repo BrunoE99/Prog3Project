@@ -218,10 +218,7 @@ export async function createGroup(_: any, formData: FormData) {
   );
 
   if (response.status === 201) {
-    return {
-      success: true,
-      message: response.message || "Group updated created successfully",
-    };
+    return response.body;
   } else {
     return {
       status: response.status,

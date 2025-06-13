@@ -10,8 +10,9 @@ export const groupJoinSchema = z.object({
 export const MeetingFormSchema = z.object({
   fecha: z
     .string()
-    .datetime({ message: "Fecha must be a valid date and time" }),
-  link: z.string().url({ message: "Link must be a valid url format" }),
+    .datetime({ message: "Fecha must be a valid date and time" })
+    .trim(),
+  link: z.string().url({ message: "Link must be a valid url format" }).trim(),
 });
 
 export const reviewFormSchema = z.object({
@@ -19,11 +20,29 @@ export const reviewFormSchema = z.object({
     .number()
     .gte(1, { message: "Score must be at least 1" })
     .lte(10, { message: "Score must be at most 10" }),
-  texto: z.string().min(1, "Review content must not be empty"),
+  texto: z.string().min(1, "Review content must not be empty").trim(),
   pelicula_id: z.coerce
     .number()
     .int({ message: "Pelicula ID must be an integer" })
     .positive({ message: "Pelicula ID must be a positive number" }),
+  grupo_id: z
+    .number()
+    .int({ message: "Grupo ID must be an integer" })
+    .positive({ message: "Grupo ID must be a positive number" })
+    .optional(),
+});
+
+export const reviewEditSchema = z.object({
+  puntuacion: z.coerce
+    .number()
+    .gte(1, { message: "Score must be at least 1" })
+    .lte(10, { message: "Score must be at most 10" })
+    .optional(),
+  texto: z
+    .string()
+    .min(1, "Review content must not be empty")
+    .trim()
+    .optional(),
 });
 
 export const SignupFormSchema = z.object({
@@ -49,6 +68,30 @@ export const LogInFormSchema = z.object({
   password: z
     .string()
     .min(6, { message: "La password tiene que tener minimo 6 caracteres" })
+    .trim(),
+});
+
+export const groupEditSchema = z.object({
+  nombre: z
+    .string()
+    .min(3, { message: "El nombre debe tener al menos 3 caracteres" })
+    .trim()
+    .optional(),
+  descripcion: z.string().optional(),
+});
+
+export const groupCreateSchema = z.object({
+  nombre: z
+    .string()
+    .min(3, { message: "El nombre debe tener al menos 3 caracteres" })
+    .trim(),
+  descripcion: z.string().optional(),
+});
+
+export const commentSchema = z.object({
+  texto: z
+    .string()
+    .min(1, { message: "El texto debe tener al menos 1 caracter" })
     .trim(),
 });
 

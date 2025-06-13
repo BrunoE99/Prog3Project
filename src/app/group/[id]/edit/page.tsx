@@ -1,5 +1,8 @@
-import { deleteMeeting } from "@/app/group/actions";
-import Button from "./button";
+import {
+  GroupEditForm,
+  GroupEditHeader,
+} from "../../../../../components/groupEditForm";
+import { findGroupById, findRoleInGroup } from "../../actions";
 
 interface MovieComponents {
   id: number;
@@ -74,42 +77,37 @@ interface ReviewComponents {
   comentarios: Comment[];
 }
 
-export default function MeetingCard({
-  meeting,
-  role,
-  onDelete,
+export default async function GroupEdit({
+  params,
 }: {
-  meeting: Reunion;
-  role: string;
-  onDelete: () => void;
+  params: { id: string };
 }) {
-  const meetingDate = meeting.fecha.split("T")[0].split("-");
+  const { id } = await params;
+  const group: Group = await findGroupById(Number(id));
+  const userRole = await findRoleInGroup(Number(id));
 
-  const meetingInProgress = new Date(meeting.fecha).getTime() <= Date.now();
   return (
-    <div
-      className={`flex flex-col justify-between items-center font-semibold rounded-md m-3 w-full gap-4`}
-    >
-      <span className="tex-2xl">
-        {meetingInProgress
-          ? "NOW"
-          : `${meetingDate[2]}/${meetingDate[1]}/${meetingDate[0]}`}
-      </span>
-      <div className="flex flex-row gap-2">
-        <Button
-          text="Go to Meeting"
-          onClick={() => window.location.replace(meeting.link)}
+    <div className={`min-h-screen bg-[#001d3d]`}>
+      <div className={`${userRole && userRole === "lider" ? "" : "blur-sm"}`}>
+        <GroupEditHeader
+          id={group.id}
+          authorized={userRole && userRole === "lider"}
         />
-        <div className={role && role === "lider" ? "" : "hidden"}>
-          <Button
-            text="Delete"
-            onClick={async () => {
-              await deleteMeeting();
-              onDelete();
-            }}
-          />
-        </div>
+
+        <GroupEditForm
+          group={group}
+          authorized={userRole && userRole === "lider"}
+        />
       </div>
+      {userRole && userRole === "lider" ? null : (
+        <div className="flex justify-center items-center">
+          <div className="fixed justify-center items-center blur-none">
+            <span className="rounded-sm text-3xl font-bold z-2">
+              Sorry, you must be a group admin to view this page
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

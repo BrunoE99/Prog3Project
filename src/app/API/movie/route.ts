@@ -2,9 +2,29 @@ import "server-only";
 
 const api_URL = "http:localhost:3000/api/peliculas";
 
+export async function getAllMoviesByName(name: string) {
+  try {
+    const params = new URLSearchParams({ q: name });
+    const request = await fetch(`${api_URL}/search/name?${params}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return await request.json();
+  } catch (e) {
+    console.error(e);
+    return {
+      success: false,
+      status: 500,
+      error: "An unexpected error ocurred",
+    };
+  }
+}
 
 export async function getAllMovies(pagination: number) {
-  const params = new URLSearchParams ({
+  const params = new URLSearchParams({
     page: pagination.toString(),
   });
 
@@ -17,9 +37,7 @@ export async function getAllMovies(pagination: number) {
     });
 
     const response = request;
-    // console.log('response: ', response);
     const responseJson = await request.json();
-    console.log('response json: ', responseJson);
 
     if (response.status === 200) {
       return responseJson;
@@ -34,11 +52,10 @@ export async function getAllMovies(pagination: number) {
     return {
       success: false,
       status: 500,
-      message: "Internal server error",
+      error: "An unexpected error ocurred",
     };
   }
 }
-
 
 export async function getMovie(pelicula_id: number) {
   try {
@@ -81,23 +98,24 @@ export async function getMovie(pelicula_id: number) {
 export async function movieByGenre(genre: string) {
   const pagination = 0;
 
-    try {
-        const userInfo = await fetch(`${api_URL}/generos/${genre}?page=${pagination}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
+  try {
+    const userInfo = await fetch(
+      `${api_URL}/generos/${genre}?page=${pagination}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
-        
-        const data = await userInfo.json();
-        return data;
-
-    } catch (err) {
-        console.error('Signup failed: ', err)
-        return {
-            success: false,
-            message: 'Unexpected error.'
-        }
-    }
+    const data = await userInfo.json();
+    return data;
+  } catch (err) {
+    console.error("Signup failed: ", err);
+    return {
+      success: false,
+      message: "Unexpected error.",
+    };
+  }
 }

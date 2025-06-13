@@ -72,7 +72,7 @@ interface ReviewComponents {
 
 export default async function Movie({ params }: { params: { id: string } }) {
   const { id } = await params;
-  const reviews = await getAllReviewsByMovie(Number(id));
+  const reviews = await getAllReviewsByMovie(Number(id), 0);
   const movie = await getMovieById(Number(id));
 
   // actualizar toda esta seccion para que sea mobile-friendly
@@ -88,7 +88,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
         {movie ? (
           <>
             <MovieInfoSection {...movie} />
-            <MovieReviewsSection reviews={reviews} title={movie.nombre} />
+            <MovieReviewsSection reviews={reviews} movie={movie} />
           </>
         ) : (
           <NotFoundPage />

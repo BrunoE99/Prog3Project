@@ -38,7 +38,7 @@ export default function SearchBar() {
   }
 
   const changeHandler = useCallback((event: ChangeHandlerEvent): void => {
-    const value = event.target.value.trim();
+    const value = event.target.value;
     setSearchString(value);
     if (value.length > 2) {
       setTimeout(() => {
@@ -48,11 +48,6 @@ export default function SearchBar() {
       setSearch(false);
     }
   }, []);
-
-  // const debouncedChangeHandler = useMemo(
-  //   () => debounce(changeHandler, 50),
-  //   [changeHandler]
-  // );
 
   return (
     <div className="relative flex flex-col justify-center items-center rounded-sm w-full max-w-md">

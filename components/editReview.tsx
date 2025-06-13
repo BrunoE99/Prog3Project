@@ -1,5 +1,4 @@
-import { createReview } from "@/app/movie/[id]/actions";
-import { redirect } from "next/navigation";
+import { reviewEdit } from "@/app/reviews/actions";
 import { useActionState, useEffect, useRef, useState } from "react";
 
 interface MovieComponents {
@@ -75,34 +74,46 @@ interface ReviewComponents {
   comentarios: Comment[];
 }
 
-export default function CreateReview(props: {
-  movie: MovieComponents;
+export default function ReviewEditSidebar({
+  review,
+  onSubmit,
+  onClose,
+}: {
+  review: ReviewComponents;
   onSubmit: () => void;
-  groupId?: string;
+  onClose: () => void;
 }) {
-  const { movie, onSubmit, groupId } = props;
-  const scoreSelected = useRef(false);
-  const [score, setScore] = useState("1");
-  const wrappedCreateReview = async (_state: any, formData: FormData) => {
-    const result = await createReview(_state, formData);
-    if (result.success) {
+  const [fieldsEdited, setFieldsEdited] = useState([false, false]);
+  const scoreSelected = useRef(true);
+  const firstPass = useRef(true);
+  const [fields, setFields] = useState([review.puntuacion, review.texto]);
+
+  const wrappedEditReview = async (_state: any, formData: FormData) => {
+    const result = await reviewEdit(_state, formData);
+    if (result.status === 200) {
       onSubmit();
     }
     return result;
   };
-  const [state, action, pending] = useActionState(
-    wrappedCreateReview,
-    undefined
-  );
+  const [state, action, pending] = useActionState(wrappedEditReview, undefined);
 
   useEffect(() => {
-    if (state?.status === 401) {
-      // refresh token here
-      // redirecting to login for now
-      redirect("/login");
+    const starButtons = document.querySelectorAll(
+      "#review-edit-sidebar button"
+    );
+    if (firstPass.current) {
+      firstPass.current = false;
+      starButtons.forEach((btn) => {
+        const index = btn.getAttribute("aria-label");
+        if (Number(index) <= Number(fields[0])) {
+          btn.querySelector("span")?.classList.add("fa-star");
+          btn.querySelector("span")?.classList.remove("fa-star-o");
+        } else {
+          btn.querySelector("span")?.classList.add("fa-star-o");
+          btn.querySelector("span")?.classList.remove("fa-star");
+        }
+      });
     }
-
-    const starButtons = document.querySelectorAll("#review-sidebar button");
     starButtons.forEach((button) => {
       button.addEventListener("mouseover", () => {
         const index = button.getAttribute("aria-label");
@@ -122,9 +133,11 @@ export default function CreateReview(props: {
     });
 
     document
-      .getElementById("review-score")!
+      .getElementById("review-edit-score")!
       .addEventListener("mouseleave", () => {
-        const score = document.getElementById("score")?.getAttribute("value");
+        const score = document
+          .getElementById("edit-score")
+          ?.getAttribute("value");
         starButtons.forEach((btn) => {
           if (!scoreSelected.current) {
             btn.querySelector("span")?.classList.add("fa-star-o");
@@ -142,46 +155,57 @@ export default function CreateReview(props: {
     starButtons.forEach((button) => {
       button.addEventListener("click", () => {
         scoreSelected.current = true;
-        setScore(button.getAttribute("aria-label")!);
+        setFields([button.getAttribute("aria-label")!, fields[1]]);
+        setFieldsEdited([true, fieldsEdited[1]]);
       });
     });
   });
+
   return (
     <div
-      id="review-sidebar"
-      className="h-full fixed z-1 top-0 right-0 overflow-x-hidden bg-white dark:bg-[#001d3d] dark:text-white pt-15 w-1/5 text-black"
+      id="review-edit-sidebar"
+      className="h-full fixed top-0 right-0 z-5 overflow-x-hidden bg-white dark:bg-[#001d3d] dark:text-white pt-15 w-1/5 text-black"
     >
+      <button
+        className="fixed top-3 right-3 text-4xl mr-4 mt-0.5 justify-center dark:text-white text-black cursor-pointer rounded-full hover:bg-[#bdbcb968] h-10 w-10 transition-all delay-75 duration-100 ease-in-out"
+        onClick={onClose}
+      >
+        &times;
+      </button>
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
       ></link>
-      <div className="text-2xl p-4 ml-2 font-semibold">{movie.nombre}</div>
       <form
         name="create-review"
         action={action}
         className="flex flex-col h-3/4 p-6 gap-4"
       >
         <input
-          type="text"
           className="hidden"
-          id="grupo_id"
-          name="grupo_id"
+          name="changedFields"
+          id="changedFields"
           readOnly
-          defaultValue={groupId}
+          value={fieldsEdited?.toString() ?? "true,true"}
         />
         <input
           type="text"
           className="hidden"
-          id="pelicula_id"
-          name="pelicula_id"
+          id="review_id"
+          name="review_id"
           readOnly
-          defaultValue={movie.id}
+          defaultValue={review.id}
         />
         <div className="flex flex-col gap-2">
           <span>Your score</span>
-          <div id="review-score" className="flex flex-row gap-2 items-center">
+          <div
+            id="review-edit-score"
+            className="flex flex-row gap-2 items-center"
+          >
             <button aria-label="1" type="button" className="cursor-pointer">
-              <span className="fa fa-star-o fa-lg checked text-[#f5c518] text-xl inline-block"></span>
+              <span
+                className={`fa fa-star-o fa-lg checked text-[#f5c518] text-xl inline-block`}
+              ></span>
             </button>
             <button aria-label="2" type="button" className="cursor-pointer">
               <span className="fa fa-star-o fa-lg checked text-[#f5c518] text-xl inline-block"></span>
@@ -212,9 +236,9 @@ export default function CreateReview(props: {
             </button>
             <input
               className="hidden"
-              name="score"
-              id="score"
-              value={score}
+              name="edit-score"
+              id="edit-score"
+              value={fields[0]}
               readOnly
             />
           </div>
@@ -222,10 +246,15 @@ export default function CreateReview(props: {
         <div className="flex flex-col h-3/4">
           <textarea
             required
-            name="content"
-            id="content"
+            name="edit-content"
+            id="edit-content"
             className="border-2 h-3/4 p-2 text-start rounded-md items-start justify-start placeholder-gray-400"
             placeholder="Write you review here..."
+            onChange={(e) => {
+              setFields([fields[0], e.target.value]);
+              setFieldsEdited([fieldsEdited[0], true]);
+            }}
+            value={fields[1]}
           />
         </div>
         <span
@@ -244,7 +273,7 @@ export default function CreateReview(props: {
           onClick={() => {
             scoreSelected.current = false;
             const stars = document.querySelectorAll(
-              "#review-sidebar button span"
+              "#review-edit-sidebar button span"
             );
             stars.forEach((star) => {
               star.classList.add("fa-star-o");

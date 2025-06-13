@@ -1,4 +1,16 @@
+import {
+  createComment,
+  findAllCommentsForReview,
+} from "@/app/API/comment/actions";
+import { eraseReview } from "@/app/reviews/actions";
 import Image from "next/image";
+import { useEffect, useState } from "react";
+import Comment from "./comment";
+import { getDecodedToken } from "@/app/movie/[id]/actions";
+import { ModalConfirmation } from "./modalConfirmation";
+import { redirect } from "next/navigation";
+import Button from "./button";
+import ReviewEditSidebar from "./editReview";
 
 interface MovieComponents {
   id: number;
@@ -73,24 +85,131 @@ interface ReviewComponents {
   comentarios: Comment[];
 }
 
-export default function MovieReview(review: ReviewComponents) {
+type JwtBody = {
+  sub: number;
+  role: "user" | "admin";
+  iat: number;
+  exp: number;
+};
+
+export default function MovieReview({
+  review,
+  authorized,
+  onEditDelete,
+}: {
+  review: ReviewComponents;
+  authorized: boolean;
+  onEditDelete: () => void;
+}) {
+  const [commentsOpen, setOpen] = useState(false);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+  const [comments, setComments] = useState<Comment[] | undefined>(undefined);
+  const [contextMenuOpen, setContextOpen] = useState(false);
+  const [commentRefresh, setRefresh] = useState(true);
+  const [token, setToken] = useState<JwtBody | undefined>(undefined);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [newComment, setNewComment] = useState("");
+  const handleModalOpen = () => {
+    if (authorized) {
+      setModalOpen(true);
+      document.body.style.overflow = "hidden";
+    } else {
+      redirect("/login");
+    }
+  };
+  const handleCommentPost = () => {
+    if (token && newComment !== "") {
+      createComment(review.id, newComment);
+      setNewComment("");
+      setRefresh(true);
+    } else if (!token) {
+      redirect("/login");
+    }
+  };
+  useEffect(() => {
+    (async () => {
+      const t = await getDecodedToken();
+      setToken(t);
+    })();
+    async function fetchComments() {
+      const reviewComments = await findAllCommentsForReview(review.id);
+      setComments(reviewComments);
+    }
+    if (commentRefresh) {
+      setRefresh(false);
+      fetchComments();
+    }
+  }, [commentRefresh]);
+  const deleteReview = () => {
+    eraseReview(review.id);
+    onEditDelete();
+  };
+
   return (
-    <div className="flex flex-col gap-3 p-5 bg-[#003566] px-2 py-2 m-3 rounded-sm shadow-lg">
-      <div className="flex flex-row gap-2">
-        <Image
-          className="rounded-full"
-          // This is temporary until we figure out images since the current default is in an ivalid format
-          src={review.user.urlImagen.replace(".", "")}
-          alt="User's Avatar"
-          width={50}
-          height={50}
-        />
-        <div className="p-2 flex flex-col w-full">
-          <h3 className="text-2xl font-semibold">{review.user.username}</h3>
-          <h4 className="text-sm font-medium opacity-60">
-            {review.grupo?.nombre}
-          </h4>
+    <div className="flex flex-col gap-3 p-5 bg-[#003566] px-2 py-2 m-3 rounded-sm shadow-lg w-full">
+      {isSidebarOpen ? (
+        <div>
+          <div className="fixed inset-0 bg-black opacity-60"></div>
+          <ReviewEditSidebar
+            review={review}
+            onClose={() => {
+              setContextOpen(false);
+              setSidebarOpen(false);
+            }}
+            onSubmit={() => {
+              setContextOpen(false);
+              setSidebarOpen(false);
+              onEditDelete();
+            }}
+          />
         </div>
+      ) : null}
+      {modalOpen ? (
+        <ModalConfirmation
+          message={`Are you sure you want to delete this review?`}
+          onAccept={() => {
+            deleteReview();
+            setContextOpen(false);
+            setModalOpen(false);
+            document.body.style.overflow = "unset";
+          }}
+          onCancel={() => {
+            setContextOpen(false);
+            setModalOpen(false);
+            document.body.style.overflow = "unset";
+          }}
+        />
+      ) : null}
+      <div className="flex flex-row justify-between items-center p-1">
+        <div className="flex flex-row gap-2">
+          <Image
+            className="rounded-full"
+            src={review.user.urlImagen}
+            alt="User's Avatar"
+            width={50}
+            height={50}
+          />
+          <div className="p-2 flex flex-col">
+            <h3 className="text-2xl font-semibold">{review.user.username}</h3>
+            <h4 className="text-sm font-medium opacity-60">
+              {review.grupo?.nombre}
+            </h4>
+          </div>
+        </div>
+        {review.pelicula ? (
+          <div className="hidden lg:flex flex-row justify-center items-center gap-3">
+            <Image
+              className="rounded-sm"
+              src={review.pelicula.urlImagen}
+              alt="Movie's Poster"
+              width={36}
+              height={36}
+            />
+            <span className="text-2xl font-semibold text-nowrap">
+              {review.pelicula.nombre}
+            </span>
+          </div>
+        ) : null}
         <div>
           <div className="text-md md:text-xl font-semibold flex justify-end w-full p-2">
             {review.puntuacion}/10
@@ -107,9 +226,88 @@ export default function MovieReview(review: ReviewComponents) {
           </div>
         </div>
       </div>
-      <div className="text-sm p-2 pl-0 lg:pl-15 w-3/4 wrap-balanced md:text-base ">
+      <div className="text-sm p-2 pl-0 lg:pl-15 w-3/4 wrap-balanced md:text-base">
         {review.texto}
       </div>
+      <div className="flex flex-row justify-between items-center">
+        <div className="flex flex-row gap-2 justify-center items-center pl-5">
+          <span className="text-xl font-semibold">
+            {commentsOpen ? "-" : "+"}
+          </span>
+          <button
+            className="text-sm cursor-pointer transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
+            onClick={() => setOpen((prev) => !prev)}
+          >
+            View Comments
+          </button>
+        </div>
+        {authorized ? (
+          <div className="flex flex-row justify-end items-center gap-2 relative">
+            {contextMenuOpen && authorized ? (
+              <div
+                id="contextMenu"
+                className="flex flex-col bg-[#eeeeee] rounded-sm divide-y-1 divide-[#65686c] absolute right-full shadow-md mr-2 z-1"
+              >
+                <div
+                  className="flex flex-row items-center justify-center gap-1 rounded-t-sm bg-[#eeeeee] shadow-md text-[#000814] text-sm p-1.5 hover:bg-[#cccccc] cursor-pointer transition-colors delay-75 duration-150 ease-in-out"
+                  onClick={() => setSidebarOpen((prev) => !prev)}
+                >
+                  <i className="fa fa-edit pl-1"></i>
+                  <button className="pr-1 cursor-pointer" disabled={modalOpen}>
+                    Edit
+                  </button>
+                </div>
+                <div
+                  className="flex flex-row items-center justify-center gap-1 rounded-b-sm bg-[#eeeeee] shadow-md text-[#000814] text-sm p-1.5 hover:bg-[#cccccc] cursor-pointer transition-colors delay-75 duration-200 ease-in-out"
+                  onClick={handleModalOpen}
+                >
+                  <i className="fa fa-trash-o pl-1 text-orange-500"></i>
+                  <button className="pr-1 cursor-pointer" disabled={modalOpen}>
+                    Delete
+                  </button>
+                </div>
+              </div>
+            ) : null}
+            <div
+              className="inline-block cursor-pointer pr-2 pb-2 opacity-100 hover:opacity-60"
+              onClick={() => {
+                setContextOpen((prev) => !prev);
+              }}
+            >
+              <div className="bg-white h-1 w-1 rounded-full mt-1"></div>
+              <div className="bg-white h-1 w-1 rounded-full mt-1"></div>
+              <div className="bg-white h-1 w-1 rounded-full mt-1"></div>
+            </div>
+          </div>
+        ) : null}
+      </div>
+      {commentsOpen ? (
+        <div className="flex flex-col">
+          <div className="flex flex-row gap-2 justify-center items-center p-2">
+            <input
+              className="w-full"
+              type="text"
+              placeholder="Write comment..."
+              id="comment-post"
+              autoComplete="off"
+              onChange={(e) => setNewComment(e.target.value)}
+              value={newComment}
+            />
+            <Button text="Post" onClick={handleCommentPost} />
+          </div>
+          {comments &&
+            comments.map((comment, index) => (
+              <Comment
+                key={index}
+                comment={comment}
+                onDelete={() => setRefresh(true)}
+                authorized={
+                  comment.userId === token?.sub || token?.role === "admin"
+                }
+              />
+            ))}
+        </div>
+      ) : null}
     </div>
   );
 }

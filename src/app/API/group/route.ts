@@ -146,3 +146,138 @@ export async function getGroupMemberCount(id: number) {
     };
   }
 }
+
+export async function groupUpdate(
+  id: number,
+  nombre?: string,
+  descripcion?: string
+) {
+  try {
+    const userCookie = await cookies();
+    const token = userCookie.get("auth_token")?.value;
+
+    const body: Record<string, string> = {};
+    if (nombre !== undefined) body.nombre = nombre;
+    if (descripcion !== undefined) body.descripcion = descripcion;
+
+    const request = await fetch(`${api_URL}/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify(body),
+    });
+
+    const answer = request;
+    const answerJson = await request.json();
+
+    if (answer.status == 201) {
+      return {
+        status: answer.status,
+        body: answerJson,
+      };
+    } else {
+      return {
+        status: answer.status,
+        message: answerJson.message || "An unexpected error ocurred",
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      status: 500,
+      message: "Internal Server Error",
+    };
+  }
+}
+
+export async function findAllGroupsByName(name: string) {
+  try {
+    const params = new URLSearchParams({ q: name });
+    const request = await fetch(`${api_URL}/search/name?${params}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    return await request.json();
+  } catch (e) {
+    console.error(e);
+    return {
+      success: false,
+      status: 500,
+      error: "An unexpected error ocurred",
+    };
+  }
+}
+
+export async function deleteMember(userId: number, groupId: number) {
+  try {
+    const userCookie = await cookies();
+    const token = userCookie.get("auth_token")?.value;
+    const request = await fetch(`${api_URL}/${groupId}/kick/${userId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + token,
+        "Content-Type": "application/json",
+      },
+    });
+
+    return await request.json();
+  } catch (e) {
+    console.error(e);
+    return {
+      success: false,
+      status: 500,
+      message: "Internal Server Error",
+    };
+  }
+}
+
+export async function groupPost(nombre: string, descripcion?: string) {
+  try {
+    const userCookie = await cookies();
+    const token = userCookie.get("auth_token")?.value;
+
+    const body: Record<string, string> = {};
+    body.nombre = nombre;
+    if (descripcion !== undefined) body.descripcion = descripcion;
+
+    const request = await fetch(`${api_URL}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        nombre: nombre,
+        descripcion: descripcion,
+      }),
+    });
+
+    const answer = request;
+    const answerJson = await request.json();
+
+    if (answer.status == 201) {
+      return {
+        status: answer.status,
+        body: answerJson,
+      };
+    } else {
+      return {
+        status: answer.status,
+        message: answerJson.message || "An unexpected error ocurred",
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      status: 500,
+      message: "Internal Server Error",
+    };
+  }
+}

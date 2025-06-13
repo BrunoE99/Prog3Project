@@ -9,8 +9,10 @@ import {
 import NotFoundPage from "../../../../components/notFoundPage";
 import {
   findAllGroupMembers,
+  findAllGroupReviews,
   findGroupById,
   findGroupMemberCount,
+  findMeeting,
   findRoleInGroup,
 } from "../actions";
 
@@ -95,15 +97,20 @@ export default async function Group({ params }: { params: { id: string } }) {
     Number(id)
   );
   const userRole = await findRoleInGroup(Number(id));
+  const meeting = userRole ? await findMeeting() : undefined;
+  const reviews = await findAllGroupReviews(Number(id));
 
   return (
-    <div className="min-h-screen bg-[#001d3d]">
+    <div className="min-h-screen bg-[#001d3d] w-full overflow-x-hidden">
       {group ? (
         <div>
           <GroupHeader {...group} />
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3 divide-x-1 divide-[#65686c]">
-            <GroupMeetingColumn meeting={group.reunion} role={userRole} />
-            <GroupReviews reviews={group.reviews} />
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-3 divide-x-1 divide-[#65686c] md:divide-x-0">
+            <GroupMeetingColumn
+              meeting={meeting && meeting.statusCode ? undefined : meeting}
+              role={userRole}
+            />
+            <GroupReviews reviews={reviews} userRole={userRole} />
             <GroupMembersPreview
               members={groupMembers}
               memberCount={groupMemberCount}

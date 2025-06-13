@@ -2,6 +2,8 @@
 
 import { redirect } from "next/navigation";
 import {
+  deleteMember,
+  findAllGroupsByName,
   getAllGroupMembers,
   getAllGroups,
   getGroupById,
@@ -9,8 +11,17 @@ import {
   getUserInGroup,
   groupJoinPost,
   groupLeavePost,
+  groupPost,
+  groupUpdate,
 } from "../API/group/route";
-import { groupJoinSchema } from "../lib/definitions";
+import {
+  groupCreateSchema,
+  groupEditSchema,
+  groupJoinSchema,
+  MeetingFormSchema,
+} from "../lib/definitions";
+import { meetingDelete, meetingGet, meetingPost } from "../API/meeting/route";
+import { groupReviewsGetAllPaged } from "../API/reviews/route";
 
 export async function findAllGroups() {
   const response = await getAllGroups();
@@ -83,4 +94,135 @@ export async function findRoleInGroup(groupId: number) {
   const response = await getUserInGroup(groupId);
 
   return response.rol;
+}
+
+export async function scheduleMeeting(_: any, formData: FormData) {
+  const fecha = new Date(formData.get("date") as string);
+  const link = formData.get("link") as string;
+
+  const validateFields = MeetingFormSchema.safeParse({
+    fecha: fecha.toISOString(),
+    link: link,
+  });
+
+  if (!validateFields.success) {
+    return {
+      error: validateFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const response = await meetingPost(fecha, link);
+
+  if (response.status === 201) {
+    return {
+      success: true,
+      message: response.message || "Meeting created successfully",
+    };
+  } else {
+    return {
+      status: response.status,
+      error: response.message || "An unexpected error occurred",
+    };
+  }
+}
+
+export async function findMeeting() {
+  const response = await meetingGet();
+
+  return response;
+}
+
+export async function deleteMeeting() {
+  const response = await meetingDelete();
+
+  return response;
+}
+
+export async function editGroup(_: any, formData: FormData) {
+  const id = formData.get("id") as string;
+  const nombre = formData.get("group-name") as string;
+  const descripcion = formData.get("group-description") as string;
+  const editedFields = formData.get("changedFields") as string;
+  const [nameChanged, descriptionChanged] = editedFields.split(",");
+
+  const validateFields = groupEditSchema.safeParse({
+    nombre: nameChanged === "true" ? nombre : undefined,
+    descripcion: descriptionChanged === "true" ? descripcion : undefined,
+  });
+
+  if (!validateFields.success) {
+    return {
+      error: validateFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const response = await groupUpdate(
+    Number(id),
+    nameChanged === "true" ? nombre : undefined,
+    descriptionChanged === "true" ? descripcion : undefined
+  );
+
+  if (response.status === 201) {
+    return {
+      success: true,
+      message: response.message || "Group updated created successfully",
+    };
+  } else {
+    return {
+      status: response.status,
+      error: response.message || "An unexpected error occurred",
+    };
+  }
+}
+
+export async function retrieveFilteredGroups(name: string) {
+  const response = await findAllGroupsByName(name);
+
+  return response;
+}
+
+export async function kickMember(userId: number, groupId: number) {
+  const response = await deleteMember(userId, groupId);
+
+  return response;
+}
+
+export async function findAllGroupReviews(groupId: number, page: number = 0) {
+  const response = await groupReviewsGetAllPaged(groupId, page);
+  if (response.body) {
+    return response.body;
+  }
+
+  return [];
+}
+
+export async function createGroup(_: any, formData: FormData) {
+  const nombre = formData.get("group-name") as string;
+  const descripcion = formData.get("group-description") as string;
+  const descriptionGiven = formData.get("descriptionGiven") as string;
+
+  const validateFields = groupCreateSchema.safeParse({
+    nombre: nombre,
+    descripcion: descriptionGiven === "true" ? descripcion : undefined,
+  });
+
+  if (!validateFields.success) {
+    return {
+      error: validateFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const response = await groupPost(
+    nombre,
+    descriptionGiven === "true" ? descripcion : undefined
+  );
+
+  if (response.status === 201) {
+    return response.body;
+  } else {
+    return {
+      status: response.status,
+      error: response.message || "An unexpected error occurred",
+    };
+  }
 }

@@ -109,6 +109,8 @@ export default function MovieReview({
   const [token, setToken] = useState<JwtBody | undefined>(undefined);
   const [modalOpen, setModalOpen] = useState(false);
   const [newComment, setNewComment] = useState("");
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageChanged, setPaging] = useState(false);
   const handleModalOpen = () => {
     if (authorized) {
       setModalOpen(true);
@@ -132,14 +134,24 @@ export default function MovieReview({
       setToken(t);
     })();
     async function fetchComments() {
-      const reviewComments = await findAllCommentsForReview(review.id);
+      let reviewComments = await findAllCommentsForReview(
+        review.id,
+        pageNumber - 1
+      );
+      if (!reviewComments && pageNumber > 1) {
+        setPageNumber(pageNumber - 1);
+        reviewComments = comments;
+      } else if (!reviewComments && pageNumber === 1) {
+        reviewComments = [];
+      }
       setComments(reviewComments);
     }
-    if (commentRefresh) {
+    if (commentRefresh || pageChanged) {
       setRefresh(false);
+      setPaging(false);
       fetchComments();
     }
-  }, [commentRefresh]);
+  }, [commentRefresh, pageChanged]);
   const deleteReview = () => {
     eraseReview(review.id);
     onEditDelete();
@@ -229,7 +241,11 @@ export default function MovieReview({
       <div className="text-sm p-2 pl-0 lg:pl-15 w-3/4 wrap-balanced md:text-base">
         {review.texto}
       </div>
-      <div className="flex flex-row justify-between items-center">
+      <div
+        className={`flex flex-row justify-between items-center ${
+          commentsOpen ? "border-b-1" : ""
+        }`}
+      >
         <div className="flex flex-row gap-2 justify-center items-center pl-5">
           <span className="text-xl font-semibold">
             {commentsOpen ? "-" : "+"}
@@ -240,6 +256,34 @@ export default function MovieReview({
           >
             View Comments
           </button>
+          <div
+            className={`${
+              commentsOpen ? "flex" : "hidden"
+            } flex-row p-5 items-center`}
+          >
+            <button
+              disabled={pageNumber <= 1}
+              className={`pr-2 text-2xl ${
+                pageNumber <= 1 ? "cursor-default" : "cursor-pointer"
+              }`}
+              onClick={() => {
+                setPageNumber(pageNumber - 1);
+                setPaging(true);
+              }}
+            >
+              &lt;
+            </button>
+            <span className="text-sm">Page {pageNumber}</span>
+            <button
+              className="pl-2 text-2xl cursor-pointer"
+              onClick={() => {
+                setPageNumber(pageNumber + 1);
+                setPaging(true);
+              }}
+            >
+              &gt;
+            </button>
+          </div>
         </div>
         {authorized ? (
           <div className="flex flex-row justify-end items-center gap-2 relative">

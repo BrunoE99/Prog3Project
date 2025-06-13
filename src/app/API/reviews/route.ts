@@ -167,7 +167,7 @@ export async function reviewUpdate(
     const answer = request;
     const answerJson = await request.json();
 
-    if (answer.status == 201) {
+    if (answer.status == 200) {
       return {
         status: answer.status,
         body: answerJson,
@@ -175,7 +175,7 @@ export async function reviewUpdate(
     } else {
       return {
         status: answer.status,
-        message: answerJson.message || "An unexpected error ocurred",
+        error: answerJson.message || "An unexpected error ocurred",
       };
     }
   } catch (error) {
@@ -183,7 +183,7 @@ export async function reviewUpdate(
     return {
       success: false,
       status: 500,
-      message: "Internal Server Error",
+      error: "Internal Server Error",
     };
   }
 }

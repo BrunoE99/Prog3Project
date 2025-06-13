@@ -9,23 +9,31 @@ export async function eraseReview(id: number) {
   return response;
 }
 
-export async function reviewEdit(
-  reviewId: number,
-  texto?: string,
-  puntuacion?: number
-) {
+export async function reviewEdit(_: any, formData: FormData) {
+  const puntuacion = formData.get("edit-score") as string;
+  const texto = formData.get("edit-content") as string;
+  const reviewId = formData.get("review_id") as string;
+  const editedFields = formData.get("changedFields") as string;
+  const [scoreChanged, contentChanged] = editedFields.split(",");
+
   const validateFields = reviewEditSchema.safeParse({
-    puntuacion: puntuacion,
-    texto: texto,
+    puntuacion: scoreChanged === "true" ? puntuacion : undefined,
+    texto: contentChanged === "true" ? texto : undefined,
   });
 
   if (!validateFields.success) {
     return {
+      success: validateFields.success,
+      status: 400,
       error: validateFields.error.flatten().fieldErrors,
     };
   }
 
-  const response = await reviewUpdate(reviewId, puntuacion, texto);
+  const response = await reviewUpdate(
+    Number(reviewId),
+    Number(puntuacion),
+    texto
+  );
 
   return response;
 }

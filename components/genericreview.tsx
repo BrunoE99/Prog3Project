@@ -10,6 +10,7 @@ import { getDecodedToken } from "@/app/movie/[id]/actions";
 import { ModalConfirmation } from "./modalConfirmation";
 import { redirect } from "next/navigation";
 import Button from "./button";
+import ReviewEditSidebar from "./editReview";
 
 interface MovieComponents {
   id: number;
@@ -101,6 +102,7 @@ export default function MovieReview({
   onEditDelete: () => void;
 }) {
   const [commentsOpen, setOpen] = useState(false);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [comments, setComments] = useState<Comment[] | undefined>(undefined);
   const [contextMenuOpen, setContextOpen] = useState(false);
   const [commentRefresh, setRefresh] = useState(true);
@@ -117,7 +119,6 @@ export default function MovieReview({
   };
   const handleCommentPost = () => {
     if (token && newComment !== "") {
-      console.log("here");
       createComment(review.id, newComment);
       setNewComment("");
       setRefresh(true);
@@ -139,9 +140,6 @@ export default function MovieReview({
       fetchComments();
     }
   }, [commentRefresh]);
-  const editReview = () => {
-    onEditDelete();
-  };
   const deleteReview = () => {
     eraseReview(review.id);
     onEditDelete();
@@ -149,11 +147,29 @@ export default function MovieReview({
 
   return (
     <div className="flex flex-col gap-3 p-5 bg-[#003566] px-2 py-2 m-3 rounded-sm shadow-lg w-full">
+      {isSidebarOpen ? (
+        <div>
+          <div className="fixed inset-0 bg-black opacity-60"></div>
+          <ReviewEditSidebar
+            review={review}
+            onClose={() => {
+              setContextOpen(false);
+              setSidebarOpen(false);
+            }}
+            onSubmit={() => {
+              setContextOpen(false);
+              setSidebarOpen(false);
+              onEditDelete();
+            }}
+          />
+        </div>
+      ) : null}
       {modalOpen ? (
         <ModalConfirmation
           message={`Are you sure you want to delete this review?`}
           onAccept={() => {
             deleteReview();
+            setContextOpen(false);
             setModalOpen(false);
             document.body.style.overflow = "unset";
           }}
@@ -234,7 +250,7 @@ export default function MovieReview({
               >
                 <div
                   className="flex flex-row items-center justify-center gap-1 rounded-t-sm bg-[#eeeeee] shadow-md text-[#000814] text-sm p-1.5 hover:bg-[#cccccc] cursor-pointer transition-colors delay-75 duration-150 ease-in-out"
-                  onClick={editReview}
+                  onClick={() => setSidebarOpen((prev) => !prev)}
                 >
                   <i className="fa fa-edit pl-1"></i>
                   <button className="pr-1 cursor-pointer" disabled={modalOpen}>

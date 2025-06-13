@@ -216,24 +216,26 @@ export function MovieReviewsSection({
 
   return (
     <section className="mx-auto py-20 px-6">
-      <div className={`${isSidebarOpen ? "flex" : "hidden"}`}>
-        <button
-          className="fixed top-3 right-3 text-4xl mr-4 mt-0.5 z-2 justify-center dark:text-white text-black cursor-pointer rounded-full hover:bg-[#bdbcb968] h-10 w-10 transition-all delay-75 duration-100 ease-in-out"
-          onClick={() => handleSidebarToggle()}
-        >
-          &times;
-        </button>
-        <CreateReview
-          movie={movie}
-          onSubmit={() => setSubmit(true)}
-          groupId={undefined}
-        />
-      </div>
-      <div
-        className={`${
-          isSidebarOpen ? "fixed" : "hidden"
-        } inset-0 bg-black opacity-60`}
-      ></div>
+      {isSidebarOpen ? (
+        <div className={`${isSidebarOpen ? "flex" : "hidden"}`}>
+          <button
+            className="fixed top-3 right-3 text-4xl mr-4 mt-0.5 z-2 justify-center dark:text-white text-black cursor-pointer rounded-full hover:bg-[#bdbcb968] h-10 w-10 transition-all delay-75 duration-100 ease-in-out"
+            onClick={() => handleSidebarToggle()}
+          >
+            &times;
+          </button>
+          <CreateReview
+            movie={movie}
+            onSubmit={() => setSubmit(true)}
+            groupId={undefined}
+          />
+          <div
+            className={`${
+              isSidebarOpen ? "fixed" : "hidden"
+            } inset-0 bg-black opacity-60`}
+          ></div>
+        </div>
+      ) : null}
       <div className="flex flex-row justify-between items-center bg-[#001d3d] p-5">
         <div className="flex flex-col items-start gap-4">
           <div className="flex flex-row items-center gap-6">
@@ -315,9 +317,6 @@ export function MovieReviewsSection({
         <button
           className="pl-2 text-2xl cursor-pointer"
           onClick={() => {
-            // Cambiar esto a cuando el response.next == null asi no permitimos pasar a paginas pasadas del limite, usando disabled = {}
-            // lo mismo con cursor-pointer a cursor-default
-
             setPageNumber(pageNumber + 1);
             setPaging(true);
           }}

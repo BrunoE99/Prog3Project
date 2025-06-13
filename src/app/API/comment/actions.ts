@@ -31,7 +31,5 @@ export async function createComment(reviewId: number, texto: string) {
 
   const response = await postComment(reviewId, texto);
 
-  console.log(response);
-
   return response;
 }

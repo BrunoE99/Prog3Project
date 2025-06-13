@@ -1,3 +1,11 @@
-export default function AllGenres() {
-    return <p>this is all the genres</p>
+import GenreCard from "../../../components/movieGenreCard";
+
+export default async function AllGenres() {
+    
+
+    return (
+        <div>
+            <GenreCard moviesPerGenre={4} />
+        </div>
+    );
 }

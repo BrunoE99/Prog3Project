@@ -1,10 +1,10 @@
 'use client'
 
 import { redirect } from "next/navigation"
-import { Movie } from "./reviewsection"
+import { Movie, MovieWithReviews } from "./reviewsection"
 import Image from 'next/image'
 
-export default function MovieCardFull({ pelicula, key, }: { pelicula: Movie, key: number }) {
+export default function MovieCardFull({ pelicula, key, }: { pelicula: MovieWithReviews, key: number }) {
     const clicked = () => redirect('/movie/' + pelicula.id)
 
     return (
@@ -31,7 +31,7 @@ export default function MovieCardFull({ pelicula, key, }: { pelicula: Movie, key
                         <span className="hidden sm:inline">Details and reviews</span>
                         <span className="sm:hidden">Details</span>
                     </button>
-                    <span className="text-white text-xl m-1">💬125</span>
+                    <span className="text-white text-xl m-1">💬{pelicula.reviewCount}</span>
                 </div>
             </div>
             {/* <Button text="Read reviews" onClick={clicked} /> */}

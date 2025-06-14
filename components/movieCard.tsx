@@ -2,11 +2,13 @@
 
 import { redirect } from "next/navigation"
 import Button from "./button"
-import { Movie } from "./reviewsection"
+import { MovieWithReviews } from "./reviewsection"
 import Image from 'next/image'
 
-export default function MovieCard({ pelicula, key }: { pelicula: Movie, key: number }) {
+export default function MovieCard({ pelicula, key }: { pelicula: MovieWithReviews, key: number }) {
     const clicked = () => redirect('/movie/' + pelicula.id)
+
+    console.log(pelicula);
 
     return (
         <div key={key} className="bg-[#003566] p-4 w=1/3 rounded-xl text-center">
@@ -21,7 +23,7 @@ export default function MovieCard({ pelicula, key }: { pelicula: Movie, key: num
             <div className="flex justify-between">
                 <span className="text-[#f5c518] text-xl m-1">⭐{pelicula.calificacion}</span>
                 <Button text="Read reviews" onClick={clicked} />
-                <span className="text-white text-xl m-1">💬125</span>
+                <span className="text-white text-xl m-1">💬{pelicula.reviewCount}</span>
             </div>        
         </div>
     )

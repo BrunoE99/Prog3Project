@@ -224,3 +224,98 @@ export async function reviewDelete(id: number) {
     };
   }
 }
+
+export async function reviewByUserID(userId: number, pagination: number) {
+  const params = new URLSearchParams({
+    page: pagination.toString()
+  });
+
+  try {
+    const request = await fetch(`${api_URL}/user/${userId}?${params.toString()}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const response = request;
+    const responseJson = await request.json();
+
+    if (response.status === 200) {
+      return {
+        status: response.status,
+        reviews: responseJson,
+        currentPage: pagination,
+        hasMovies: true
+      };
+    } else if (response.status === 400) {
+      return {
+        status: response.status,
+        hasMovies: false,
+        message: responseJson.message || "Bad request",
+      };
+    } else if (response.status === 404) {
+      return {
+        status: response.status,
+        currentPage: pagination,
+        hasMovies: false,
+        message: responseJson.message || "Reviews not found"
+      }
+    } else {
+      return {
+        status: response.status,
+        hasMovies: false,
+        message: responseJson.message || "Unexpected error"
+      }
+    }
+  } catch (e) {
+    console.error(e);
+    return {
+      success: false,
+      status: 500,
+      message: "Internal server error",
+    };
+  }
+}
+
+export async function reviewsByMovieCount(movieId: number) {
+  try {
+    const request = await fetch(`${api_URL}/pelicula/${movieId}/count`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const response = request;
+    const responseJson = await request.json();
+
+    // console.log(responseJson.cantidad);
+
+    if (response.status === 200) {
+      return responseJson.cantidad
+    } else if (response.status === 400) {
+      return {
+        status: response.status,
+        message: responseJson.message || "Bad request",
+      };
+    } else if (response.status === 404) {
+      return {
+        status: response.status,
+        message: responseJson.message || "Movie not found"
+      }
+    } else {
+      return {
+        status: response.status,
+        message: responseJson.message || "Unexpected error"
+      }
+    }
+  } catch (e) {
+    console.error(e);
+    return {
+      success: false,
+      status: 500,
+      message: "Internal server error",
+    };
+  }
+}

@@ -2,6 +2,7 @@ import { movieByGenre } from "@/app/API/movie/route";
 import MovieCardFull from "./movieCardComplete";
 import MovieFilter from "./filter";
 import Pagination from "./pagination";
+import { reviewsByMovieCount } from "@/app/API/reviews/route";
 
 export interface Movie {
     id: number;
@@ -12,6 +13,10 @@ export interface Movie {
     duracion: number;
     urlImagen: any;
     calificacion: number;
+}
+
+export interface MovieWithReviews extends Movie {
+    reviewCount: number;
 }
 
 interface GenresProps {
@@ -29,6 +34,16 @@ export default async function ByGenre({ genre, filter, order, page }: GenresProp
     // console.log(peliculas.status);
 
     // console.log(peliculas);
+
+    const moviesWithReviews: MovieWithReviews[] = await Promise.all(
+        peliculas.movies.map(async (pelicula: Movie) => {
+            const reviewCount = await reviewsByMovieCount(pelicula.id);
+            return {
+                ...pelicula,
+                reviewCount: typeof reviewCount === 'number' ? reviewCount : 0
+            };
+        })
+    );
 
     if (peliculas.status === 500) {
         return (
@@ -96,7 +111,7 @@ export default async function ByGenre({ genre, filter, order, page }: GenresProp
                 </div>
                 <h2 className="text-2xl font-semibold mb-4 p-5">{peliculas.movies.nombre}</h2>
                 <div className="grid grid-cols-1 gap-6 p-5">
-                    {peliculas.movies.map((pelicula: Movie, index: number) => (
+                    {moviesWithReviews.map((pelicula: MovieWithReviews, index: number) => (
                         <MovieCardFull pelicula={pelicula} key={index} />
                     ))}
                 </div>

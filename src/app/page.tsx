@@ -1,4 +1,3 @@
-import Image from "next/image";
 import HeroSection from "../../components/herosection";
 import AllReviews from "../../components/reviewsection";
 

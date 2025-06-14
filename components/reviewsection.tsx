@@ -1,5 +1,6 @@
 import { getAllMovies } from "@/app/API/movie/route";
 import MovieCard from "./movieCard";
+import { reviewsByMovieCount } from "@/app/API/reviews/route";
 
 export interface Movie {
     id: number;
@@ -12,12 +13,26 @@ export interface Movie {
     calificacion: number;
 }
 
+export interface MovieWithReviews extends Movie {
+    reviewCount: number;
+}
+
 export default async function AllReviews() {
     const rating = 'desc';
     const alphabetic = '';
     const peliculas = await getAllMovies(0, rating);
 
     // console.log(peliculas);
+
+    const moviesWithReviews: MovieWithReviews[] = await Promise.all(
+        peliculas.movies.map(async (pelicula: Movie) => {
+            const reviewCount = await reviewsByMovieCount(pelicula.id);
+            return {
+                ...pelicula,
+                reviewCount: typeof reviewCount === 'number' ? reviewCount : 0
+            };
+        })
+    );
 
     return (
         <section className="px-6 py-10 bg-[#003566]">
@@ -26,7 +41,7 @@ export default async function AllReviews() {
                     <h1 className="text-2xl font-bold text-center pt-3">Top rated movies</h1>
                     <h2 className="text-2xl font-semibold mb-4 p-5">{peliculas.movies.nombre}</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-5 lg:grid-cols-5">
-                        {peliculas.movies.map((pelicula: Movie, index: number) => (
+                        {moviesWithReviews.map((pelicula: MovieWithReviews, index: number) => (
                             <MovieCard pelicula={pelicula} key={index} />
                         ))}
                     </div>

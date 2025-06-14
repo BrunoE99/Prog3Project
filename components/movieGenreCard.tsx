@@ -4,6 +4,7 @@ import MovieCard from './movieCard';
 import { getAllGenres } from '@/app/API/genres/route';
 import { movieByGenre } from '@/app/API/movie/route';
 import { redirect } from 'next/navigation';
+import { reviewsByMovieCount } from '@/app/API/reviews/route';
 
 interface Genre {
   id: number;
@@ -19,6 +20,10 @@ export interface Movie {
     duracion: number;
     urlImagen: any;
     calificacion: number;
+}
+
+export interface MovieWithReviews extends Movie {
+    reviewCount: number;
 }
 
 interface GenreShowcaseProps {
@@ -52,12 +57,33 @@ const GenreCard: React.FC<GenreShowcaseProps> = async ({
     });
 
     const genreMoviesData = await Promise.all(genreMoviesPromises);
+    // console.log(genreMoviesData)
+
+    const genreMoviesWithReviews = await Promise.all(
+      genreMoviesData.map(async (genreData) => {
+        // For each genre, add review counts to its movies
+        const moviesWithReviews = await Promise.all(
+          genreData.movies.map(async (movie: Movie) => {
+            const reviewCount = await reviewsByMovieCount(movie.id);
+            return {
+              ...movie,
+              reviewCount: typeof reviewCount === 'number' ? reviewCount : 0
+            };
+          })
+        );
+        
+        return {
+          genre: genreData.genre,
+          movies: moviesWithReviews
+        };
+      })
+    );
 
     return (
       <div className={`space-y-8 ${className}`}>
         <h2 className="text-3xl font-bold my-6 text-center">Movies by Genres</h2>
         
-        {genreMoviesData.map(({ genre, movies }) => (
+        {genreMoviesWithReviews.map(({ genre, movies }) => (
           <div key={genre.id} className="bg-[#021f3b] rounded-lg shadow-lg p-6 mx-3">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-2xl font-semibold">{genre.nombre}</h3>
@@ -68,7 +94,7 @@ const GenreCard: React.FC<GenreShowcaseProps> = async ({
 
             {movies.length > 0 ? (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {movies.map((movie: Movie) => (
+                {movies.map((movie: MovieWithReviews) => (
                   <MovieCard key={movie.id} pelicula={movie} />
                 ))}
               </div>

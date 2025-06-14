@@ -227,16 +227,19 @@ export async function reviewDelete(id: number) {
 
 export async function reviewByUserID(userId: number, pagination: number) {
   const params = new URLSearchParams({
-    page: pagination.toString()
+    page: pagination.toString(),
   });
 
   try {
-    const request = await fetch(`${api_URL}/user/${userId}?${params.toString()}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const request = await fetch(
+      `${api_URL}/user/${userId}?${params.toString()}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     const response = request;
     const responseJson = await request.json();
@@ -246,7 +249,7 @@ export async function reviewByUserID(userId: number, pagination: number) {
         status: response.status,
         reviews: responseJson,
         currentPage: pagination,
-        hasMovies: true
+        hasMovies: true,
       };
     } else if (response.status === 400) {
       return {
@@ -259,14 +262,14 @@ export async function reviewByUserID(userId: number, pagination: number) {
         status: response.status,
         currentPage: pagination,
         hasMovies: false,
-        message: responseJson.message || "Reviews not found"
-      }
+        message: responseJson.message || "Reviews not found",
+      };
     } else {
       return {
         status: response.status,
         hasMovies: false,
-        message: responseJson.message || "Unexpected error"
-      }
+        message: responseJson.message || "Unexpected error",
+      };
     }
   } catch (e) {
     console.error(e);
@@ -290,10 +293,8 @@ export async function reviewsByMovieCount(movieId: number) {
     const response = request;
     const responseJson = await request.json();
 
-    // console.log(responseJson.cantidad);
-
     if (response.status === 200) {
-      return responseJson.cantidad
+      return responseJson.cantidad;
     } else if (response.status === 400) {
       return {
         status: response.status,
@@ -302,13 +303,13 @@ export async function reviewsByMovieCount(movieId: number) {
     } else if (response.status === 404) {
       return {
         status: response.status,
-        message: responseJson.message || "Movie not found"
-      }
+        message: responseJson.message || "Movie not found",
+      };
     } else {
       return {
         status: response.status,
-        message: responseJson.message || "Unexpected error"
-      }
+        message: responseJson.message || "Unexpected error",
+      };
     }
   } catch (e) {
     console.error(e);

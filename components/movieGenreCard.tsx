@@ -1,10 +1,10 @@
-import React from 'react';
-import Link from 'next/link';
-import MovieCard from './movieCard';
-import { getAllGenres } from '@/app/API/genres/route';
-import { movieByGenre } from '@/app/API/movie/route';
-import { redirect } from 'next/navigation';
-import { reviewsByMovieCount } from '@/app/API/reviews/route';
+import React from "react";
+import Link from "next/link";
+import MovieCard from "./movieCard";
+import { getAllGenres } from "@/app/API/genres/route";
+import { movieByGenre } from "@/app/API/movie/route";
+import { redirect } from "next/navigation";
+import { reviewsByMovieCount } from "@/app/API/reviews/route";
 
 interface Genre {
   id: number;
@@ -12,18 +12,18 @@ interface Genre {
 }
 
 export interface Movie {
-    id: number;
-    nombre: string;
-    sinopsis: string;
-    genero: number;
-    fechaEstreno: string;
-    duracion: number;
-    urlImagen: any;
-    calificacion: number;
+  id: number;
+  nombre: string;
+  sinopsis: string;
+  genero: number;
+  fechaEstreno: string;
+  duracion: number;
+  urlImagen: any;
+  calificacion: number;
 }
 
 export interface MovieWithReviews extends Movie {
-    reviewCount: number;
+  reviewCount: number;
 }
 
 interface GenreShowcaseProps {
@@ -31,33 +31,30 @@ interface GenreShowcaseProps {
   moviesPerGenre?: number;
 }
 
-const GenreCard: React.FC<GenreShowcaseProps> = async ({ 
-  className = '',
-  moviesPerGenre = 4 
+const GenreCard: React.FC<GenreShowcaseProps> = async ({
+  className = "",
+  moviesPerGenre = 4,
 }) => {
   try {
     const genres: Genre[] = await getAllGenres();
-    
+
     const genreMoviesPromises = genres.map(async (genre) => {
       try {
-        // console.log(genre);
         const movies = await movieByGenre(genre.nombre, 0);
-        // console.log(movies);
         return {
           genre,
-          movies: movies.movies.slice(0, moviesPerGenre)
+          movies: movies.movies.slice(0, moviesPerGenre),
         };
       } catch (error) {
         console.error(`Failed to get movies for genre ${genre.nombre}:`, error);
         return {
           genre,
-          movies: []
+          movies: [],
         };
       }
     });
 
     const genreMoviesData = await Promise.all(genreMoviesPromises);
-    // console.log(genreMoviesData)
 
     const genreMoviesWithReviews = await Promise.all(
       genreMoviesData.map(async (genreData) => {
@@ -67,27 +64,35 @@ const GenreCard: React.FC<GenreShowcaseProps> = async ({
             const reviewCount = await reviewsByMovieCount(movie.id);
             return {
               ...movie,
-              reviewCount: typeof reviewCount === 'number' ? reviewCount : 0
+              reviewCount: typeof reviewCount === "number" ? reviewCount : 0,
             };
           })
         );
-        
+
         return {
           genre: genreData.genre,
-          movies: moviesWithReviews
+          movies: moviesWithReviews,
         };
       })
     );
 
     return (
       <div className={`space-y-8 ${className}`}>
-        <h2 className="text-3xl font-bold my-6 text-center">Movies by Genres</h2>
-        
+        <h2 className="text-3xl font-bold my-6 text-center">
+          Movies by Genres
+        </h2>
+
         {genreMoviesWithReviews.map(({ genre, movies }) => (
-          <div key={genre.id} className="bg-[#021f3b] rounded-lg shadow-lg p-6 mx-3">
+          <div
+            key={genre.id}
+            className="bg-[#021f3b] rounded-lg shadow-lg p-6 mx-3"
+          >
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-2xl font-semibold">{genre.nombre}</h3>
-              <Link href={`/genres/${encodeURIComponent(genre.nombre)}`} className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium">
+              <Link
+                href={`/genres/${encodeURIComponent(genre.nombre)}`}
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
+              >
                 View all {genre.nombre} movies
               </Link>
             </div>
@@ -105,7 +110,7 @@ const GenreCard: React.FC<GenreShowcaseProps> = async ({
             )}
           </div>
         ))}
-        
+
         {genres.length === 0 && (
           <div className="text-center py-12 text-gray-500">
             <p className="text-lg">No genres available at the moment.</p>
@@ -114,7 +119,7 @@ const GenreCard: React.FC<GenreShowcaseProps> = async ({
       </div>
     );
   } catch (error) {
-    console.error('Error getting genres and movies:', error);
+    console.error("Error getting genres and movies:", error);
     return (
       <div className={`text-center text-red-600 p-8 ${className}`}>
         <p>Failed to load genres and movies..</p>

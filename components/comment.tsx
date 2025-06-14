@@ -122,7 +122,7 @@ export default function Comment({
         <div className="flex flex-col w-full p-1.5">
           <div className="flex flex-row gap-3 items-center justify-start">
             <Image
-              src={comment.user.urlImagen}
+              src={`http://localhost:3000${comment.user.urlImagen}`}
               alt="Commenter's Profile Picture"
               width={25}
               height={25}

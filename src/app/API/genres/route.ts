@@ -2,7 +2,6 @@ import "server-only";
 
 const api_URL = "http:localhost:3000/api/generos";
 
-
 export async function getAllGenres() {
   try {
     const request = await fetch(`${api_URL}`, {
@@ -13,9 +12,7 @@ export async function getAllGenres() {
     });
 
     const response = request;
-    // console.log('response: ', response);
     const responseJson = await request.json();
-    // console.log('response json: ', responseJson);
 
     if (response.status === 200) {
       return responseJson;

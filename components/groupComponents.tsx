@@ -453,8 +453,8 @@ export function GroupMembersPreview({
           member.rol === "lider" ? (
             <div key={index} className="flex flex-row items-center gap-2 pt-3">
               <Image
-                src={member.urlImagen || "/default-user.png"}
-                alt={member.urlImagen}
+                src={`http://localhost:3000${member.urlImagen}`}
+                alt={"Profile Icon"}
                 width={32}
                 height={32}
                 className="rounded-full"

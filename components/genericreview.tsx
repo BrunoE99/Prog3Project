@@ -196,7 +196,7 @@ export default function MovieReview({
         <div className="flex flex-row gap-2">
           <Image
             className="rounded-full"
-            src={review.user.urlImagen}
+            src={`http://localhost:3000${review.user.urlImagen}`}
             alt="User's Avatar"
             width={50}
             height={50}
@@ -209,7 +209,10 @@ export default function MovieReview({
           </div>
         </div>
         {review.pelicula ? (
-          <div className="hidden lg:flex flex-row justify-center items-center gap-3">
+          <div
+            className="hidden lg:flex flex-row justify-center items-center gap-3 cursor-pointer"
+            onClick={() => redirect(`/movie/${review.peliculaId}`)}
+          >
             <Image
               className="rounded-sm"
               src={review.pelicula.urlImagen}
@@ -238,7 +241,7 @@ export default function MovieReview({
           </div>
         </div>
       </div>
-      <div className="text-sm p-2 pl-0 lg:pl-15 w-3/4 wrap-balanced md:text-base">
+      <div className="text-sm p-2 pl-0 lg:pl-15 w-3/4 md:text-base h-fit wrap-normal">
         {review.texto}
       </div>
       <div

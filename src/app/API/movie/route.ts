@@ -23,16 +23,17 @@ export async function getAllMoviesByName(name: string) {
   }
 }
 
-
-export async function getAllMovies(pagination: number, rating?: string | null, alphabetic?: string | null) {
+export async function getAllMovies(
+  pagination: number,
+  rating?: string | null,
+  alphabetic?: string | null
+) {
   const params = new URLSearchParams({
-    page: pagination.toString()
+    page: pagination.toString(),
   });
 
-  if (rating) params.append('rating', rating);
-  if (alphabetic) params.append('alphabetic', alphabetic);
-
-  // console.log(params.toString());
+  if (rating) params.append("rating", rating);
+  if (alphabetic) params.append("alphabetic", alphabetic);
 
   try {
     const request = await fetch(`${api_URL}?${params.toString()}`, {
@@ -44,13 +45,12 @@ export async function getAllMovies(pagination: number, rating?: string | null, a
 
     const response = request;
     const responseJson = await request.json();
-    // console.log('response json: ', responseJson);
 
     if (response.status === 200) {
       return {
         movies: responseJson,
         currentPage: pagination,
-        hasMovies: true
+        hasMovies: true,
       };
     } else if (response.status === 400) {
       return {
@@ -63,14 +63,14 @@ export async function getAllMovies(pagination: number, rating?: string | null, a
         status: response.status,
         currentPage: pagination,
         hasMovies: false,
-        message: responseJson.message || "No se encontraron peliculas"
-      }
+        message: responseJson.message || "No se encontraron peliculas",
+      };
     } else {
       return {
         status: response.status,
         hasMovies: false,
-        message: responseJson.message || "Unexpected error"
-      }
+        message: responseJson.message || "Unexpected error",
+      };
     }
   } catch (e) {
     console.error(e);
@@ -121,31 +121,39 @@ export async function getMovie(pelicula_id: number) {
   }
 }
 
-export async function movieByGenre(genre: string, pagination: number, rating?: string | null, alphabetic?: string | null) {
+export async function movieByGenre(
+  genre: string,
+  pagination: number,
+  rating?: string | null,
+  alphabetic?: string | null
+) {
   const params = new URLSearchParams({
-    page: pagination.toString()
+    page: pagination.toString(),
   });
 
-  if (rating) params.append('rating', rating);
-  if (alphabetic) params.append('alphabetic', alphabetic);
+  if (rating) params.append("rating", rating);
+  if (alphabetic) params.append("alphabetic", alphabetic);
 
   try {
-    const request = await fetch(`${api_URL}/generos/${genre}?${params.toString()}`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json'
+    const request = await fetch(
+      `${api_URL}/generos/${genre}?${params.toString()}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }
-    })
+    );
 
     const response = request;
-    const responseJson = await request.json()
+    const responseJson = await request.json();
     // return data;
 
     if (response.status === 200) {
       return {
         movies: responseJson,
         currentPage: pagination,
-        hasMovies: true
+        hasMovies: true,
       };
     } else if (response.status === 400) {
       return {
@@ -158,24 +166,20 @@ export async function movieByGenre(genre: string, pagination: number, rating?: s
         status: response.status,
         currentPage: pagination,
         hasMovies: false,
-        message: responseJson.message || "No se encontraron peliculas"
-      }
+        message: responseJson.message || "No se encontraron peliculas",
+      };
     } else {
       return {
         status: response.status,
         hasMovies: false,
-        message: responseJson.message || "Unexpected error"
-      }
+        message: responseJson.message || "Unexpected error",
+      };
     }
-
-
-
-
   } catch (err) {
-    console.error('Signup failed: ', err)
+    console.error("Signup failed: ", err);
     return {
       success: false,
-      message: 'Unexpected error.'
-    }
+      message: "Unexpected error.",
+    };
   }
 }

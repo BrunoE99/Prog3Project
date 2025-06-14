@@ -1,27 +1,25 @@
 import AllMovies from "../../../components/allMovies";
 
 interface PageProps {
-    searchParams?: {
-        filter?: string;
-        order?: string;
-        page?: string;
-    }
+  searchParams?: {
+    filter?: string;
+    order?: string;
+    page?: string;
+  };
 }
 
 export default async function CompleteMovies({ searchParams }: PageProps) {
-    const awaitedSearchParams = await searchParams;
+  const awaitedSearchParams = await searchParams;
 
-    const filter = awaitedSearchParams?.filter || 'default';
-    const order = awaitedSearchParams?.order || 'asc';
-    const page : number = awaitedSearchParams?.page ? Number(awaitedSearchParams.page) || 0 : 0;
+  const filter = awaitedSearchParams?.filter || "default";
+  const order = awaitedSearchParams?.order || "asc";
+  const page: number = awaitedSearchParams?.page
+    ? Number(awaitedSearchParams.page) || 0
+    : 0;
 
-    // console.log(filter)
-    // console.log(order)
-    // console.log(page)
-
-    return (
-        <div>
-            <AllMovies  filter={filter} order={order} page={page}/>
-        </div>
-    )
+  return (
+    <div>
+      <AllMovies filter={filter} order={order} page={page} />
+    </div>
+  );
 }

@@ -176,8 +176,8 @@ export function GroupMembersBody({
               >
                 <div className="flex flex-row justify-center items-center gap-2">
                   <Image
-                    src={member.urlImagen || "/default-user.png"}
-                    alt={member.urlImagen}
+                    src={`http://localhost:3000${member.urlImagen}`}
+                    alt={"Profile Icon"}
                     width={32}
                     height={32}
                     className="rounded-full"
@@ -218,8 +218,8 @@ export function GroupMembersBody({
               >
                 <div className="flex flex-row justify-center items-center gap-2">
                   <Image
-                    src={member.urlImagen || "/default-user.png"}
-                    alt={member.urlImagen}
+                    src={`http://localhost:3000${member.urlImagen}`}
+                    alt={"Profile Icon"}
                     width={32}
                     height={32}
                     className="rounded-full"

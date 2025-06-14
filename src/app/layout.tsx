@@ -8,6 +8,7 @@ import { cookies } from "next/headers";
 import { DecodeToken } from "@/actions";
 import { Suspense } from "react";
 import SignupSuccessHandler from "./(auth)/signup/signupHandler";
+import { getAllGenres } from "./API/genres/route";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const genres = await getAllGenres();
   const token = (await cookies()).get("auth_token")?.value;
 
   let userId: number | null = null;
@@ -41,13 +43,13 @@ export default async function RootLayout({
         className={`${inter.className} antialiased min-h-full flex flex-col min-w-full`}
       >
         <header>
-          <Navbar token={token} userId={userId} />
+          <Navbar token={token} userId={userId} allGenres={genres} />
         </header>
         <main className="flex-1 flex flex-col">{children}</main>
         <footer>
           <Footer />
         </footer>
-
+        
         <Suspense fallback={null}>
           <LoginSuccessHandler />
           <SignupSuccessHandler />

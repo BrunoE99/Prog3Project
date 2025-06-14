@@ -1,6 +1,9 @@
-import AllMovies from "../../../components/allMovies";
+import ByGenre from "../../../../components/movieByGenre";
 
-interface PageProps {
+interface GenrePage {
+    params: {
+        genreId: string;
+    },
     searchParams?: {
         filter?: string;
         order?: string;
@@ -8,20 +11,20 @@ interface PageProps {
     }
 }
 
-export default async function CompleteMovies({ searchParams }: PageProps) {
+export default async function oneGenre({ params, searchParams }: GenrePage) {
+    const genreMovie = decodeURIComponent((await params).genreId);
+
     const awaitedSearchParams = await searchParams;
 
     const filter = awaitedSearchParams?.filter || 'default';
     const order = awaitedSearchParams?.order || 'asc';
     const page : number = awaitedSearchParams?.page ? Number(awaitedSearchParams.page) || 0 : 0;
 
-    // console.log(filter)
-    // console.log(order)
-    // console.log(page)
+    console.log(genreMovie);
 
     return (
         <div>
-            <AllMovies  filter={filter} order={order} page={page}/>
+            <ByGenre genre={genreMovie} filter={filter} order={order} page={page} />
         </div>
     )
 }

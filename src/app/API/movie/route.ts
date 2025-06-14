@@ -12,7 +12,7 @@ export async function getAllMoviesByName(name: string) {
       },
     });
 
-    return await request.json();
+    return request.json();
   } catch (e) {
     console.error(e);
     return {
@@ -23,10 +23,16 @@ export async function getAllMoviesByName(name: string) {
   }
 }
 
-export async function getAllMovies(pagination: number) {
+
+export async function getAllMovies(pagination: number, rating?: string | null, alphabetic?: string | null) {
   const params = new URLSearchParams({
-    page: pagination.toString(),
+    page: pagination.toString()
   });
+
+  if (rating) params.append('rating', rating);
+  if (alphabetic) params.append('alphabetic', alphabetic);
+
+  // console.log(params.toString());
 
   try {
     const request = await fetch(`${api_URL}?${params.toString()}`, {
@@ -38,21 +44,41 @@ export async function getAllMovies(pagination: number) {
 
     const response = request;
     const responseJson = await request.json();
+    // console.log('response json: ', responseJson);
 
     if (response.status === 200) {
-      return responseJson;
+      return {
+        movies: responseJson,
+        currentPage: pagination,
+        hasMovies: true
+      };
     } else if (response.status === 400) {
       return {
         status: response.status,
+        hasMovies: false,
         message: responseJson.message || "Bad request",
       };
+    } else if (response.status === 404) {
+      return {
+        status: response.status,
+        currentPage: pagination,
+        hasMovies: false,
+        message: responseJson.message || "No se encontraron peliculas"
+      }
+    } else {
+      return {
+        status: response.status,
+        hasMovies: false,
+        message: responseJson.message || "Unexpected error"
+      }
     }
   } catch (e) {
     console.error(e);
     return {
       success: false,
       status: 500,
-      error: "An unexpected error ocurred",
+      hasMovies: false,
+      message: "Internal server error",
     };
   }
 }
@@ -95,27 +121,61 @@ export async function getMovie(pelicula_id: number) {
   }
 }
 
-export async function movieByGenre(genre: string) {
-  const pagination = 0;
+export async function movieByGenre(genre: string, pagination: number, rating?: string | null, alphabetic?: string | null) {
+  const params = new URLSearchParams({
+    page: pagination.toString()
+  });
+
+  if (rating) params.append('rating', rating);
+  if (alphabetic) params.append('alphabetic', alphabetic);
 
   try {
-    const userInfo = await fetch(
-      `${api_URL}/generos/${genre}?page=${pagination}`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
+    const request = await fetch(`${api_URL}/generos/${genre}?${params.toString()}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
       }
-    );
+    })
 
-    const data = await userInfo.json();
-    return data;
+    const response = request;
+    const responseJson = await request.json()
+    // return data;
+
+    if (response.status === 200) {
+      return {
+        movies: responseJson,
+        currentPage: pagination,
+        hasMovies: true
+      };
+    } else if (response.status === 400) {
+      return {
+        status: response.status,
+        hasMovies: false,
+        message: responseJson.message || "Bad request",
+      };
+    } else if (response.status === 404) {
+      return {
+        status: response.status,
+        currentPage: pagination,
+        hasMovies: false,
+        message: responseJson.message || "No se encontraron peliculas"
+      }
+    } else {
+      return {
+        status: response.status,
+        hasMovies: false,
+        message: responseJson.message || "Unexpected error"
+      }
+    }
+
+
+
+
   } catch (err) {
-    console.error("Signup failed: ", err);
+    console.error('Signup failed: ', err)
     return {
       success: false,
-      message: "Unexpected error.",
-    };
+      message: 'Unexpected error.'
+    }
   }
 }

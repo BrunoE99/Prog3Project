@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import "server-only";
 
 const api_URL = "http:localhost:3000/api/peliculas";
@@ -180,6 +181,43 @@ export async function movieByGenre(
     return {
       success: false,
       message: "Unexpected error.",
+    };
+  }
+}
+
+export async function deleteMovie(movieId: number) {
+  try {
+    const userCookie = await cookies();
+    const token = userCookie.get("auth_token")?.value;
+
+    const request = await fetch(`${api_URL}/${movieId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    });
+
+    const answer = request;
+    const answerJson = await request.json();
+
+    if (answer.status == 201) {
+      return {
+        status: answer.status,
+        body: answerJson,
+      };
+    } else {
+      return {
+        status: answer.status,
+        message: answerJson.message || "An unexpected error ocurred",
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      status: 500,
+      message: "Internal Server Error",
     };
   }
 }

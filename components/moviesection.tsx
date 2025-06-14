@@ -4,12 +4,14 @@ import MovieReview from "./genericreview";
 import CreateReview from "./createreview";
 import { useEffect, useState } from "react";
 import {
+  eraseMovie,
   getAllReviewsByMovie,
   getDecodedToken,
   getFeaturedReviews,
 } from "@/app/movie/[id]/actions";
 import { redirect, useParams } from "next/navigation";
 import Image from "next/image";
+import { ModalConfirmation } from "./modalConfirmation";
 
 interface MovieComponents {
   id: number;
@@ -328,8 +330,25 @@ export function MovieReviewsSection({
   );
 }
 
-export function MovieInfoSection(movie: MovieComponents) {
+export function MovieInfoSection({
+  movie,
+  authorized,
+}: {
+  movie: MovieComponents;
+  authorized: boolean;
+}) {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [contextMenuOpen, setContextOpen] = useState(false);
   const release_year = movie.fechaEstreno?.split("-")[0] || "Unknown";
+
+  const handleModalOpen = () => {
+    if (authorized) {
+      setModalOpen(true);
+      document.body.style.overflow = "hidden";
+    } else {
+      redirect("/login");
+    }
+  };
 
   return (
     <section className="flex flex-col bg-[#001d3d] mb-5 justify-center items-center w-full mx-auto">
@@ -337,10 +356,27 @@ export function MovieInfoSection(movie: MovieComponents) {
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
       ></link>
+      {modalOpen ? (
+        <ModalConfirmation
+          message={`Are you sure you want to delete ${movie.nombre}?`}
+          onAccept={() => {
+            eraseMovie(Number(movie.id));
+            setContextOpen(false);
+            setModalOpen(false);
+            document.body.style.overflow = "unset";
+            redirect("/");
+          }}
+          onCancel={() => {
+            setContextOpen(false);
+            setModalOpen(false);
+            document.body.style.overflow = "unset";
+          }}
+        />
+      ) : null}
       <div className="flex items-start flex-row flex-nowrap p-6 bg-[#003566] shadow-sm rounded-md">
         <div className="relative mx-auto w-1/2 aspect-[2/3] min-w-32 max-w-56">
           <Image
-            className="mx-auto rounded-sm"
+            className="mx-auto rounded-sm z-1"
             src={movie.urlImagen}
             fill
             priority
@@ -403,6 +439,51 @@ export function MovieInfoSection(movie: MovieComponents) {
               <span className="p-1 text-end w-full">{movie.genero.nombre}</span>
             </div>
           </div>
+          {authorized ? (
+            <div className="flex flex-row justify-end items-center gap-2 relative">
+              {contextMenuOpen && authorized ? (
+                <div
+                  id="contextMenu"
+                  className="flex flex-col bg-[#eeeeee] rounded-sm divide-y-1 divide-[#65686c] absolute right-full shadow-md mr-2 z-1"
+                >
+                  <div
+                    className="flex flex-row items-center justify-center gap-1 rounded-t-sm bg-[#eeeeee] shadow-md text-[#000814] text-sm p-1.5 hover:bg-[#cccccc] cursor-pointer transition-colors delay-75 duration-150 ease-in-out"
+                    onClick={() => redirect(`/movie/${movie.id}/edit`)}
+                  >
+                    <i className="fa fa-edit pl-1"></i>
+                    <button
+                      className="pr-1 cursor-pointer"
+                      disabled={modalOpen}
+                    >
+                      Edit
+                    </button>
+                  </div>
+                  <div
+                    className="flex flex-row items-center justify-center gap-1 rounded-b-sm bg-[#eeeeee] shadow-md text-[#000814] text-sm p-1.5 hover:bg-[#cccccc] cursor-pointer transition-colors delay-75 duration-200 ease-in-out"
+                    onClick={handleModalOpen}
+                  >
+                    <i className="fa fa-trash-o pl-1 text-orange-500"></i>
+                    <button
+                      className="pr-1 cursor-pointer"
+                      disabled={modalOpen}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ) : null}
+              <div
+                className="inline-block cursor-pointer pr-2 pb-2 opacity-100 hover:opacity-60"
+                onClick={() => {
+                  setContextOpen((prev) => !prev);
+                }}
+              >
+                <div className="bg-white h-1 w-1 rounded-full mt-1"></div>
+                <div className="bg-white h-1 w-1 rounded-full mt-1"></div>
+                <div className="bg-white h-1 w-1 rounded-full mt-1"></div>
+              </div>
+            </div>
+          ) : null}
         </div>
       </div>
     </section>

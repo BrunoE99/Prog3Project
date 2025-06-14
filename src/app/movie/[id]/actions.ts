@@ -1,6 +1,10 @@
 "use server";
 
-import { getAllMoviesByName, getMovie } from "@/app/API/movie/route";
+import {
+  deleteMovie,
+  getAllMoviesByName,
+  getMovie,
+} from "@/app/API/movie/route";
 import { reviewGetAllPaged, reviewPost } from "@/app/API/reviews/route";
 import { reviewFormSchema } from "@/app/lib/definitions";
 import { jwtDecode } from "jwt-decode";
@@ -103,3 +107,11 @@ export async function createReview(_: any, formData: FormData) {
     };
   }
 }
+
+export async function eraseMovie(movieId: number) {
+  const response = await deleteMovie(movieId);
+
+  return response;
+}
+
+export async function editMovie(_: any, formData: FormData) {}

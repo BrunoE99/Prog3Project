@@ -10,9 +10,14 @@ export const groupJoinSchema = z.object({
 export const MeetingFormSchema = z.object({
   fecha: z
     .string()
-    .datetime({ message: "Fecha must be a valid date and time" })
+    .datetime({ message: "Debe ser un dia y tiempo valido" })
     .trim(),
-  link: z.string().url({ message: "Link must be a valid url format" }).trim(),
+  link: z
+    .string()
+    .url({
+      message: "Debe ser un formate de url valido Ej: https://example.com/abc",
+    })
+    .trim(),
 });
 
 export const reviewFormSchema = z.object({

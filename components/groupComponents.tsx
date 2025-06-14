@@ -205,9 +205,12 @@ export function GroupMeetingColumn(props: { meeting?: Reunion; role: string }) {
 
   useEffect(() => {
     if (submitted) {
+      setSubmit(false);
       findMeeting().then((newMeeting) => {
         setMeeting(newMeeting);
-        handleSidebarToggle();
+        if (isSidebarOpen) {
+          handleSidebarToggle();
+        }
       });
     }
   }, [submitted]);

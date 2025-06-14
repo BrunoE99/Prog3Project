@@ -79,6 +79,7 @@ export async function createReview(_: any, formData: FormData) {
 
   if (!validateFields.success) {
     return {
+      success: false,
       error: validateFields.error.flatten().fieldErrors,
     };
   }

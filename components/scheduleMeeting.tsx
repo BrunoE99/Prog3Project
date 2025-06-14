@@ -53,7 +53,9 @@ export default function ScheduleMeeting({
         </div>
         <span
           className={`${
-            state?.status && state.status >= 400 ? "block" : "hidden"
+            (state?.status && state.status >= 400) || !state?.success
+              ? "block"
+              : "hidden"
           } text-red-500 justify-center items-center text-center`}
         >
           {state?.error}

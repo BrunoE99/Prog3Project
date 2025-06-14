@@ -82,7 +82,7 @@ export default function GroupCreate() {
   const [state, action, pending] = useActionState(createGroup, undefined);
 
   useEffect(() => {
-    if (state) {
+    if (state && state.id) {
       redirect(`/group/${state.id}`);
     }
   });
@@ -116,6 +116,11 @@ export default function GroupCreate() {
               name="group-name"
               required
             />
+            {state?.error?.nombre ? (
+              <span className="block text-red-500 justify-center items-center text-center">
+                {state?.error.nombre.map((message: string) => message + " ")}
+              </span>
+            ) : null}
           </div>
           <div className="flex flex-col items-start justify-center gap-2">
             <span className="font-semibold text-2xl">Description</span>
@@ -131,8 +136,22 @@ export default function GroupCreate() {
                 }
               }}
             ></textarea>
+            {state?.error?.texto ? (
+              <span className="block text-red-500 justify-center items-center text-center">
+                {state?.error.texto.map((message: string) => message + " ")}
+              </span>
+            ) : null}
           </div>
-          <div className="flex justify-end items-center">
+          <div className="flex flex-col justify-end items-center">
+            {typeof state?.error !== "object" ? (
+              <span
+                className={`${
+                  state?.error ? "block" : "hidden"
+                } text-red-500 justify-center items-center text-center`}
+              >
+                {state?.error}
+              </span>
+            ) : null}
             <input
               className={`bg-blue-700 rounded-md text-xl m-5 p-1 ${
                 pending ? "" : "cursor-pointer hover:bg-blue-600"

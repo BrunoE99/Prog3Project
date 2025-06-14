@@ -55,7 +55,7 @@ export async function meetingPost(fecha: Date, link: string) {
     } else {
       return {
         status: answer.status,
-        message: answerJson.message || "An unexpected error ocurred",
+        error: answerJson.message || "An unexpected error ocurred",
       };
     }
   } catch (error) {

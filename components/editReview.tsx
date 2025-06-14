@@ -257,13 +257,27 @@ export default function ReviewEditSidebar({
             value={fields[1]}
           />
         </div>
-        <span
-          className={`${
-            state?.status && state.status >= 400 ? "block" : "hidden"
-          } text-red-500 justify-center items-center text-center`}
-        >
-          {state?.error}
-        </span>
+        <div className="flex flex-col justify-center items-center">
+          {state?.error?.puntuacion ? (
+            <span className="block text-red-500 justify-center items-center text-center">
+              {state?.error.puntuacion.map((message: string) => message + " ")}
+            </span>
+          ) : null}
+          {state?.error?.texto ? (
+            <span className="block text-red-500 justify-center items-center text-center">
+              {state?.error.texto.map((message: string) => message + " ")}
+            </span>
+          ) : null}
+          {typeof state?.error !== "object" ? (
+            <span
+              className={`${
+                state?.error ? "block" : "hidden"
+              } text-red-500 justify-center items-center text-center`}
+            >
+              {state?.error}
+            </span>
+          ) : null}
+        </div>
         <input
           disabled={pending}
           type="submit"

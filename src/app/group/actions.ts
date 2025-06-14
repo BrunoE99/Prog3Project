@@ -22,6 +22,7 @@ import {
 } from "../lib/definitions";
 import { meetingDelete, meetingGet, meetingPost } from "../API/meeting/route";
 import { groupReviewsGetAllPaged } from "../API/reviews/route";
+import { success } from "zod/v4";
 
 export async function findAllGroups() {
   const response = await getAllGroups();
@@ -107,7 +108,8 @@ export async function scheduleMeeting(_: any, formData: FormData) {
 
   if (!validateFields.success) {
     return {
-      error: validateFields.error.flatten().fieldErrors,
+      success: false,
+      error: validateFields.error.flatten().fieldErrors.link,
     };
   }
 

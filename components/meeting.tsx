@@ -103,8 +103,8 @@ export default function MeetingCard({
         <div className={role && role === "lider" ? "" : "hidden"}>
           <Button
             text="Delete"
-            onClick={async () => {
-              await deleteMeeting();
+            onClick={() => {
+              deleteMeeting();
               onDelete();
             }}
           />

@@ -136,6 +136,11 @@ export function GroupEditForm({
             }}
             value={fields[0]}
           />
+          {state?.error?.nombre ? (
+            <span className="block text-red-500 justify-center items-center text-center">
+              {state?.error.nombre.map((message: string) => message + " ")}
+            </span>
+          ) : null}
         </div>
         <div className="flex flex-col items-start justify-center gap-2">
           <span className="font-semibold text-2xl">Description</span>
@@ -150,9 +155,23 @@ export function GroupEditForm({
             }}
             value={fields[1]}
           ></textarea>
+          {state?.error?.descripcion ? (
+            <span className="block text-red-500 justify-center items-center text-center">
+              {state?.error.descripcion.map((message: string) => message + " ")}
+            </span>
+          ) : null}
         </div>
       </div>
-      <div className="flex justify-end items-center">
+      <div className="flex flex-row justify-end items-center">
+        {typeof state?.error !== "object" ? (
+          <span
+            className={`${
+              state?.error ? "block" : "hidden"
+            } text-red-500 justify-center items-center text-center`}
+          >
+            {state?.error}
+          </span>
+        ) : null}
         <input
           className={`bg-blue-700 rounded-md text-xl m-5 p-1 ${
             pending || !authorized ? "" : "cursor-pointer hover:bg-blue-600"

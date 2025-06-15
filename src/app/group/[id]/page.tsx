@@ -1,5 +1,6 @@
 "use server";
 
+import { getAuthorization } from "@/app/API/auth/actions";
 import {
   GroupHeader,
   GroupMeetingColumn,
@@ -99,18 +100,23 @@ export default async function Group({ params }: { params: { id: string } }) {
   const userRole = await findRoleInGroup(Number(id));
   const meeting = userRole ? await findMeeting() : undefined;
   const reviews = await findAllGroupReviews(Number(id));
+  const isAdmin = await getAuthorization();
 
   return (
     <div className="min-h-screen bg-[#001d3d] w-full overflow-x-hidden">
       {group ? (
         <div>
-          <GroupHeader {...group} />
+          <GroupHeader group={group} isAdmin={isAdmin} />
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 divide-x-1 divide-[#65686c] md:divide-x-0">
             <GroupMeetingColumn
               meeting={meeting && meeting.statusCode ? undefined : meeting}
               role={userRole}
             />
-            <GroupReviews reviews={reviews} userRole={userRole} />
+            <GroupReviews
+              reviews={reviews}
+              userRole={userRole}
+              isAdmin={isAdmin}
+            />
             <GroupMembersPreview
               members={groupMembers}
               memberCount={groupMemberCount}

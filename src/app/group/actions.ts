@@ -2,6 +2,7 @@
 
 import { redirect } from "next/navigation";
 import {
+  deleteGroup,
   deleteMember,
   findAllGroupsByName,
   getAllGroupMembers,
@@ -154,6 +155,8 @@ export async function editGroup(_: any, formData: FormData) {
 
   if (!validateFields.success) {
     return {
+      success: false,
+      status: 400,
       error: validateFields.error.flatten().fieldErrors,
     };
   }
@@ -164,17 +167,7 @@ export async function editGroup(_: any, formData: FormData) {
     descriptionChanged === "true" ? descripcion : undefined
   );
 
-  if (response.status === 201) {
-    return {
-      success: true,
-      message: response.message || "Group updated created successfully",
-    };
-  } else {
-    return {
-      status: response.status,
-      error: response.message || "An unexpected error occurred",
-    };
-  }
+  return response;
 }
 
 export async function retrieveFilteredGroups(name: string) {
@@ -227,4 +220,10 @@ export async function createGroup(_: any, formData: FormData) {
       error: response.message || "An unexpected error occurred",
     };
   }
+}
+
+export async function eraseGroup(id: number) {
+  const response = await deleteGroup(id);
+
+  return response;
 }

@@ -3,6 +3,7 @@
 import { redirect, useParams } from "next/navigation";
 import MovieReview from "./genericreview";
 import {
+  eraseGroup,
   findAllGroupReviews,
   findMeeting,
   findRoleInGroup,
@@ -16,6 +17,7 @@ import ScheduleMeeting from "./scheduleMeeting";
 import CreateReview from "./createreview";
 import { MovieSelectModal } from "./movieSelectModal";
 import { getAuthToken } from "@/app/movie/[id]/actions";
+import { ModalConfirmation } from "./modalConfirmation";
 
 interface MovieComponents {
   id: number;
@@ -104,10 +106,17 @@ export function GroupPreviewCard(group: Group) {
   );
 }
 
-export function GroupHeader(group: Group) {
+export function GroupHeader({
+  group,
+  isAdmin,
+}: {
+  group: Group;
+  isAdmin: boolean;
+}) {
   let creationDate: string[] = [];
   const [role, setRole] = useState(undefined);
   const [token, setToken] = useState<string | undefined>(undefined);
+  const [modalOpen, setOpen] = useState(false);
 
   if (group) {
     creationDate = group.createdAt.split("T")[0].split("-");
@@ -140,6 +149,22 @@ export function GroupHeader(group: Group) {
 
   return (
     <div className="flex flex-col justify-between items-center pt-6">
+      {modalOpen ? (
+        <ModalConfirmation
+          message="Are you sure you want to delete this group?"
+          onAccept={async () => {
+            const response = await eraseGroup(group.id);
+            setOpen(false);
+            document.body.style.overflow = "unset";
+            if (response && response.status && response.status === 200)
+              redirect("/group");
+          }}
+          onCancel={() => {
+            setOpen(false);
+            document.body.style.overflow = "unset";
+          }}
+        />
+      ) : null}
       <div className="flex flex-row justify-between items-center w-full pl-6 pr-6">
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-0.5">
@@ -173,14 +198,25 @@ export function GroupHeader(group: Group) {
               </button>
             </div>
           </form>
-          <button
-            onClick={() => redirect(`/group/${group.id}/edit`)}
-            className={`${
-              role === "lider" ? "flex" : "hidden"
-            } bg-[#1c1e21] shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 text-lg text-center rounded-sm font-semibold text-nowrap`}
-          >
-            Edit Group
-          </button>
+          {role === "lider" || isAdmin ? (
+            <button
+              onClick={() => redirect(`/group/${group.id}/edit`)}
+              className={`flex bg-[#1c1e21] shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 text-lg text-center rounded-sm font-semibold text-nowrap`}
+            >
+              Edit Group
+            </button>
+          ) : null}
+          {role === "lider" || isAdmin ? (
+            <button
+              onClick={() => {
+                setOpen(true);
+                document.body.style.overflow = "hidden";
+              }}
+              className={`flex bg-red-800 shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 text-lg text-center rounded-sm font-semibold text-nowrap`}
+            >
+              Delete Group
+            </button>
+          ) : null}
         </div>
       </div>
       <div className="w-full mt-1 border-1 border-solid border-[#65686c] rounded-sm shadow-2xl"></div>
@@ -270,9 +306,11 @@ export function GroupMeetingColumn(props: { meeting?: Reunion; role: string }) {
 export function GroupReviews({
   reviews,
   userRole,
+  isAdmin,
 }: {
   reviews: ReviewComponents[];
   userRole: string | undefined;
+  isAdmin: boolean;
 }) {
   const [groupReviews, setReviews] = useState(reviews);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
@@ -380,7 +418,7 @@ export function GroupReviews({
             <MovieReview
               key={index}
               review={review}
-              authorized={userRole && userRole === "lider" ? true : false}
+              authorized={(userRole && userRole === "lider") || isAdmin}
               onEditDelete={() => setSubmit(true)}
             />
           ))

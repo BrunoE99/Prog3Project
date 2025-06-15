@@ -100,6 +100,37 @@ export const commentSchema = z.object({
     .trim(),
 });
 
+export const movieEditSchema = z.object({
+  nombre: z
+    .string()
+    .min(1, { message: "El nombre debe tener al menos 1 caracter" })
+    .trim()
+    .optional(),
+  sinopsis: z
+    .string()
+    .min(1, { message: "La sinopsis debe tener al menos 1 caracter" })
+    .trim()
+    .optional(),
+  genero: z
+    .string()
+    .min(1, { message: "El genero debe tener al menos 1 caracter" })
+    .trim()
+    .optional(),
+  fechaEstreno: z
+    .date({
+      message: "La fecha de estreno debe ser una fecha valida. Ej: 01/01/2020",
+    })
+    .optional(),
+  duracion: z
+    .number({ message: "La duracion debe ser un numero" })
+    .int({ message: "La duracion debe ser un entero" })
+    .optional(),
+  calificacion: z
+    .number({ message: "La calificacion debe ser un numero" })
+    .int({ message: "La caliicacioon debe ser un entero" })
+    .optional(),
+});
+
 export type FormState = {
   errors?: {
     username?: string[];

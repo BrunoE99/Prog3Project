@@ -1,3 +1,4 @@
+import { getAuthorization } from "@/app/API/auth/actions";
 import {
   GroupEditForm,
   GroupEditHeader,
@@ -85,21 +86,26 @@ export default async function GroupEdit({
   const { id } = await params;
   const group: Group = await findGroupById(Number(id));
   const userRole = await findRoleInGroup(Number(id));
+  const isAdmin = await getAuthorization();
 
   return (
     <div className={`min-h-screen bg-[#001d3d]`}>
-      <div className={`${userRole && userRole === "lider" ? "" : "blur-sm"}`}>
+      <div
+        className={`${
+          (userRole && userRole === "lider") || isAdmin ? "" : "blur-sm"
+        }`}
+      >
         <GroupEditHeader
           id={group.id}
-          authorized={userRole && userRole === "lider"}
+          authorized={(userRole && userRole === "lider") || isAdmin}
         />
 
         <GroupEditForm
           group={group}
-          authorized={userRole && userRole === "lider"}
+          authorized={(userRole && userRole === "lider") || isAdmin}
         />
       </div>
-      {userRole && userRole === "lider" ? null : (
+      {(userRole && userRole === "lider") || isAdmin ? null : (
         <div className="flex justify-center items-center">
           <div className="fixed justify-center items-center blur-none">
             <span className="rounded-sm text-3xl font-bold z-2">

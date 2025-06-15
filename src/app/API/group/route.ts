@@ -172,7 +172,7 @@ export async function groupUpdate(
     const answer = request;
     const answerJson = await request.json();
 
-    if (answer.status == 201) {
+    if (answer.status == 200) {
       return {
         status: answer.status,
         body: answerJson,
@@ -180,7 +180,7 @@ export async function groupUpdate(
     } else {
       return {
         status: answer.status,
-        message: answerJson.message || "An unexpected error ocurred",
+        error: answerJson.message || "An unexpected error ocurred",
       };
     }
   } catch (error) {
@@ -188,7 +188,7 @@ export async function groupUpdate(
     return {
       success: false,
       status: 500,
-      message: "Internal Server Error",
+      error: "Internal Server Error",
     };
   }
 }
@@ -262,6 +262,43 @@ export async function groupPost(nombre: string, descripcion?: string) {
     const answerJson = await request.json();
 
     if (answer.status == 201) {
+      return {
+        status: answer.status,
+        body: answerJson,
+      };
+    } else {
+      return {
+        status: answer.status,
+        message: answerJson.message || "An unexpected error ocurred",
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      status: 500,
+      message: "Internal Server Error",
+    };
+  }
+}
+
+export async function deleteGroup(id: number) {
+  try {
+    const userCookie = await cookies();
+    const token = userCookie.get("auth_token")?.value;
+
+    const request = await fetch(`${api_URL}/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+    });
+
+    const answer = request;
+    const answerJson = await request.json();
+
+    if (answer.status == 200) {
       return {
         status: answer.status,
         body: answerJson,

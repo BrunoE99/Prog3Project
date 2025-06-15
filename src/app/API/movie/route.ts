@@ -221,3 +221,51 @@ export async function deleteMovie(movieId: number) {
     };
   }
 }
+
+export async function movieUpdate(
+  id: number,
+  movieDto: {
+    nombre?: string;
+    sinopsis?: string;
+    genero?: string;
+    fechaEstreno?: Date;
+    duracion?: number;
+    calificacion?: number;
+  }
+) {
+  try {
+    const userCookie = await cookies();
+    const token = userCookie.get("auth_token")?.value;
+
+    const request = await fetch(`${api_URL}/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify(movieDto),
+    });
+
+    const answer = request;
+    const answerJson = await request.json();
+
+    if (answer.status == 200) {
+      return {
+        status: answer.status,
+        body: answerJson,
+      };
+    } else {
+      return {
+        status: answer.status,
+        error: answerJson.message || "An unexpected error ocurred",
+      };
+    }
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      status: 500,
+      message: "Internal Server Error",
+    };
+  }
+}

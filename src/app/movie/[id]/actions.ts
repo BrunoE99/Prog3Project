@@ -4,11 +4,13 @@ import {
   deleteMovie,
   getAllMoviesByName,
   getMovie,
+  movieUpdate,
 } from "@/app/API/movie/route";
 import { reviewGetAllPaged, reviewPost } from "@/app/API/reviews/route";
-import { reviewFormSchema } from "@/app/lib/definitions";
+import { movieEditSchema, reviewFormSchema } from "@/app/lib/definitions";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";
+import { success } from "zod/v4";
 
 type JwtBody = {
   sub: number;
@@ -114,4 +116,58 @@ export async function eraseMovie(movieId: number) {
   return response;
 }
 
-export async function editMovie(_: any, formData: FormData) {}
+export async function editMovie(_: any, formData: FormData) {
+  const id = formData.get("id") as string;
+  const nombre = formData.get("movie-name") as string;
+  const sinopsis = formData.get("movie-synopsis") as string;
+  const genero = formData.get("movie-genre") as string;
+  const fechaEstreno = formData.get("estreno") as string;
+  const hours = formData.get("hours") as string;
+  const minutes = formData.get("minutes") as string;
+  const duracion = Number(hours) * 60 + Number(minutes);
+  const calificacion = formData.get("calificacion") as string;
+  const editedFields = formData.get("changedFields") as string;
+
+  const fields = editedFields.replace("{", "").replace("}", "").split(",");
+  const changed: boolean[] = fields.map((field) => {
+    const values = field.split(":");
+    return values[1] === "true";
+  });
+
+  const movieDto: {
+    nombre?: string;
+    sinopsis?: string;
+    genero?: string;
+    fechaEstreno?: Date;
+    duracion?: number;
+    calificacion?: number;
+  } = {
+    nombre: changed[0] ? nombre : undefined,
+    sinopsis: changed[1] ? sinopsis : undefined,
+    genero: changed[2] ? genero : undefined,
+    fechaEstreno: changed[3] ? new Date(fechaEstreno) : undefined,
+    duracion: changed[4] ? duracion : undefined,
+    calificacion: changed[5] ? Number(calificacion) : undefined,
+  };
+
+  const validateFields = movieEditSchema.safeParse({
+    nombre: movieDto.nombre,
+    sinopsis: movieDto.sinopsis,
+    genero: movieDto.genero,
+    fechaEstreno: movieDto.fechaEstreno,
+    duracion: movieDto.duracion,
+    calificacion: movieDto.calificacion,
+  });
+
+  if (!validateFields.success) {
+    return {
+      success: false,
+      status: 400,
+      error: validateFields.error.flatten().fieldErrors,
+    };
+  }
+
+  const response = await movieUpdate(Number(id), movieDto);
+
+  return response;
+}

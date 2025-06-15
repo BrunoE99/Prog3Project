@@ -264,8 +264,8 @@ export function MovieReviewsSection({
           </div>
           <div
             className={`${
-              loadAllReviews ? "flex" : "hidden"
-            } flex items-center gap-4`}
+              loadAllReviews ? "flex flex-row" : "hidden"
+            } items-center gap-4`}
           >
             <span>Filter</span>
             <select

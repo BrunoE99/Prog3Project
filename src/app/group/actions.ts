@@ -23,7 +23,6 @@ import {
 } from "../lib/definitions";
 import { meetingDelete, meetingGet, meetingPost } from "../API/meeting/route";
 import { groupReviewsGetAllPaged } from "../API/reviews/route";
-import { success } from "zod/v4";
 
 export async function findAllGroups() {
   const response = await getAllGroups();
@@ -54,9 +53,7 @@ export async function findGroupMemberCount(id: number) {
   return response;
 }
 
-export async function joinGroup(_: any, formData: FormData) {
-  const id = formData.get("grupoId") as string;
-
+export async function joinGroup(id: number) {
   const validateFields = groupJoinSchema.safeParse({ id: id });
 
   if (!validateFields.success) {
@@ -70,9 +67,7 @@ export async function joinGroup(_: any, formData: FormData) {
   return response;
 }
 
-export async function leaveGroup(_: any, formData: FormData) {
-  const id = formData.get("grupoId") as string;
-
+export async function leaveGroup(id: number) {
   const validateFields = groupJoinSchema.safeParse({ id: id });
 
   if (!validateFields.success) {

@@ -3,7 +3,10 @@ import "server-only";
 
 const api_URL = "http:localhost:3000/api/comentarios";
 
-export async function postComment(reviewId: number, texto: string) {
+export async function postComment(
+  reviewId: number,
+  texto: string
+): Promise<any> {
   try {
     const userCookie = await cookies();
     const token = userCookie.get("auth_token")?.value;

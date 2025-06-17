@@ -51,6 +51,11 @@ export default function SearchBar() {
 
   return (
     <div className="relative flex flex-col justify-center items-center rounded-sm w-full max-w-md">
+      <div
+        className={`${
+          hasSearched ? "" : "hidden"
+        }fixed inset-0 bg-black opacity-60`}
+      ></div>
       <link
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
@@ -77,7 +82,7 @@ export default function SearchBar() {
         id="searchResults"
         className={`${
           hasSearched ? "flex flex-col" : "hidden"
-        } absolute top-11 rounded-none bg-[#0b244a] w-full shadow-lg`}
+        } absolute top-11 rounded-none bg-[#0b244a] w-full shadow-lg z-2`}
       >
         {filteredMovies.map((movie, index) => (
           <SearchChip

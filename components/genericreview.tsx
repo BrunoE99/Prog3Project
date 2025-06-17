@@ -1,8 +1,8 @@
 import {
   createComment,
+  eraseReview,
   findAllCommentsForReview,
-} from "@/app/API/comment/actions";
-import { eraseReview } from "@/app/reviews/actions";
+} from "@/app/reviews/actions";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Comment from "./comment";
@@ -202,8 +202,20 @@ export default function MovieReview({
             height={50}
           />
           <div className="p-2 flex flex-col">
-            <h3 className="text-2xl font-semibold">{review.user.username}</h3>
-            <h4 className="text-sm font-medium opacity-60">
+            <h3
+              className="text-2xl font-semibold cursor-pointer"
+              onClick={() => redirect(`/profile/${review.userId}`)}
+            >
+              {review.user.username}
+            </h3>
+            <h4
+              className={`${
+                review.grupo ? "cursor-pointer" : "hidden"
+              } text-sm font-medium opacity-60`}
+              onClick={() => {
+                if (review.grupo) redirect(`/group/${review.grupo.id}`);
+              }}
+            >
               {review.grupo?.nombre}
             </h4>
           </div>
@@ -241,7 +253,7 @@ export default function MovieReview({
           </div>
         </div>
       </div>
-      <div className="text-sm p-2 pl-0 lg:pl-15 w-3/4 md:text-base h-fit wrap-normal">
+      <div className="text-sm p-2 pl-0 lg:pl-15 w-3/4 md:text-base h-fit break-words">
         {review.texto}
       </div>
       <div

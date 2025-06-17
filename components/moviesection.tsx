@@ -12,6 +12,7 @@ import {
 import { redirect, useParams } from "next/navigation";
 import Image from "next/image";
 import { ModalConfirmation } from "./modalConfirmation";
+import { effect } from "zod";
 
 interface MovieComponents {
   id: number;
@@ -118,8 +119,8 @@ export function MovieReviewsSection({
       redirect("/login");
     }
   };
+  console.log("effect");
 
-  // Fetch token on mount
   useEffect(() => {
     (async () => {
       const t = await getDecodedToken();

@@ -1,8 +1,8 @@
-import { eraseComment } from "@/app/API/comment/actions";
 import { useState } from "react";
 import Image from "next/image";
 import { ModalConfirmation } from "./modalConfirmation";
 import { redirect } from "next/navigation";
+import { eraseComment } from "@/app/reviews/actions";
 
 interface MovieComponents {
   id: number;

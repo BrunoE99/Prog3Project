@@ -138,8 +138,8 @@ export default function AllGroups() {
           Create Group
         </button>
       </div>
-      <div className="flex flex-row justify-between">
-        <div className="flex flex-col gap-4 justify-center items-start w-2/5">
+      <div className="flex flex-row justify-between items-start gap-2">
+        <div className="flex flex-col gap-4 justify-center items-start w-4/5 md:w-2/5">
           {filteredGroups.length > 0
             ? filteredGroups.map((group, index) => (
                 <GroupPreviewCard key={index} {...group} />

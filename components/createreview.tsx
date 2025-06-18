@@ -149,7 +149,7 @@ export default function CreateReview(props: {
   return (
     <div
       id="review-sidebar"
-      className="h-full fixed z-1 top-0 right-0 overflow-x-hidden bg-white dark:bg-[#001d3d] dark:text-white pt-15 w-1/5 text-black"
+      className="h-full fixed z-1 top-0 right-0 overflow-x-hidden bg-white dark:bg-[#001d3d] dark:text-white pt-15 w-4/5 md:w-2/5 2xl:w-1/5 text-black"
     >
       <link
         rel="stylesheet"

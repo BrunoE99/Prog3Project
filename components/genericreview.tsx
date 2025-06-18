@@ -193,36 +193,38 @@ export default function MovieReview({
         />
       ) : null}
       <div className="flex flex-row justify-between items-center p-1">
-        <div className="flex flex-row gap-2">
-          <Image
-            className="rounded-full"
-            src={`http://localhost:3000${review.user.urlImagen}`}
-            alt="User's Avatar"
-            width={50}
-            height={50}
-          />
-          <div className="p-2 flex flex-col">
-            <h3
-              className="text-2xl font-semibold cursor-pointer"
-              onClick={() => redirect(`/profile/${review.userId}`)}
-            >
-              {review.user.username}
-            </h3>
-            <h4
-              className={`${
-                review.grupo ? "cursor-pointer" : "hidden"
-              } text-sm font-medium opacity-60`}
-              onClick={() => {
-                if (review.grupo) redirect(`/group/${review.grupo.id}`);
-              }}
-            >
-              {review.grupo?.nombre}
-            </h4>
+        {!review.pelicula ? (
+          <div className="flex flex-row gap-2">
+            <Image
+              className="rounded-full"
+              src={`http://localhost:3000${review.user.urlImagen}`}
+              alt="User's Avatar"
+              width={50}
+              height={50}
+            />
+            <div className="p-2 flex flex-col">
+              <h3
+                className="text-2xl font-semibold cursor-pointer"
+                onClick={() => redirect(`/profile/${review.userId}`)}
+              >
+                {review.user.username}
+              </h3>
+              <h4
+                className={`${
+                  review.grupo ? "cursor-pointer" : "hidden"
+                } text-sm font-medium opacity-60`}
+                onClick={() => {
+                  if (review.grupo) redirect(`/group/${review.grupo.id}`);
+                }}
+              >
+                {review.grupo?.nombre}
+              </h4>
+            </div>
           </div>
-        </div>
+        ) : null}
         {review.pelicula ? (
           <div
-            className="hidden lg:flex flex-row justify-center items-center gap-3 cursor-pointer"
+            className="flex flex-row justify-center items-center gap-6 sm:gap-3 cursor-pointer"
             onClick={() => redirect(`/movie/${review.peliculaId}`)}
           >
             <Image

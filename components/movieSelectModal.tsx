@@ -125,7 +125,7 @@ export function MovieSelectModal({
   return (
     <div className="fixed">
       <div className="fixed inset-0 bg-black opacity-60 z-1"></div>
-      <div className="fixed top-1/3 left-1/3 right-1/3 flex justify-center items-center rounded-lg bg-[#001d3d] shadow-lg z-2 w-auto">
+      <div className="fixed top-1/3 left-1/3 right-1/3 flex justify-center items-center rounded-lg bg-[#001d3d] shadow-lg z-2 w-4/5 md:w-auto">
         <div className="flex flex-col h-full pt-6 pb-6 gap-5 w-full items-center">
           <div>
             <span className="font-semibold text-lg text-wrap">{message}</span>

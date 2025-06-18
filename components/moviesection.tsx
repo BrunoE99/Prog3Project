@@ -119,7 +119,6 @@ export function MovieReviewsSection({
       redirect("/login");
     }
   };
-  console.log("effect");
 
   useEffect(() => {
     (async () => {

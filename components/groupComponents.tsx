@@ -163,7 +163,7 @@ export function GroupHeader({
           }}
         />
       ) : null}
-      <div className="flex flex-row justify-between items-center w-full pl-6 pr-6">
+      <div className="flex flex-col lg:flex-row justify-between items-center w-full pl-1 pr-1 sm:pl-6 sm:pr-6">
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-0.5">
             <span className="text-6xl">{group.nombre}</span>
@@ -466,7 +466,7 @@ export function GroupMembersPreview({
     unit = "m";
   }
   return (
-    <div className="flex flex-col col-span-1 items-start mr-6 h-full w-full pt-4 bg-[#003566] shadow-2xl rounded-bl-md">
+    <div className="flex flex-col col-span-1 items-start mr-0 sm:mr-6 h-full w-full pt-4 bg-[#003566] shadow-2xl rounded-bl-md pb-2 sm:pb-0">
       <div className="flex flex-col mb-2 ml-3">
         <span
           onClick={() => redirect(`/group/${params.id}/members`)}

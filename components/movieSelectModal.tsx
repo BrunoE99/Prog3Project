@@ -165,7 +165,10 @@ export function MovieSelectModal({
                 }
               }}
               onBlur={() => {
-                blurTimeout.current = setTimeout(() => setSearch(false), 100);
+                blurTimeout.current = setTimeout(() => {
+                  setSearch(false);
+                  setMovies([]);
+                }, 100);
               }}
             />
 
@@ -183,6 +186,7 @@ export function MovieSelectModal({
                     setSearchString(movie.nombre);
                     setMovie(movie);
                     setSearch(false);
+                    setMovies([]);
                   }}
                 >
                   <Image

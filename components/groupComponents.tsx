@@ -118,6 +118,7 @@ export function GroupHeader({
   let creationDate: string[] = [];
   const [data, setData] = useState<{ token?: string; role?: string }>({});
   const [modalOpen, setOpen] = useState(false);
+  const [joined, setJoin] = useState(false);
 
   if (group) {
     creationDate = group.createdAt.split("T")[0].split("-");
@@ -132,13 +133,19 @@ export function GroupHeader({
       setData({ token: t, role: rol });
     }
     fetchData();
-  }, [group.id]);
+
+    if (joined) {
+      setJoin(false);
+    }
+  }, [group.id, joined]);
 
   const wrappedJoinLeave = () => {
     if (data.token) {
       if (data.role) {
         leaveGroup(group.id);
       } else {
+        setJoin(true);
+        console.log(joined);
         joinGroup(group.id);
       }
       if (data.role) redirect("/group");

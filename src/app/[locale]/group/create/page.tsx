@@ -116,6 +116,7 @@ export default function GroupCreate() {
               type="text"
               id="group-name"
               name="group-name"
+              autoComplete="off"
               required
             />
             {state?.error?.nombre ? (
@@ -146,7 +147,7 @@ export default function GroupCreate() {
               </span>
             ) : null}
           </div>
-          <div className="flex flex-col justify-end items-center">
+          <div className="flex flex-col justify-end items-end">
             {typeof state?.error !== "object" ? (
               <span
                 className={`${

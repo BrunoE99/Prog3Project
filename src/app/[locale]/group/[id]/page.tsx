@@ -93,7 +93,6 @@ interface ReviewComponents {
 export default async function Group({ params }: { params: { id: string } }) {
   const { id } = await params;
   const group: Group = await findGroupById(Number(id));
-  console.log(group);
   const groupMembers = await findAllGroupMembers(Number(id));
   const groupMemberCount: { cantidad: number } = await findGroupMemberCount(
     Number(id)

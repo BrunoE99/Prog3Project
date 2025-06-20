@@ -81,7 +81,6 @@ interface ReviewComponents {
 export default async function Members({ params }: { params: { id: string } }) {
   const { id } = await params;
   const groupMembers: GroupMembership[] = await findAllGroupMembers(Number(id));
-  console.log(groupMembers);
   const userRole = await findRoleInGroup(Number(id));
 
   return (

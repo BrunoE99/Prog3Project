@@ -173,8 +173,13 @@ export function GroupMembersBody({
                 key={index}
                 className="inline-flex flex-row items-center pt-3 gap-1 cursor-pointer"
                 onClick={() => {
-                  setMember(member.id);
-                  setName(member.nombre);
+                  if (selectedMember && selectedMember === member.id) {
+                    setMember(undefined);
+                    setName(undefined);
+                  } else {
+                    setMember(member.id);
+                    setName(member.nombre);
+                  }
                 }}
               >
                 <div className="flex flex-row justify-center items-center gap-2">

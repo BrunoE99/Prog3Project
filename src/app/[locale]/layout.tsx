@@ -11,8 +11,15 @@ import { Inter } from "next/font/google";
 import LoginSuccessHandler from "./(auth)/login/loginHandler";
 import SignupSuccessHandler from "./(auth)/signup/signupHandler";
 import "../globals.css";
+import { Metadata } from "next";
 
 const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Movie Review App",
+  description:
+    "Meet people with similar interests and review your favorite moviews.",
+};
 
 export default async function RootLayout({
   children,

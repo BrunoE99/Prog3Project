@@ -148,7 +148,6 @@ export async function movieByGenre(
 
     const response = request;
     const responseJson = await request.json();
-    // return data;
 
     if (response.status === 200) {
       return {
@@ -161,6 +160,7 @@ export async function movieByGenre(
         status: response.status,
         hasMovies: false,
         message: responseJson.message || "Bad request",
+        movies: [],
       };
     } else if (response.status === 404) {
       return {
@@ -168,12 +168,14 @@ export async function movieByGenre(
         currentPage: pagination,
         hasMovies: false,
         message: responseJson.message || "No se encontraron peliculas",
+        movies: [],
       };
     } else {
       return {
         status: response.status,
         hasMovies: false,
         message: responseJson.message || "Unexpected error",
+        movies: [],
       };
     }
   } catch (err) {

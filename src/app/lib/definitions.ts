@@ -153,7 +153,7 @@ export async function getMovieEditSchema() {
       .optional(),
     fechaEstreno: z
       .date({
-        message: t("move-edit-date-format"),
+        message: t("movie-edit-date-format"),
       })
       .optional(),
     duracion: z

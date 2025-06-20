@@ -266,15 +266,17 @@ export default function MovieReview({
         }`}
       >
         <div className="flex flex-row gap-2 justify-center items-center pl-5">
-          <span className="text-xl font-semibold">
-            {commentsOpen ? "-" : "+"}
-          </span>
-          <button
-            className="text-sm cursor-pointer transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
+          <div
+            className="flex flex-row gap-2 cursor-pointer transition-colors delay-75 duration-100 ease-in-out hover:text-[#f5c518]"
             onClick={() => setOpen((prev) => !prev)}
           >
-            {t("comment-button")}
-          </button>
+            <span className="text-xl font-semibold">
+              {commentsOpen ? "-" : "+"}
+            </span>
+            <button className="text-sm cursor-pointer">
+              {t("comment-button")}
+            </button>
+          </div>
           <div
             className={`${
               commentsOpen ? "flex" : "hidden"

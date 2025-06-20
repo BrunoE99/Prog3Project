@@ -1,6 +1,7 @@
 "use client";
 
-import { editGroup } from "@/app/group/actions";
+import { editGroup } from "@/app/[locale]/group/actions";
+import { useTranslations } from "next-intl";
 import { redirect } from "next/navigation";
 import { useActionState, useState } from "react";
 
@@ -84,6 +85,7 @@ export function GroupEditHeader({
   id: number;
   authorized: boolean;
 }) {
+  const t = useTranslations("GroupEditHeader");
   return (
     <div className="flex flex-row gap-3 m-6 items-center">
       <button
@@ -95,7 +97,7 @@ export function GroupEditHeader({
       >
         &lt;
       </button>
-      <h1 className="text-4xl font-semibold">Edit Group</h1>
+      <h1 className="text-4xl font-semibold">{t("title")}</h1>
     </div>
   );
 }
@@ -107,6 +109,7 @@ export function GroupEditForm({
   group: Group;
   authorized: boolean;
 }) {
+  const t = useTranslations("GroupEditForm");
   const [fieldsEdited, setFieldsEdited] = useState([false, false]);
   const [fields, setFields] = useState([group.nombre, group.descripcion]);
   const [state, action, pending] = useActionState(editGroup, undefined);
@@ -123,7 +126,7 @@ export function GroupEditForm({
           value={fieldsEdited?.toString() ?? "true,true"}
         />
         <div className="flex flex-col items-start justify-center gap-2">
-          <span className="font-semibold text-2xl">Name</span>
+          <span className="font-semibold text-2xl">{t("name-label")}</span>
           <input
             disabled={!authorized}
             className="border border-[#545454b7] w-full mb-1 p-1"
@@ -143,7 +146,9 @@ export function GroupEditForm({
           ) : null}
         </div>
         <div className="flex flex-col items-start justify-center gap-2">
-          <span className="font-semibold text-2xl">Description</span>
+          <span className="font-semibold text-2xl">
+            {t("description-label")}
+          </span>
           <textarea
             disabled={!authorized}
             className="w-full border border-[#545454b7] mb-1 p-1"

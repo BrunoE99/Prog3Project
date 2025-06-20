@@ -1,6 +1,9 @@
+"use server";
+
 import { reviewByUserID } from "@/app/API/reviews/route";
 import ReviewCard from "./reviewProfileSection";
 import Pagination from "./pagination";
+import { getTranslations } from "next-intl/server";
 
 interface MovieComponents {
   id: number;
@@ -66,15 +69,16 @@ export default async function ReviewsByUserID({
   userId: number;
   pagination: number;
 }) {
+  const t = await getTranslations("ReviewsByUserID");
   const reviewsUser = await reviewByUserID(userId, pagination);
 
   if (reviewsUser.status === 500) {
     return (
       <section className="px-6 py-10">
-        <h1 className="text-center pb-3 text-2xl text-white">My reviews</h1>
+        <h1 className="text-center pb-3 text-2xl text-white">{t("title")}</h1>
         <div className="mb-10 bg-[#001d3d] rounded-lg">
           <div className="grid grid-cols-1 gap-6 p-5">
-            <p className="text-red-900">Something went wrong.</p>
+            <p className="text-red-900">{t("error-msg")}</p>
           </div>
           <Pagination
             currentPage={pagination}
@@ -88,7 +92,7 @@ export default async function ReviewsByUserID({
   if (reviewsUser.status === 400) {
     return (
       <section className="px-6 py-10">
-        <h1 className="text-center pb-3 text-2xl text-white">My reviews</h1>
+        <h1 className="text-center pb-3 text-2xl text-white">{t("title")}</h1>
         <div className="mb-10 bg-[#001d3d] rounded-lg">
           <div className="grid grid-cols-1 gap-6 p-5">
             <h1 className="text-red-900 text-center text-2xl">
@@ -107,7 +111,7 @@ export default async function ReviewsByUserID({
   if (reviewsUser.status === 404) {
     return (
       <section className="px-6 py-10">
-        <h1 className="text-center pb-3 text-2xl text-white">My reviews</h1>
+        <h1 className="text-center pb-3 text-2xl text-white">{t("title")}</h1>
         <div className="mb-10 bg-[#001d3d] rounded-lg">
           <div className="grid grid-cols-1 gap-6 p-5">
             <h1 className="text-red-900 text-center text-2xl">
@@ -125,7 +129,7 @@ export default async function ReviewsByUserID({
 
   return (
     <section className="px-6 py-10">
-      <h1 className="text-center pb-3 text-2xl text-white">My reviews</h1>
+      <h1 className="text-center pb-3 text-2xl text-white">{t("title")}</h1>
       <div className="mb-10 bg-[#001d3d] rounded-lg">
         <div className="grid grid-cols-1 gap-6 p-5">
           {reviewsUser.reviews.map(

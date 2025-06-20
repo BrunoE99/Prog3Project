@@ -1,10 +1,12 @@
+"use server";
+
 import React from "react";
 import Link from "next/link";
 import MovieCard from "./movieCard";
 import { getAllGenres } from "@/app/API/genres/route";
 import { movieByGenre } from "@/app/API/movie/route";
-import { redirect } from "next/navigation";
 import { reviewsByMovieCount } from "@/app/API/reviews/route";
+import { getTranslations } from "next-intl/server";
 
 interface Genre {
   id: number;
@@ -35,6 +37,7 @@ const GenreCard: React.FC<GenreShowcaseProps> = async ({
   className = "",
   moviesPerGenre = 4,
 }) => {
+  const t = await getTranslations("GenreCard");
   try {
     const genres: Genre[] = await getAllGenres();
 
@@ -78,9 +81,7 @@ const GenreCard: React.FC<GenreShowcaseProps> = async ({
 
     return (
       <div className={`space-y-8 ${className}`}>
-        <h2 className="text-3xl font-bold my-6 text-center">
-          Movies by Genres
-        </h2>
+        <h2 className="text-3xl font-bold my-6 text-center">{t("title")}</h2>
 
         {genreMoviesWithReviews.map(({ genre, movies }) => (
           <div
@@ -93,7 +94,7 @@ const GenreCard: React.FC<GenreShowcaseProps> = async ({
                 href={`/genres/${encodeURIComponent(genre.nombre)}`}
                 className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 font-medium"
               >
-                View all {genre.nombre} movies
+                {t("link-start")} {genre.nombre} {t("link-end")}
               </Link>
             </div>
 
@@ -105,7 +106,7 @@ const GenreCard: React.FC<GenreShowcaseProps> = async ({
               </div>
             ) : (
               <div className="text-center py-8 text-gray-500">
-                <p>No movies available for this genre yet.</p>
+                <p>{t("no-movies-msg")}</p>
               </div>
             )}
           </div>
@@ -113,7 +114,7 @@ const GenreCard: React.FC<GenreShowcaseProps> = async ({
 
         {genres.length === 0 && (
           <div className="text-center py-12 text-gray-500">
-            <p className="text-lg">No genres available at the moment.</p>
+            <p className="text-lg">{t("no-genres-msg")}</p>
           </div>
         )}
       </div>
@@ -122,7 +123,7 @@ const GenreCard: React.FC<GenreShowcaseProps> = async ({
     console.error("Error getting genres and movies:", error);
     return (
       <div className={`text-center text-red-600 p-8 ${className}`}>
-        <p>Failed to load genres and movies..</p>
+        <p>{t("fail-msg")}</p>
       </div>
     );
   }

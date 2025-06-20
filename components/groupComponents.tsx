@@ -9,15 +9,16 @@ import {
   findRoleInGroup,
   joinGroup,
   leaveGroup,
-} from "@/app/group/actions";
-import { useActionState, useEffect, useState } from "react";
+} from "@/app/[locale]/group/actions";
+import { useEffect, useState } from "react";
 import MeetingCard from "./meeting";
 import Image from "next/image";
 import ScheduleMeeting from "./scheduleMeeting";
 import CreateReview from "./createreview";
 import { MovieSelectModal } from "./movieSelectModal";
-import { getAuthToken } from "@/app/movie/[id]/actions";
 import { ModalConfirmation } from "./modalConfirmation";
+import { getAuthToken } from "@/app/[locale]/movie/[id]/actions";
+import { useTranslations } from "next-intl";
 
 interface MovieComponents {
   id: number;
@@ -113,45 +114,51 @@ export function GroupHeader({
   group: Group;
   isAdmin: boolean;
 }) {
+  const t = useTranslations("GroupHeader");
   let creationDate: string[] = [];
-  const [role, setRole] = useState(undefined);
-  const [token, setToken] = useState<string | undefined>(undefined);
+  const [data, setData] = useState<{ token?: string; role?: string }>({});
   const [modalOpen, setOpen] = useState(false);
+  const [joined, setJoin] = useState(false);
 
   if (group) {
     creationDate = group.createdAt.split("T")[0].split("-");
   }
 
   useEffect(() => {
-    (async () => {
-      const t = await getAuthToken();
-      setToken(t);
-    })();
-    async function getRole() {
-      const rol = await findRoleInGroup(group.id);
-      setRole(rol);
+    async function fetchData() {
+      const [t, rol] = await Promise.all([
+        getAuthToken(),
+        findRoleInGroup(group.id),
+      ]);
+      setData({ token: t, role: rol });
     }
-    getRole();
-  });
+    fetchData();
 
-  const joinLeaveFunc = role ? leaveGroup : joinGroup;
+    if (joined) {
+      setJoin(false);
+    }
+  }, [group.id, joined]);
 
-  const wrappedJoinLeave = (_state: any, formData: FormData) => {
-    if (token) {
-      joinLeaveFunc(_state, formData);
-      if (role) redirect("/group");
+  const wrappedJoinLeave = () => {
+    if (data.token) {
+      if (data.role) {
+        leaveGroup(group.id);
+      } else {
+        setJoin(true);
+        console.log(joined);
+        joinGroup(group.id);
+      }
+      if (data.role) redirect("/group");
     } else {
       redirect("/login");
     }
   };
 
-  const [state, action, pending] = useActionState(wrappedJoinLeave, undefined);
-
   return (
     <div className="flex flex-col justify-between items-center pt-6">
       {modalOpen ? (
         <ModalConfirmation
-          message="Are you sure you want to delete this group?"
+          message={t("confirmation")}
           onAccept={async () => {
             const response = await eraseGroup(group.id);
             setOpen(false);
@@ -165,48 +172,39 @@ export function GroupHeader({
           }}
         />
       ) : null}
-      <div className="flex flex-row justify-between items-center w-full pl-6 pr-6">
+      <div className="flex flex-col lg:flex-row justify-between items-center w-full pl-1 pr-1 sm:pl-6 sm:pr-6">
         <div className="flex flex-col gap-5">
           <div className="flex flex-col gap-0.5">
             <span className="text-6xl">{group.nombre}</span>
             <span className="flex text-base text-[#b0b3b8] align-middle">
-              Reviewing since {creationDate[2]}/{creationDate[1]}/
+              {t("creation-date-label")} {creationDate[2]}/{creationDate[1]}/
               {creationDate[0]}
             </span>
           </div>
           <p className="text-lg text-wrap w-2/3 pb-3">{group.descripcion}</p>
         </div>
         <div className="flex flex-row justify-end items-end">
-          <form action={action}>
-            <input
-              className="hidden"
-              name="grupoId"
-              id="grupoId"
-              readOnly
-              defaultValue={group.id}
-            />
-            <div className="flex flex-col">
-              <button
-                disabled={pending}
-                type="submit"
-                name="submit"
-                className={`flex shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 ${
-                  !role ? "before:content-['+']" : "before:content-['-']"
-                } before:pr-2 before:text-xl text-lg text-center rounded-sm font-semibold bg-blue-700 hover:bg-blue-800 transition-colors delay-75 duration-100 ease-in-out`}
-              >
-                {!role ? "Join" : "Leave"}
-              </button>
-            </div>
-          </form>
-          {role === "lider" || isAdmin ? (
+          <div className="flex flex-col">
+            <button
+              onClick={wrappedJoinLeave}
+              type="submit"
+              name="submit"
+              className={`flex shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 ${
+                !data.role ? "before:content-['+']" : "before:content-['-']"
+              } before:pr-2 before:text-xl text-lg text-center rounded-sm font-semibold bg-blue-700 hover:bg-blue-800 transition-colors delay-75 duration-100 ease-in-out`}
+            >
+              {!data.role ? t("join-button") : t("leave-button")}
+            </button>
+          </div>
+          {data.role === "lider" || isAdmin ? (
             <button
               onClick={() => redirect(`/group/${group.id}/edit`)}
               className={`flex bg-[#1c1e21] shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 text-lg text-center rounded-sm font-semibold text-nowrap`}
             >
-              Edit Group
+              {t("edit-button")}
             </button>
           ) : null}
-          {role === "lider" || isAdmin ? (
+          {data.role === "lider" || isAdmin ? (
             <button
               onClick={() => {
                 setOpen(true);
@@ -214,7 +212,7 @@ export function GroupHeader({
               }}
               className={`flex bg-red-800 shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 text-lg text-center rounded-sm font-semibold text-nowrap`}
             >
-              Delete Group
+              {t("delete-button")}
             </button>
           ) : null}
         </div>
@@ -224,14 +222,16 @@ export function GroupHeader({
   );
 }
 
-export function GroupMeetingColumn(props: { meeting?: Reunion; role: string }) {
-  const { role } = props;
+export function GroupMeetingColumn(props: {
+  meeting?: Reunion;
+  role: string;
+  isAdmin: boolean;
+}) {
+  const t = useTranslations("GroupMeetingColumn");
+  const { role, isAdmin } = props;
   const [isSidebarOpen, setOpen] = useState(false);
   const [meeting, setMeeting] = useState(props.meeting);
   const [submitted, setSubmit] = useState(false);
-  const meetingInProgress = meeting
-    ? new Date(meeting.fecha).getTime() <= Date.now()
-    : false;
   const handleSidebarToggle = () => {
     if (isSidebarOpen) {
       setOpen((prev) => !prev);
@@ -252,50 +252,47 @@ export function GroupMeetingColumn(props: { meeting?: Reunion; role: string }) {
   }, [submitted]);
 
   return (
-    <div className="col-span-1 pl-6 bg-[#003566] h-full shadow-2xl rounded-br-md">
-      <div className={`${isSidebarOpen ? "flex" : "hidden"}`}>
-        <button
-          className="fixed top-3 left-3 text-4xl mr-4 mt-0.5 z-4 justify-center dark:text-white text-black cursor-pointer rounded-full hover:bg-[#bdbcb968] h-10 w-10 transition-all delay-75 duration-100 ease-in-out"
-          onClick={() => handleSidebarToggle()}
-        >
-          &times;
-        </button>
-        <ScheduleMeeting
-          onSubmit={() => {
-            setSubmit(true);
-          }}
-        />
-      </div>
-      <div
-        className={`${
-          isSidebarOpen ? "fixed" : "hidden"
-        } inset-0 bg-black opacity-60`}
-      ></div>
+    <div className="col-span-1 pl-2 xl:pl-6 bg-[#003566] h-full shadow-2xl rounded-br-md">
+      {isSidebarOpen ? (
+        <>
+          <div className="flex">
+            <button
+              className="fixed top-3 left-3 text-4xl mr-4 mt-0.5 z-4 justify-center dark:text-white text-black cursor-pointer rounded-full hover:bg-[#bdbcb968] h-10 w-10 transition-all delay-75 duration-100 ease-in-out"
+              onClick={() => handleSidebarToggle()}
+            >
+              &times;
+            </button>
+            <ScheduleMeeting
+              onSubmit={() => {
+                setSubmit(true);
+              }}
+            />
+          </div>
+          <div className="fixed inset-0 bg-black opacity-60"></div>
+        </>
+      ) : null}
       <div className="flex flex-col gap-2">
-        <div className="flex flex-row justify-between items-center mr-3 pt-4">
-          <h2 className="font-semibold text-xl">Meeting</h2>
-          <button
-            onClick={() => setOpen((prev) => !prev)}
-            className={`${
-              role && role === "lider" ? "flex" : "hidden"
-            } shadow-sm cursor-pointer text-center self-center items-center justify-center pb-1 pt-1 pr-4 pl-4 before:content-['+'] before:pr-2 before:text-xl text-lg rounded-sm font-semibold bg-blue-700 hover:bg-blue-800 transition-colors delay-75 duration-100 ease-in-out`}
-          >
-            Schedule Meeting
-          </button>
+        <div className="flex flex-row justify-between items-center mr-1 xl:mr-3 pt-4 gap-1">
+          <h2 className="font-semibold text-xl">{t("title")}</h2>
+          {role && role === "lider" ? (
+            <button
+              onClick={() => setOpen((prev) => !prev)}
+              className="flex shadow-sm cursor-pointer text-center self-center items-center justify-center pb-1 pt-1 pr-4 pl-4 before:content-['+'] before:pr-2 before:text-xl text-lg rounded-sm font-semibold bg-blue-700 hover:bg-blue-800 transition-colors delay-75 duration-100 ease-in-out"
+            >
+              {t("schedule-button")}
+            </button>
+          ) : null}
         </div>
-        <div
-          className={`flex flex-col items-center mr-3 ${
-            meetingInProgress ? "bg-red-600" : ""
-          }`}
-        >
+        <div className="flex flex-col items-center mr-3">
           {meeting !== undefined ? (
             <MeetingCard
               role={role}
               meeting={meeting}
               onDelete={() => setMeeting(undefined)}
+              isAdmin={isAdmin}
             />
           ) : (
-            <span className="mt-5">No meetings scheduled</span>
+            <span className="mt-5">{t("no-meeting-msg")}</span>
           )}
         </div>
       </div>
@@ -312,6 +309,7 @@ export function GroupReviews({
   userRole: string | undefined;
   isAdmin: boolean;
 }) {
+  const t = useTranslations("GroupReviews");
   const [groupReviews, setReviews] = useState(reviews);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
@@ -366,7 +364,7 @@ export function GroupReviews({
     <div className="flex flex-col col-span-2 items-center h-full pt-4 gap-3">
       {modalOpen ? (
         <MovieSelectModal
-          message="Select a movie"
+          message={t("select-modal-msg")}
           onConfirm={(movie: MovieComponents) => {
             setMovie(movie);
             handleModalToggle();
@@ -402,14 +400,14 @@ export function GroupReviews({
             : "justify-center"
         } items-center w-full pl-5 pr-5`}
       >
-        <h2 className="text-4xl">Reviews</h2>
+        <h2 className="text-4xl">{t("title")}</h2>
         <button
           onClick={() => handleModalToggle()}
           className={`${
             userRole && userRole === "lider" ? "" : "hidden"
           } font-semibold cursor-pointer before:content-['+'] before:mr-1 before:text-[#f5c518] before:text-xl transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]`}
         >
-          Write Review
+          {t("create-button")}
         </button>
       </div>
       <div className="flex flex-col justify-center items-center gap-2 w-full">
@@ -423,7 +421,7 @@ export function GroupReviews({
             />
           ))
         ) : (
-          <span className="mt-5">This group has no reviews yet.</span>
+          <span className="mt-5">{t("no-reviews-msg")}</span>
         )}
       </div>
       <div className={`flex flex-row p-5 items-center`}>
@@ -439,7 +437,9 @@ export function GroupReviews({
         >
           &lt;
         </button>
-        <span className="text-sm">Page {pageNumber}</span>
+        <span className="text-sm">
+          {t("page-text")} {pageNumber}
+        </span>
         <button
           className="pl-2 text-2xl cursor-pointer"
           onClick={() => {
@@ -461,6 +461,7 @@ export function GroupMembersPreview({
   members: GroupMembership[];
   memberCount: { cantidad: number };
 }) {
+  const t = useTranslations("GroupMembersPreview");
   const params = useParams();
 
   let parsedCount = memberCount.cantidad;
@@ -473,13 +474,13 @@ export function GroupMembersPreview({
     unit = "m";
   }
   return (
-    <div className="flex flex-col col-span-1 items-start mr-6 h-full w-full pt-4 bg-[#003566] shadow-2xl rounded-bl-md">
+    <div className="flex flex-col col-span-1 items-start mr-0 sm:mr-6 h-full w-full pt-4 pb-4 bg-[#003566] shadow-2xl rounded-bl-md lg:pb-0">
       <div className="flex flex-col mb-2 ml-3">
         <span
           onClick={() => redirect(`/group/${params.id}/members`)}
           className="font-semibold text-xl hover:font-bold cursor-pointer transition-all delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
         >
-          Members
+          {t("title")}
         </span>
         <span className="opacity-60">
           {parsedCount}
@@ -492,7 +493,7 @@ export function GroupMembersPreview({
             <div key={index} className="flex flex-row items-center gap-2 pt-3">
               <Image
                 src={`http://localhost:3000${member.urlImagen}`}
-                alt={"Profile Icon"}
+                alt="Profile Icon"
                 width={32}
                 height={32}
                 className="rounded-full"

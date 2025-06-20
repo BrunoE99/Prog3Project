@@ -1,4 +1,5 @@
 import { reviewEdit } from "@/app/reviews/actions";
+import { useTranslations } from "next-intl";
 import { useActionState, useEffect, useRef, useState } from "react";
 
 interface MovieComponents {
@@ -83,10 +84,14 @@ export default function ReviewEditSidebar({
   onSubmit: () => void;
   onClose: () => void;
 }) {
+  const t = useTranslations("ReviewEditSidebar");
   const [fieldsEdited, setFieldsEdited] = useState([false, false]);
   const scoreSelected = useRef(true);
   const firstPass = useRef(true);
-  const [fields, setFields] = useState([review.puntuacion, review.texto]);
+  const [fields, setFields] = useState([
+    review.puntuacion ?? 1,
+    review.texto ?? "",
+  ]);
 
   const wrappedEditReview = async (_state: any, formData: FormData) => {
     const result = await reviewEdit(_state, formData);
@@ -197,7 +202,7 @@ export default function ReviewEditSidebar({
           defaultValue={review.id}
         />
         <div className="flex flex-col gap-2">
-          <span>Your score</span>
+          <span>{t("score-label")}</span>
           <div
             id="review-edit-score"
             className="flex flex-row gap-2 items-center"
@@ -249,7 +254,7 @@ export default function ReviewEditSidebar({
             name="edit-content"
             id="edit-content"
             className="border-2 h-3/4 p-2 text-start rounded-md items-start justify-start placeholder-gray-400"
-            placeholder="Write you review here..."
+            placeholder={t("content-placeholder")}
             onChange={(e) => {
               setFields([fields[0], e.target.value]);
               setFieldsEdited([fieldsEdited[0], true]);

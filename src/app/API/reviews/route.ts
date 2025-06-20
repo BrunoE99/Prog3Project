@@ -202,14 +202,14 @@ export async function reviewDelete(id: number) {
     });
 
     const answer = request;
-    const answerJson = await request.json();
 
-    if (answer.status == 201) {
+    if (answer.status == 200) {
       return {
         status: answer.status,
-        body: answerJson,
+        success: true,
       };
     } else {
+      const answerJson = await request.json();
       return {
         status: answer.status,
         message: answerJson.message || "An unexpected error ocurred",

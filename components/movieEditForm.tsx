@@ -1,6 +1,7 @@
 "use client";
 
-import { editMovie } from "@/app/movie/[id]/actions";
+import { editMovie } from "@/app/[locale]/movie/[id]/actions";
+import { useTranslations } from "next-intl";
 import { redirect } from "next/navigation";
 import { useActionState, useState } from "react";
 
@@ -27,6 +28,7 @@ export function MovieEditHeader({
   id: number;
   authorized: boolean;
 }) {
+  const t = useTranslations("MovieEditHeader");
   return (
     <div className="flex flex-row gap-3 m-6 items-center">
       <button
@@ -38,7 +40,7 @@ export function MovieEditHeader({
       >
         &lt;
       </button>
-      <h1 className="text-4xl font-semibold">Edit Movie</h1>
+      <h1 className="text-4xl font-semibold">{t("title")}</h1>
     </div>
   );
 }
@@ -52,6 +54,7 @@ export function MovieEditForm({
   authorized: boolean;
   generos: Genero[];
 }) {
+  const t = useTranslations("MovieEditForm");
   const [fieldsEdited, setFieldsEdited] = useState({
     nombre: false,
     sinopsis: false,
@@ -72,7 +75,6 @@ export function MovieEditForm({
   const [selectedGenre, setGenre] = useState(movie.genero.nombre);
   const [hours, setHours] = useState(Math.floor(movie.duracion / 60));
   const [minutes, setMinutes] = useState(movie.duracion % 60);
-  //TODO: Implement error display
   const [state, action, pending] = useActionState(editMovie, undefined);
   function doesGenreExist(genreName: string) {
     const nombres = generos.map((genero) => genero.nombre);
@@ -91,7 +93,7 @@ export function MovieEditForm({
           value={JSON.stringify(fieldsEdited)}
         />
         <div className="flex flex-col items-start justify-center gap-2">
-          <span className="font-semibold text-2xl">Name</span>
+          <span className="font-semibold text-2xl">{t("name-label")}</span>
           <input
             autoComplete="false"
             disabled={!authorized}
@@ -112,7 +114,7 @@ export function MovieEditForm({
           ) : null}
         </div>
         <div className="flex flex-col items-start justify-center gap-2">
-          <span className="font-semibold text-2xl">Synopsis</span>
+          <span className="font-semibold text-2xl">{t("synopsis-label")}</span>
           <textarea
             autoComplete="false"
             disabled={!authorized}
@@ -133,7 +135,7 @@ export function MovieEditForm({
         </div>
         <div className="flex flex-col items-start justify-center gap-3">
           <div className="flex flex-col justify-center items-start gap-4">
-            <span className="font-semibold text-2xl">Select a Genre</span>
+            <span className="font-semibold text-2xl">{t("genre-select")}</span>
             <div className="w-full flex flex-row gap-3">
               <select
                 className="[&>option]:text-black rounded-sm transition-colors delay-75 duration-200 ease-in-out hover:bg-[#899fff]/20 [&>option]:bg-white w-full"
@@ -153,15 +155,13 @@ export function MovieEditForm({
               </select>
               {genreTyped ? (
                 <span className="xl:text-nowrap text-[#f39c11]">
-                  Warning: A new genre name overrides the selected genre, make
-                  sure that this field matches the one below if you want to use
-                  this genre
+                  {t("genre-warning")}
                 </span>
               ) : null}
             </div>
           </div>
-          <span className="font-light text-lg">or</span>
-          <span className="font-semibold text-2xl">Create a New Genre</span>
+          <span className="font-light text-lg">{t("genre-separator")}</span>
+          <span className="font-semibold text-2xl">{t("new-genre")}</span>
           <input
             autoComplete="false"
             disabled={!authorized}
@@ -188,7 +188,7 @@ export function MovieEditForm({
           ) : null}
         </div>
         <div className="flex flex-col items-start justify-center gap-2">
-          <span className="font-semibold text-2xl">Release Date</span>
+          <span className="font-semibold text-2xl">{t("date-label")}</span>
           <input
             autoComplete="false"
             disabled={!authorized}
@@ -211,7 +211,7 @@ export function MovieEditForm({
           ) : null}
         </div>
         <div className="flex flex-col items-start justify-center gap-2">
-          <span className="font-semibold text-2xl">Length</span>
+          <span className="font-semibold text-2xl">{t("length-label")}</span>
           <div className="flex flex-row w-full gap-3">
             <div className="flex flex-row items-center gap-1">
               <input
@@ -270,7 +270,7 @@ export function MovieEditForm({
           ) : null}
         </div>
         <div className="flex flex-col items-start justify-center gap-2">
-          <span className="font-semibold text-2xl">Score</span>
+          <span className="font-semibold text-2xl">{t("score-label")}</span>
           <input
             disabled={!authorized}
             className="border border-[#545454b7] w-full mb-1 p-1 bg-[#899fff]/20"

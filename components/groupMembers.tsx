@@ -3,9 +3,10 @@
 import { redirect } from "next/navigation";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { findAllGroupMembers, kickMember } from "@/app/group/actions";
+import { findAllGroupMembers, kickMember } from "@/app/[locale]/group/actions";
 import { ModalConfirmation } from "./modalConfirmation";
-import { getAuthToken } from "@/app/movie/[id]/actions";
+import { getAuthToken } from "@/app/[locale]/movie/[id]/actions";
+import { useTranslations } from "next-intl";
 
 interface MovieComponents {
   id: number;
@@ -81,6 +82,7 @@ interface ReviewComponents {
 }
 
 export function GroupMembersHeader({ id }: { id: string }) {
+  const t = useTranslations("GroupMembersHeader");
   return (
     <div className="flex flex-row gap-3 m-6 items-center">
       <span
@@ -89,7 +91,7 @@ export function GroupMembersHeader({ id }: { id: string }) {
       >
         &lt;
       </span>
-      <h1 className="text-4xl font-semibold">Members</h1>
+      <h1 className="text-4xl font-semibold">{t("title")}</h1>
     </div>
   );
 }
@@ -103,6 +105,7 @@ export function GroupMembersBody({
   groupId: number;
   role: string | undefined;
 }) {
+  const t = useTranslations("GroupMembersBody");
   const [groupMembers, setMembers] = useState(members);
   const [selectedMember, setMember] = useState<number | undefined>(undefined);
   const [selectedMemberName, setName] = useState<string | undefined>(undefined);
@@ -142,7 +145,7 @@ export function GroupMembersBody({
     <div className="grid grid-cols-1 grid-rows-2 gap-5">
       {modalOpen ? (
         <ModalConfirmation
-          message={`Are you sure you want to kick ${selectedMemberName}?`}
+          message={`${t("confirmation")} ${selectedMemberName}?`}
           onAccept={() => {
             setOpen(false);
             document.body.style.overflow = "unset";
@@ -158,7 +161,7 @@ export function GroupMembersBody({
       ) : null}
       <div>
         <div className="flex flex-row items-center gap-2">
-          <h2 className="text-4xl">Admins</h2>
+          <h2 className="text-4xl">{t("admins-label")}</h2>
           <span className="opacity-60">
             {groupMembers.filter((member) => member.rol === "lider").length}
           </span>
@@ -170,8 +173,13 @@ export function GroupMembersBody({
                 key={index}
                 className="inline-flex flex-row items-center pt-3 gap-1 cursor-pointer"
                 onClick={() => {
-                  setMember(member.id);
-                  setName(member.nombre);
+                  if (selectedMember && selectedMember === member.id) {
+                    setMember(undefined);
+                    setName(undefined);
+                  } else {
+                    setMember(member.id);
+                    setName(member.nombre);
+                  }
                 }}
               >
                 <div className="flex flex-row justify-center items-center gap-2">
@@ -190,7 +198,9 @@ export function GroupMembersBody({
                 role === "lider" ? (
                   <div className="flex flex-row items-center justify-center gap-1 rounded-sm bg-black shadow-md border border-[#545454b7] text-gray-300 text-sm p-1">
                     <i className="fa fa-trash-o pl-1 text-red-800"></i>
-                    <button className="pr-1 cursor-pointer">Kick member</button>
+                    <button className="pr-1 cursor-pointer">
+                      {t("context-kick")}
+                    </button>
                   </div>
                 ) : null}
               </div>
@@ -200,7 +210,7 @@ export function GroupMembersBody({
       </div>
       <div>
         <div className="flex flex-row items-center gap-2">
-          <h2 className="text-4xl">Members</h2>
+          <h2 className="text-4xl">{t("members-label")}</h2>
           <span className="opacity-60">
             {groupMembers.filter((member) => member.rol === "miembro").length}
           </span>
@@ -239,7 +249,7 @@ export function GroupMembersBody({
                       className="pr-1 cursor-pointer"
                       onClick={handleModalOpen}
                     >
-                      Kick member
+                      {t("context-kick")}
                     </span>
                   </div>
                 ) : null}

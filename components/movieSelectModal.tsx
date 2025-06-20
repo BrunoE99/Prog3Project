@@ -1,6 +1,7 @@
-import { retrieveFilteredMovies } from "@/app/movie/[id]/actions";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { retrieveFilteredMovies } from "@/app/[locale]/movie/[id]/actions";
+import { useTranslations } from "next-intl";
 
 interface MovieComponents {
   id: number;
@@ -88,6 +89,7 @@ export function MovieSelectModal({
   onConfirm: (movie: MovieComponents) => void;
   onCancel: () => void;
 }) {
+  const t = useTranslations("MovieSelectModal");
   const [hasSearched, setSearch] = useState(false);
   const [searchString, setSearchString] = useState("");
   const [filteredMovies, setMovies] = useState<MovieComponents[]>([]);
@@ -125,7 +127,7 @@ export function MovieSelectModal({
   return (
     <div className="fixed">
       <div className="fixed inset-0 bg-black opacity-60 z-1"></div>
-      <div className="fixed top-1/3 left-1/3 right-1/3 flex justify-center items-center rounded-lg bg-[#001d3d] shadow-lg z-2 w-auto">
+      <div className="fixed top-1/3 left-1/3 right-1/3 flex justify-center items-center rounded-lg bg-[#001d3d] shadow-lg z-2 w-4/5 md:w-auto">
         <div className="flex flex-col h-full pt-6 pb-6 gap-5 w-full items-center">
           <div>
             <span className="font-semibold text-lg text-wrap">{message}</span>
@@ -154,7 +156,7 @@ export function MovieSelectModal({
               className={`rounded-sm border border-[#545454b7] w-full bg-[#041b3db8] ${
                 selectedMovie ? "pl-12 py-5" : "pl-10 py-2"
               }`}
-              placeholder="Search..."
+              placeholder={t("search-placeholder")}
               onChange={changeHandler}
               value={searchString}
               onFocus={() => {
@@ -163,7 +165,10 @@ export function MovieSelectModal({
                 }
               }}
               onBlur={() => {
-                blurTimeout.current = setTimeout(() => setSearch(false), 100);
+                blurTimeout.current = setTimeout(() => {
+                  setSearch(false);
+                  setMovies([]);
+                }, 100);
               }}
             />
 
@@ -181,6 +186,7 @@ export function MovieSelectModal({
                     setSearchString(movie.nombre);
                     setMovie(movie);
                     setSearch(false);
+                    setMovies([]);
                   }}
                 >
                   <Image
@@ -192,7 +198,7 @@ export function MovieSelectModal({
                   <div className="flex flex-col gap-1">
                     <span className="text-lg">{movie.nombre}</span>
                     <span className="text-xs">
-                      {movie.fechaEstreno?.split("-")[0] || "Unknown"}
+                      {movie.fechaEstreno?.split("-")[0] || t("no-date-label")}
                     </span>
                   </div>
                 </div>
@@ -209,13 +215,13 @@ export function MovieSelectModal({
                   : "bg-green-800 hover:bg-green-700 cursor-pointer"
               }`}
             >
-              Confirm
+              {t("confirm")}
             </button>
             <button
               onClick={onCancel}
               className="rounded-lg shadow-md bg-red-800 hover:bg-red-700 p-1 pl-2 pr-2 cursor-pointer"
             >
-              Cancel
+              {t("cancel")}
             </button>
           </div>
         </div>

@@ -1,7 +1,10 @@
+"use server";
+
 import { userById } from "@/app/API/userId/route";
 import Image from "next/image";
 import ImageUpload from "./imageUpload";
 import ReviewsByUserID from "./reviewByUserID";
+import { getTranslations } from "next-intl/server";
 
 // to remove scroll, set footer & navbar to h-[Xvh] and then the page to the rest h-[100-Xvh]
 // mobile kinda wonky at ~300px ~350px
@@ -10,7 +13,14 @@ import ReviewsByUserID from "./reviewByUserID";
 //     pagination: number;
 // }
 
-export default async function Profile({ userId, pagination }: { userId: number, pagination: number }) {
+export default async function Profile({
+  userId,
+  pagination,
+}: {
+  userId: number;
+  pagination: number;
+}) {
+  const t = await getTranslations("Profile");
   const userInfo = await userById(userId);
   const imageName = userInfo.urlImagen.split("/").pop();
 
@@ -38,12 +48,12 @@ export default async function Profile({ userId, pagination }: { userId: number, 
           </h1>
           <p className="font-light text-gray-300 mt-3">{userInfo.email}</p>
           <p className="mt-8 text-gray-400">
-            Created at: {userInfo.fechaCreacion}
+            {t("created-date-label")} {userInfo.fechaCreacion}
           </p>
         </div>
       </div>
       <div>
-        <ReviewsByUserID userId={userId} pagination={pagination}/>
+        <ReviewsByUserID userId={userId} pagination={pagination} />
       </div>
     </div>
   );

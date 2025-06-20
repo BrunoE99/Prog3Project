@@ -1,31 +1,33 @@
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 
 export default function Footer() {
+  const t = useTranslations("Footer");
   return (
     <footer className="bg-[#000814] text-white px-6 py-8">
       <div className="max-w-6xl mx-auto grid grid-cols-2 md:grid-cols-2 gap-6">
         <div>
-          <h4 className="font-bold mb-2">Pages</h4>
+          <h4 className="font-bold mb-2">{t("pages-label")}</h4>
           <ul>
             <li>
-              <Link href="/reviews">Reviews</Link>
+              <Link href="/movie">{t("movies-link")}</Link>
             </li>
             <li>
-              <Link href="/genres">Genres</Link>
+              <Link href="/genres">{t("genres-link")}</Link>
             </li>
             <li>
-              <Link href="/about">About us</Link>
+              <Link href="/groups">{t("groups-link")}</Link>
             </li>
           </ul>
         </div>
         <div>
-          <h4 className="font-bold mb-2">Resources</h4>
+          <h4 className="font-bold mb-2">{t("resources-label")}</h4>
           <ul>
             <li>
-              <a href="#">Contact us</a>
+              <a href="#">{t("contact-link")}</a>
             </li>
             <li>
-              <a href="#">Report bugs</a>
+              <a href="#">{t("report-link")}</a>
             </li>
           </ul>
         </div>

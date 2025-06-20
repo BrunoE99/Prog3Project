@@ -1,16 +1,17 @@
 import {
   createComment,
+  eraseReview,
   findAllCommentsForReview,
-} from "@/app/API/comment/actions";
-import { eraseReview } from "@/app/reviews/actions";
+} from "@/app/reviews/actions";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Comment from "./comment";
-import { getDecodedToken } from "@/app/movie/[id]/actions";
 import { ModalConfirmation } from "./modalConfirmation";
 import { redirect } from "next/navigation";
 import Button from "./button";
 import ReviewEditSidebar from "./editReview";
+import { getDecodedToken } from "@/app/[locale]/movie/[id]/actions";
+import { useTranslations } from "next-intl";
 
 interface MovieComponents {
   id: number;
@@ -101,6 +102,7 @@ export default function MovieReview({
   authorized: boolean;
   onEditDelete: () => void;
 }) {
+  const t = useTranslations("MovieReview");
   const [commentsOpen, setOpen] = useState(false);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [comments, setComments] = useState<Comment[] | undefined>(undefined);
@@ -178,7 +180,7 @@ export default function MovieReview({
       ) : null}
       {modalOpen ? (
         <ModalConfirmation
-          message={`Are you sure you want to delete this review?`}
+          message={t("delete-confirmation")}
           onAccept={() => {
             deleteReview();
             setContextOpen(false);
@@ -193,24 +195,38 @@ export default function MovieReview({
         />
       ) : null}
       <div className="flex flex-row justify-between items-center p-1">
-        <div className="flex flex-row gap-2">
-          <Image
-            className="rounded-full"
-            src={`http://localhost:3000${review.user.urlImagen}`}
-            alt="User's Avatar"
-            width={50}
-            height={50}
-          />
-          <div className="p-2 flex flex-col">
-            <h3 className="text-2xl font-semibold">{review.user.username}</h3>
-            <h4 className="text-sm font-medium opacity-60">
-              {review.grupo?.nombre}
-            </h4>
+        {!review.pelicula ? (
+          <div className="flex flex-row gap-2">
+            <Image
+              className="rounded-full"
+              src={`http://localhost:3000${review.user.urlImagen}`}
+              alt="User's Avatar"
+              width={50}
+              height={50}
+            />
+            <div className="p-2 flex flex-col">
+              <h3
+                className="text-2xl font-semibold cursor-pointer"
+                onClick={() => redirect(`/profile/${review.userId}`)}
+              >
+                {review.user.username}
+              </h3>
+              <h4
+                className={`${
+                  review.grupo ? "cursor-pointer" : "hidden"
+                } text-sm font-medium opacity-60`}
+                onClick={() => {
+                  if (review.grupo) redirect(`/group/${review.grupo.id}`);
+                }}
+              >
+                {review.grupo?.nombre}
+              </h4>
+            </div>
           </div>
-        </div>
+        ) : null}
         {review.pelicula ? (
           <div
-            className="hidden lg:flex flex-row justify-center items-center gap-3 cursor-pointer"
+            className="flex flex-row justify-center items-center gap-6 sm:gap-3 cursor-pointer"
             onClick={() => redirect(`/movie/${review.peliculaId}`)}
           >
             <Image
@@ -241,7 +257,7 @@ export default function MovieReview({
           </div>
         </div>
       </div>
-      <div className="text-sm p-2 pl-0 lg:pl-15 w-3/4 md:text-base h-fit wrap-normal">
+      <div className="text-sm p-2 pl-0 lg:pl-15 w-3/4 md:text-base h-fit break-words">
         {review.texto}
       </div>
       <div
@@ -250,15 +266,17 @@ export default function MovieReview({
         }`}
       >
         <div className="flex flex-row gap-2 justify-center items-center pl-5">
-          <span className="text-xl font-semibold">
-            {commentsOpen ? "-" : "+"}
-          </span>
-          <button
-            className="text-sm cursor-pointer transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
+          <div
+            className="flex flex-row gap-2 cursor-pointer transition-colors delay-75 duration-100 ease-in-out hover:text-[#f5c518]"
             onClick={() => setOpen((prev) => !prev)}
           >
-            View Comments
-          </button>
+            <span className="text-xl font-semibold">
+              {commentsOpen ? "-" : "+"}
+            </span>
+            <button className="text-sm cursor-pointer">
+              {t("comment-button")}
+            </button>
+          </div>
           <div
             className={`${
               commentsOpen ? "flex" : "hidden"
@@ -276,7 +294,9 @@ export default function MovieReview({
             >
               &lt;
             </button>
-            <span className="text-sm">Page {pageNumber}</span>
+            <span className="text-sm">
+              {t("page-text")} {pageNumber}
+            </span>
             <button
               className="pl-2 text-2xl cursor-pointer"
               onClick={() => {
@@ -301,7 +321,7 @@ export default function MovieReview({
                 >
                   <i className="fa fa-edit pl-1"></i>
                   <button className="pr-1 cursor-pointer" disabled={modalOpen}>
-                    Edit
+                    {t("edit-button")}
                   </button>
                 </div>
                 <div
@@ -310,7 +330,7 @@ export default function MovieReview({
                 >
                   <i className="fa fa-trash-o pl-1 text-orange-500"></i>
                   <button className="pr-1 cursor-pointer" disabled={modalOpen}>
-                    Delete
+                    {t("delete-button")}
                   </button>
                 </div>
               </div>
@@ -334,13 +354,16 @@ export default function MovieReview({
             <input
               className="w-full"
               type="text"
-              placeholder="Write comment..."
+              placeholder={t("comment-write-placeholder")}
               id="comment-post"
               autoComplete="off"
               onChange={(e) => setNewComment(e.target.value)}
               value={newComment}
             />
-            <Button text="Post" onClick={handleCommentPost} />
+            <Button
+              text={t("comment-post-button")}
+              onClick={handleCommentPost}
+            />
           </div>
           {comments &&
             comments.map((comment, index) => (

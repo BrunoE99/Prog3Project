@@ -1,0 +1,284 @@
+{
+  "HeroSection": {
+    "title": "Reseñas sobre tus películas favoritas.",
+    "subtitle": "Explora lo que otros opinan sobre cualquier película que te guste."
+  },
+  "AllReviews": {
+    "title": "Mejor valoradas"
+  },
+  "AllMovies": {
+    "error-msg": "Algo salió mal."
+  },
+  "MovieFilter": {
+    "filter-label": "Ordenar y filtrar:",
+    "default-option": "Orden estandar",
+    "rating-asc": "Calificación (de menor a mayor)",
+    "rating-desc": "Calificación (de mayor a menor)",
+    "alphabetic-asc": "Alfabético (A-Z)",
+    "alphabetic-desc": "Alfabético (Z-A)"
+  },
+  "Pagination": {
+    "button-prev": "← Página anterior",
+    "page-text": "Página",
+    "button-next": "Página siguiente →"
+  },
+  "MovieCardFull": {
+    "detail": "Detalles y reseñas",
+    "short-detail": "Detalles"
+  },
+  "MovieInfoSection": {
+    "confirmation": "¿Estás seguro de que deseas eliminar",
+    "release-label": "Año de estreno",
+    "length-label": "Duración",
+    "genre-label": "Género",
+    "context-edit": "Editar",
+    "context-delete": "Eliminar"
+  },
+  "MovieReviewsSection": {
+    "no-review-message": "¡Felicidades! Puedes ser el primero en escribir una reseña.",
+    "featured-button": "Reseñas destacadas",
+    "all-button": "Todas las reseñas",
+    "filter-label": "Filtrar",
+    "all-filter": "Mostrar todas",
+    "1-filter": "1 estrella",
+    "2-filter": "2 estrellas",
+    "3-filter": "3 estrellas",
+    "4-filter": "4 estrellas",
+    "5-filter": "5 estrellas",
+    "6-filter": "6 estrellas",
+    "7-filter": "7 estrellas",
+    "8-filter": "8 estrellas",
+    "9-filter": "9 estrellas",
+    "10-filter": "10 estrellas",
+    "create-button": "Escribir reseña",
+    "page-text": "Página"
+  },
+  "NotFoundPage": {
+    "not-found-msg": "Lo sentimos, esta página no existe"
+  },
+  "MovieReview": {
+    "delete-confirmation": "¿Estás seguro de que deseas eliminar esta reseña?",
+    "comment-button": "Ver comentarios",
+    "page-text": "Página",
+    "edit-button": "Editar",
+    "delete-button": "Eliminar",
+    "comment-write-placeholder": "Escribe un comentario...",
+    "comment-post-button": "Publicar"
+  },
+  "ReviewEditSidebar": {
+    "score-label": "Tu puntuación",
+    "content-placeholder": "Escribe tu reseña aquí..."
+  },
+  "ModalConfirmation": {
+    "confirm": "Sí",
+    "cancel": "No"
+  },
+  "Comment": {
+    "confirmation": "¿Estás seguro de que deseas eliminar este comentario?",
+    "context-delete": "Eliminar"
+  },
+  "MovieEdit": {
+    "not-auth-message": "Lo sentimos, debes ser administrador para ver esta página"
+  },
+  "MovieEditHeader": {
+    "title": "Editar película"
+  },
+  "MovieEditForm": {
+    "name-label": "Nombre",
+    "synopsis-label": "Sinopsis",
+    "genre-select": "Selecciona un género",
+    "genre-warning": "Advertencia: Un nuevo nombre de género sobrescribe el género seleccionado, asegúrate de que este campo coincida con el de abajo si deseas usar este género",
+    "genre-separator": "o",
+    "new-genre": "Crear un nuevo género",
+    "date-label": "Fecha de estreno",
+    "length-label": "Duración",
+    "score-label": "Puntuación"
+  },
+  "LoginHandler": {
+    "message": "Inicio de sesión exitoso."
+  },
+  "Login": {
+    "email-placeholder": "Email",
+    "password-placeholder": "Contraseña",
+    "login-button": "Iniciar sesión",
+    "signup-button": "Registrarse"
+  },
+  "Signup": {
+    "username-placeholder": "Username",
+    "email-placeholder": "Email",
+    "password-placeholder": "Contraseña",
+    "password-error": "La contraseña debe tener:",
+    "register-button": "Registrar",
+    "login-button": "Iniciar sesión"
+  },
+  "SignupSuccessHandler": {
+    "message": "Registro exitoso."
+  },
+  "GenreCard": {
+    "title": "Películas por género",
+    "link-start": "Ver todas",
+    "link-end": "películas",
+    "no-movies-msg": "Aún no hay películas disponibles para este género.",
+    "no-genres-msg": "No hay géneros disponibles en este momento.",
+    "fail-msg": "No se pudieron cargar los géneros y películas."
+  },
+  "MovieCard": {
+    "button-text": "Leer reseñas"
+  },
+  "ByGenre": {
+    "title": "Género:",
+    "error-msg": "Algo salió mal."
+  },
+  "Profile": {
+    "created-date-label": "Creado el:"
+  },
+  "ImageUpload": {
+    "main-label": "Cambiar imagen",
+    "image-placeholder": "Ninguna imagen seleccionada",
+    "upload-in-progress": "Subiendo...",
+    "upload-button": "Subir"
+  },
+  "ReviewsByUserID": {
+    "title": "Mis reseñas",
+    "error-msg": "Algo salió mal."
+  },
+  "ReviewCard": {
+    "detail": "Detalles y reseñas",
+    "short-detail": "Detalles"
+  },
+  "AllGroups": {
+    "title": "Explorar grupos",
+    "create-button": "Crear grupo",
+    "search-placeholder": "Buscar grupos..."
+  },
+  "GroupCreate": {
+    "title": "Crear grupo",
+    "name-label": "Nombre",
+    "description-label": "Descripción"
+  },
+  "GroupHeader": {
+    "confirmation": "¿Estás seguro de que deseas eliminar este grupo?",
+    "creation-date-label": "Reseñando desde",
+    "join-button": "Unirse",
+    "leave-button": "Salir",
+    "delete-button": "Eliminar grupo",
+    "edit-button": "Editar grupo"
+  },
+  "GroupMeetingColumn": {
+    "title": "Reunión",
+    "schedule-button": "Programar reunión",
+    "no-meeting-msg": "No hay reuniones programadas"
+  },
+  "ScheduleMeeting": {
+    "title": "Programar reunión",
+    "date-label": "Fecha",
+    "link-placeholder": "Copia tu enlace aquí...",
+    "link-label": "Enlace"
+  },
+  "MeetingCard": {
+    "meeting-ongoing-text": "AHORA",
+    "link-button": "Ir a la reunión",
+    "delete-button": "Eliminar"
+  },
+  "GroupReviews": {
+    "select-modal-msg": "Selecciona una película",
+    "title": "Reseñas",
+    "create-button": "Escribir reseña",
+    "no-reviews-msg": "Este grupo aún no tiene reseñas.",
+    "page-text": "Página"
+  },
+  "MovieSelectModal": {
+    "search-placeholder": "Buscar...",
+    "no-date-label": "Desconocido",
+    "confirm": "Confirmar",
+    "cancel": "Cancelar"
+  },
+  "CreateReview": {
+    "score-label": "Tu puntuación",
+    "content-placeholder": "Escribe tu reseña aquí..."
+  },
+  "GroupMembersPreview": {
+    "title": "Miembros"
+  },
+  "GroupEdit": {
+    "not-auth-message": "Lo sentimos, debes ser administrador del grupo para ver esta página"
+  },
+  "GroupEditHeader": {
+    "title": "Editar grupo"
+  },
+  "GroupEditForm": {
+    "name-label": "Nombre",
+    "description-label": "Descripción"
+  },
+  "GroupMembersHeader": {
+    "title": "Miembros"
+  },
+  "GroupMembersBody": {
+    "confirmation": "¿Estás seguro de que deseas expulsar a",
+    "admins-label": "Administradores",
+    "members-label": "Miembros",
+    "context-kick": "Expulsar miembro"
+  },
+  "Navbar": {
+    "home-link": "Inicio",
+    "movies-link": "Todas las películas",
+    "genres-button": "Géneros",
+    "all-genres-link": "Todos los géneros",
+    "groups-link": "Grupos",
+    "logout-button": "Cerrar sesión",
+    "profile-button": "Perfil",
+    "login-link": "Iniciar sesión",
+    "signup-link": "Registrarse"
+  },
+  "SearchBar": {
+    "search-placeholder": "Buscar..."
+  },
+  "Footer": {
+    "pages-label": "Páginas",
+    "movies-link": "Películas",
+    "genres-link": "Géneros",
+    "groups-link": "Grupos",
+    "resources-label": "Recursos",
+    "contact-link": "Contáctanos",
+    "report-link": "Reportar errores"
+  },
+  "Validation": {
+    "group-join-id-number": "El ID del grupo debe ser un número.",
+    "group-join-id-int": "El ID del grupo debe ser un número entero.",
+    "group-join-id-positive": "El ID del grupo debe ser un número positivo.",
+    "meeting-form-date": "Debe ser una fecha y hora válida",
+    "meeting-form-link": "El enlace debe ser una URL válida. Ej: https://ejemplo.com/abc",
+    "review-form-content-string": "El contenido de la reseña debe ser una cadena de texto",
+    "review-form-content-length": "El contenido de la reseña no debe estar vacío",
+    "review-form-id-number": "El ID de la película debe ser un número.",
+    "review-form-id-int": "El ID de la película debe ser un número entero.",
+    "review-form-id-positive": "El ID de la película debe ser un número positivo.",
+    "signup-form-username-string": "El nombre de usuario debe ser una cadena de texto",
+    "signup-form-username-length": "El nombre de usuario debe tener al menos 3 caracteres",
+    "signup-form-email-string": "El correo electrónico debe ser una cadena de texto",
+    "signup-form-email-format": "Por favor, introduce una dirección de correo electrónico válida.",
+    "signup-form-email-length": "El correo electrónico debe tener al menos 1 carácter",
+    "signup-form-password-string": "La contraseña debe ser una cadena de texto",
+    "signup-form-password-length": "La contraseña debe tener al menos 8 caracteres",
+    "signup-form-password-letter": "La contraseña debe contener al menos 1 letra.",
+    "signup-form-password-number": "La contraseña debe contener al menos 1 número.",
+    "group-edit-name-string": "El nombre del grupo debe ser una cadena de texto",
+    "group-edit-name-length": "El nombre del grupo debe tener al menos 3 caracteres",
+    "group-edit-description-string": "La descripción del grupo debe ser una cadena de texto",
+    "comment-form-content-string": "El contenido del comentario debe ser una cadena de texto",
+    "comment-form-content-length": "El contenido del comentario no debe estar vacío",
+    "movie-edit-name-string": "El nombre de la película debe ser una cadena de texto",
+    "movie-edit-name-length": "El nombre de la película debe tener al menos 1 carácter",
+    "movie-edit-synopsis-string": "La sinopsis de la película debe ser una cadena de texto",
+    "movie-edit-synopsis-length": "La sinopsis de la película debe tener al menos 1 carácter",
+    "movie-edit-genre-string": "El género de la película debe ser una cadena de texto",
+    "movie-edit-genre-length": "El género de la película debe tener al menos 1 carácter",
+    "movie-edit-date-format": "La fecha de estreno debe ser una fecha válida",
+    "movie-edit-length-number": "La duración de la película debe ser un número",
+    "movie-edit-length-int": "La duración de la película debe ser un número entero",
+    "movie-edit-length-positive": "La duración de la película debe ser un número positivo",
+    "movie-edit-score-number": "La puntuación de la película debe ser un número",
+    "movie-edit-score-int": "La puntuación de la película debe ser un número entero",
+    "movie-edit-score-positive": "La puntuación de la película debe ser un número positivo"
+  }
+}

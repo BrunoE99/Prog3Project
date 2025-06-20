@@ -41,14 +41,24 @@ export async function findAllGroups() {
 
 export async function findGroupById(id: number) {
   const response = await getGroupById(id);
+  const jsonResponse = await response.json();
 
-  return await response.json();
+  if (jsonResponse.statusCode === 404) {
+    return undefined;
+  } else {
+    return jsonResponse;
+  }
 }
 
 export async function findAllGroupMembers(id: number) {
   const response = await getAllGroupMembers(id);
+  const jsonResponse = await response.json();
 
-  return await response.json();
+  if (jsonResponse.statusCode === 404) {
+    return undefined;
+  } else {
+    return jsonResponse;
+  }
 }
 
 export async function findGroupMemberCount(id: number) {

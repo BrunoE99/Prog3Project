@@ -2,6 +2,7 @@ import {
   GroupMembersBody,
   GroupMembersHeader,
 } from "../../../../../../components/groupMembers";
+import NotFoundPage from "../../../../../../components/notFoundPage";
 import { findAllGroupMembers, findRoleInGroup } from "../../actions";
 
 interface MovieComponents {
@@ -80,18 +81,23 @@ interface ReviewComponents {
 export default async function Members({ params }: { params: { id: string } }) {
   const { id } = await params;
   const groupMembers: GroupMembership[] = await findAllGroupMembers(Number(id));
+  console.log(groupMembers);
   const userRole = await findRoleInGroup(Number(id));
 
   return (
     <div className="bg-[#001d3d] min-h-screen">
-      <div className="m-6">
-        <GroupMembersHeader id={id} />
-        <GroupMembersBody
-          members={groupMembers}
-          groupId={Number(id)}
-          role={userRole}
-        />
-      </div>
+      {groupMembers ? (
+        <div className="m-6">
+          <GroupMembersHeader id={id} />
+          <GroupMembersBody
+            members={groupMembers}
+            groupId={Number(id)}
+            role={userRole}
+          />
+        </div>
+      ) : (
+        <NotFoundPage />
+      )}
     </div>
   );
 }

@@ -7,6 +7,7 @@ import {
 } from "../../../../../../components/groupEditForm";
 import { findGroupById, findRoleInGroup } from "../../actions";
 import { getTranslations } from "next-intl/server";
+import NotFoundPage from "../../../../../../components/notFoundPage";
 
 interface MovieComponents {
   id: number;
@@ -99,25 +100,30 @@ export default async function GroupEdit({
           (userRole && userRole === "lider") || isAdmin ? "" : "blur-sm"
         }`}
       >
-        <GroupEditHeader
-          id={group.id}
-          authorized={(userRole && userRole === "lider") || isAdmin}
-        />
-
-        <GroupEditForm
-          group={group}
-          authorized={(userRole && userRole === "lider") || isAdmin}
-        />
+        {group ? (
+          <>
+            <GroupEditHeader
+              id={group.id}
+              authorized={(userRole && userRole === "lider") || isAdmin}
+            />
+            <GroupEditForm
+              group={group}
+              authorized={(userRole && userRole === "lider") || isAdmin}
+            />
+            {(userRole && userRole === "lider") || isAdmin ? null : (
+              <div className="flex justify-center items-center">
+                <div className="fixed justify-center items-center blur-none">
+                  <span className="rounded-sm text-3xl font-bold z-2">
+                    {t("not-auth-message")}
+                  </span>
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <NotFoundPage />
+        )}
       </div>
-      {(userRole && userRole === "lider") || isAdmin ? null : (
-        <div className="flex justify-center items-center">
-          <div className="fixed justify-center items-center blur-none">
-            <span className="rounded-sm text-3xl font-bold z-2">
-              {t("not-auth-message")}
-            </span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

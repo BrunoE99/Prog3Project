@@ -9,6 +9,7 @@ import {
   MovieEditHeader,
 } from "../../../../../../components/movieEditForm";
 import { getTranslations } from "next-intl/server";
+import NotFoundPage from "../../../../../../components/notFoundPage";
 
 export default async function MovieEdit({
   params,
@@ -24,23 +25,28 @@ export default async function MovieEdit({
   return (
     <div className={`min-h-screen bg-[#001d3d]`}>
       <div className={isAuthorized ? "" : "blur-sm"}>
-        <MovieEditHeader id={movie.id} authorized={isAuthorized} />
-
-        <MovieEditForm
-          movie={movie}
-          authorized={isAuthorized}
-          generos={genres}
-        />
+        {movie ? (
+          <>
+            <MovieEditHeader id={movie.id} authorized={isAuthorized} />
+            <MovieEditForm
+              movie={movie}
+              authorized={isAuthorized}
+              generos={genres}
+            />
+            {isAuthorized ? null : (
+              <div className="flex justify-center items-center">
+                <div className="fixed justify-center items-center blur-none">
+                  <span className="rounded-sm text-3xl font-bold z-2">
+                    {t("not-auth-message")}
+                  </span>
+                </div>
+              </div>
+            )}
+          </>
+        ) : (
+          <NotFoundPage />
+        )}
       </div>
-      {isAuthorized ? null : (
-        <div className="flex justify-center items-center">
-          <div className="fixed justify-center items-center blur-none">
-            <span className="rounded-sm text-3xl font-bold z-2">
-              {t("not-auth-message")}
-            </span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

@@ -26,8 +26,8 @@ luego dirigirse a [`http://localhost:3000`](http://localhost:3000).
 
 ## Localizacion
 
-La aplicacion usa [next-intl](https://next-intl.dev/), con la cofigruacion [i18n](https://next-intl.dev/docs/getting-started/app-router/with-i18n-routing), para localizar a ingles y español.
+La aplicacion usa [next-intl](https://next-intl.dev/), con la cofigruacion [i18n](https://next-intl.dev/docs/getting-started/app-router/with-i18n-routing), para localizar el texto a ingles y español.
 
-Toma la configuracion de tu browser, excepto que sea un idioma no soportado, en ese caso usa el idioma predeterminado, fijado en `routing.ts` (actualmente español).
+Este toma el idioma de tu browser, excepto que sea un idioma no soportado, en ese caso usa el idioma predeterminado, fijado en `routing.ts` (actualmente español).
 
 Idiomas adicionales pueden ser agregados desde `routing.ts`, pero requiere crear un archivo `[locale].json` con el mismo esquema ya encontrado en `en.json` o `es.json`.

@@ -1,36 +1,33 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# README
 
-## Getting Started
+Aplicacion web desarrollada con [Next.js](https://nextjs.org), integrando la [Reviews Website API](https://github.com/MatiRaimondi1/Reviews-Website).
 
-First, run the development server:
+Nuestra página permite a los usuarios buscar películas y escribir y/o leer reseñas y comentarios; además de unirse y/o crear grupos donde pueden crear juntadas (meets) y escribir reseñas grupales.
+
+Los objetivos son ofrecerles a los usuarios un lugar donde puedan expresarse libremente y calificar las películas que vieron; unirse junto a otras personas con gustos similares para crear reseñas conjuntas y que puedan discutir sobre las calificaciones o reseñas que fueron escritas por ellos u por otros usuarios.
+
+## Setup
+
+Para ejecutar en modo de desarrollo:
 
 ```bash
+npm i
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+o para crear y ejecutar un build de produccion:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build
+npm run start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+luego dirigirse a [`http://localhost:3000`](http://localhost:3000).
 
-## Learn More
+## Localizacion
 
-To learn more about Next.js, take a look at the following resources:
+La aplicacion usa [next-intl](https://next-intl.dev/), con la cofigruacion [i18n](https://next-intl.dev/docs/getting-started/app-router/with-i18n-routing), para localizar a ingles y español.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Toma la configuracion de tu browser, excepto que sea un idioma no soportado, en ese caso usa el idioma predeterminado, fijado en `routing.ts` (actualmente español).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Idiomas adicionales pueden ser agregados desde `routing.ts`, pero requiere crear un archivo `[locale].json` con el mismo esquema ya encontrado en `en.json` o `es.json`.

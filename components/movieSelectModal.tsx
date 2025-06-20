@@ -1,6 +1,7 @@
-import { retrieveFilteredMovies } from "@/app/movie/[id]/actions";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { retrieveFilteredMovies } from "@/app/[locale]/movie/[id]/actions";
+import { useTranslations } from "next-intl";
 
 interface MovieComponents {
   id: number;
@@ -88,6 +89,7 @@ export function MovieSelectModal({
   onConfirm: (movie: MovieComponents) => void;
   onCancel: () => void;
 }) {
+  const t = useTranslations("MovieSelectModal");
   const [hasSearched, setSearch] = useState(false);
   const [searchString, setSearchString] = useState("");
   const [filteredMovies, setMovies] = useState<MovieComponents[]>([]);
@@ -154,7 +156,7 @@ export function MovieSelectModal({
               className={`rounded-sm border border-[#545454b7] w-full bg-[#041b3db8] ${
                 selectedMovie ? "pl-12 py-5" : "pl-10 py-2"
               }`}
-              placeholder="Search..."
+              placeholder={t("search-placeholder")}
               onChange={changeHandler}
               value={searchString}
               onFocus={() => {
@@ -192,7 +194,7 @@ export function MovieSelectModal({
                   <div className="flex flex-col gap-1">
                     <span className="text-lg">{movie.nombre}</span>
                     <span className="text-xs">
-                      {movie.fechaEstreno?.split("-")[0] || "Unknown"}
+                      {movie.fechaEstreno?.split("-")[0] || t("no-date-label")}
                     </span>
                   </div>
                 </div>
@@ -209,13 +211,13 @@ export function MovieSelectModal({
                   : "bg-green-800 hover:bg-green-700 cursor-pointer"
               }`}
             >
-              Confirm
+              {t("confirm")}
             </button>
             <button
               onClick={onCancel}
               className="rounded-lg shadow-md bg-red-800 hover:bg-red-700 p-1 pl-2 pr-2 cursor-pointer"
             >
-              Cancel
+              {t("cancel")}
             </button>
           </div>
         </div>

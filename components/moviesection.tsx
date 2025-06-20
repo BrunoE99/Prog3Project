@@ -3,16 +3,16 @@
 import MovieReview from "./genericreview";
 import CreateReview from "./createreview";
 import { useEffect, useState } from "react";
-import {
-  eraseMovie,
-  getAllReviewsByMovie,
-  getDecodedToken,
-  getFeaturedReviews,
-} from "@/app/movie/[id]/actions";
 import { redirect, useParams } from "next/navigation";
 import Image from "next/image";
 import { ModalConfirmation } from "./modalConfirmation";
-import { effect } from "zod";
+import {
+  getAllReviewsByMovie,
+  getDecodedToken,
+  getFeaturedReviews,
+} from "@/app/[locale]/movie/[id]/actions";
+import { eraseComment } from "@/app/reviews/actions";
+import { useTranslations } from "next-intl";
 
 interface MovieComponents {
   id: number;
@@ -101,6 +101,7 @@ export function MovieReviewsSection({
   reviews: ReviewComponents[];
   movie: MovieComponents;
 }) {
+  const t = useTranslations("MovieReviewsSection");
   const [isSidebarOpen, setOpen] = useState(false);
   const [loadAllReviews, setMode] = useState(false);
   const [submitted, setSubmit] = useState(false);
@@ -189,9 +190,7 @@ export function MovieReviewsSection({
           />
         ))
     ) : (
-      <span className="flex justify-center p-10">
-        Congrats! You get to be the first to write a review.
-      </span>
+      <span className="flex justify-center p-10">{t("no-review-message")}</span>
     );
   };
 
@@ -210,9 +209,7 @@ export function MovieReviewsSection({
           />
         ))
     ) : (
-      <span className="flex justify-center p-10">
-        Congrats! You get to be the first to write a review.
-      </span>
+      <span className="flex justify-center p-10">{t("no-review-message")}</span>
     );
   };
 
@@ -249,7 +246,7 @@ export function MovieReviewsSection({
                   : "font-semibold"
               }`}
             >
-              Featured Reviews
+              {t("featured-button")}
             </button>
             <button
               className={`${
@@ -259,7 +256,7 @@ export function MovieReviewsSection({
               } text-xl text-left before:content-[''] before:bg-[#f5c518] before:-ml-3 before:rounded-sm before:-mt-1 before:absolute before:h-1/30 before:w-1 before:self-center`}
               onClick={() => handleModeChange()}
             >
-              All Reviews
+              {t("all-button")}
             </button>
           </div>
           <div
@@ -267,24 +264,24 @@ export function MovieReviewsSection({
               loadAllReviews ? "flex flex-row" : "hidden"
             } items-center gap-4`}
           >
-            <span>Filter</span>
+            <span>{t("filter-label")}</span>
             <select
               className="[&>option]:text-black text-[#0e63be] rounded-sm transition-colors delay-75 duration-200 ease-in-out hover:bg-[#899fff]/20 [&>option]:bg-white"
               name="review-filter"
               id="filter-options"
               onChange={(e) => setFilter(e.target.value)}
             >
-              <option value="all">Show All</option>
-              <option value="1">1 star</option>
-              <option value="2">2 stars</option>
-              <option value="3">3 stars</option>
-              <option value="4">4 stars</option>
-              <option value="5">5 stars</option>
-              <option value="6">6 stars</option>
-              <option value="7">7 stars</option>
-              <option value="8">8 stars</option>
-              <option value="9">9 stars</option>
-              <option value="10">10 stars</option>
+              <option value="all">{t("all-filter")}</option>
+              <option value="1">{t("1-filter")}</option>
+              <option value="2">{t("2-filter")}</option>
+              <option value="3">{t("3-filter")}</option>
+              <option value="4">{t("4-filter")}</option>
+              <option value="5">{t("5-filter")}</option>
+              <option value="6">{t("6-filter")}</option>
+              <option value="7">{t("7-filter")}</option>
+              <option value="8">{t("8-filter")}</option>
+              <option value="9">{t("9-filter")}</option>
+              <option value="10">{t("10-filter")}</option>
             </select>
           </div>
         </div>
@@ -292,7 +289,7 @@ export function MovieReviewsSection({
           onClick={() => handleSidebarToggle()}
           className="font-semibold cursor-pointer before:content-['+'] before:mr-1 before:text-[#f5c518] before:text-xl transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
         >
-          Write Review
+          {t("create-button")}
         </button>
       </div>
       <div id="reviewsPreview">
@@ -315,7 +312,9 @@ export function MovieReviewsSection({
         >
           &lt;
         </button>
-        <span className="text-sm">Page {pageNumber}</span>
+        <span className="text-sm">
+          {t("page-text")} {pageNumber}
+        </span>
         <button
           className="pl-2 text-2xl cursor-pointer"
           onClick={() => {
@@ -337,6 +336,7 @@ export function MovieInfoSection({
   movie: MovieComponents;
   authorized: boolean;
 }) {
+  const t = useTranslations("MovieInfoSection");
   const [modalOpen, setModalOpen] = useState(false);
   const [contextMenuOpen, setContextOpen] = useState(false);
   const release_year = movie.fechaEstreno?.split("-")[0] || "Unknown";
@@ -358,9 +358,9 @@ export function MovieInfoSection({
       ></link>
       {modalOpen ? (
         <ModalConfirmation
-          message={`Are you sure you want to delete ${movie.nombre}?`}
+          message={`${t("confirmation")} ${movie.nombre}?`}
           onAccept={() => {
-            eraseMovie(Number(movie.id));
+            eraseComment(Number(movie.id));
             setContextOpen(false);
             setModalOpen(false);
             document.body.style.overflow = "unset";
@@ -414,7 +414,7 @@ export function MovieInfoSection({
           <div className="flex flex-col items-end p-10 m-2 justify-end w-full text-sm md:text-lg wrap-normal xl:text-nowrap pr-0">
             <div className="flex flex-row gap-3 text-start items-center self-start w-full">
               <span className="text-start mr-1 opacity-90 font-semibold text-xs md:text-sm">
-                Year of Release
+                {t("release-label")}
               </span>
               <span className="p-1 text-end w-full">{release_year}</span>
             </div>
@@ -423,7 +423,7 @@ export function MovieInfoSection({
 
             <div className="flex flex-row gap-3 text-start items-center self-start w-full ">
               <span className="text-start mr-1 opacity-90 font-semibold text-xs md:text-sm">
-                Length
+                {t("length-label")}
               </span>
               <span className="p-1 text-end w-full">
                 {Math.floor(movie.duracion / 60)}h {movie.duracion % 60}m
@@ -434,7 +434,7 @@ export function MovieInfoSection({
 
             <div className="flex flex-row gap-3 text-start items-center self-start w-full">
               <span className="text-start mr-1 opacity-90 font-semibold text-xs md:text-sm">
-                Genre
+                {t("genre-label")}
               </span>
               <span className="p-1 text-end w-full">{movie.genero.nombre}</span>
             </div>
@@ -455,7 +455,7 @@ export function MovieInfoSection({
                       className="pr-1 cursor-pointer"
                       disabled={modalOpen}
                     >
-                      Edit
+                      {t("context-edit")}
                     </button>
                   </div>
                   <div
@@ -467,7 +467,7 @@ export function MovieInfoSection({
                       className="pr-1 cursor-pointer"
                       disabled={modalOpen}
                     >
-                      Delete
+                      {t("context-delete")}
                     </button>
                   </div>
                 </div>

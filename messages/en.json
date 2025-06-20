@@ -1,0 +1,284 @@
+{
+  "HeroSection": {
+    "title": "Reviews about your loved movies.",
+    "subtitle": "Explore what others have to say about any movie you like."
+  },
+  "AllReviews": {
+    "title": "Top rated movies"
+  },
+  "AllMovies": {
+    "error-msg": "Something went wrong."
+  },
+  "MovieFilter": {
+    "filter-label": "Sort & Filter:",
+    "default-option": "Default Order",
+    "rating-asc": "Rating (Low to High)",
+    "rating-desc": "Rating (High to Low)",
+    "alphabetic-asc": "Alphabetic (A-Z)",
+    "alphabetic-desc": "Alphabetic (Z-A)"
+  },
+  "Pagination": {
+    "button-prev": "← Previous Page",
+    "page-text": "Page",
+    "button-next": "Next Page →"
+  },
+  "MovieCardFull": {
+    "detail": "Details and reviews",
+    "short-detail": "Details"
+  },
+  "MovieInfoSection": {
+    "confirmation": "Are you sure you want to delete",
+    "release-label": "Year of Release",
+    "length-label": "Length",
+    "genre-label": "Genre",
+    "context-edit": "Edit",
+    "context-delete": "Delete"
+  },
+  "MovieReviewsSection": {
+    "no-review-message": "Congrats! You get to be the first to write a review.",
+    "featured-button": "Featured Reviews",
+    "all-button": "All Reviews",
+    "filter-label": "Filter",
+    "all-filter": "Show All",
+    "1-filter": "1 star",
+    "2-filter": "2 stars",
+    "3-filter": "3 stars",
+    "4-filter": "4 stars",
+    "5-filter": "5 stars",
+    "6-filter": "6 stars",
+    "7-filter": "7 stars",
+    "8-filter": "8 stars",
+    "9-filter": "9 stars",
+    "10-filter": "10 stars",
+    "create-button": "Write Review",
+    "page-text": "Page"
+  },
+  "NotFoundPage": {
+    "not-found-msg": "Sorry, this page doesn't exist"
+  },
+  "MovieReview": {
+    "delete-confirmation": "Are you sure you want to delete this review?",
+    "comment-button": "View Comments",
+    "page-text": "Page",
+    "edit-button": "Edit",
+    "delete-button": "Delete",
+    "comment-write-placeholder": "Write comment...",
+    "comment-post-button": "Post"
+  },
+  "ReviewEditSidebar": {
+    "score-label": "Your score",
+    "content-placeholder": "Write you review here..."
+  },
+  "ModalConfirmation": {
+    "confirm": "Yes",
+    "cancel": "No"
+  },
+  "Comment": {
+    "confirmation": "Are you sure you want to delete this comment?",
+    "context-delete": "Delete"
+  },
+  "MovieEdit": {
+    "not-auth-message": "Sorry, you must be an admin to view this page"
+  },
+  "MovieEditHeader": {
+    "title": "Edit Movie"
+  },
+  "MovieEditForm": {
+    "name-label": "Name",
+    "synopsis-label": "Synopsis",
+    "genre-select": "Select a Genre",
+    "genre-warning": "Warning: A new genre name overrides the selected genre, make sure that this field matches the one below if you want to use this genre",
+    "genre-separator": "or",
+    "new-genre": "Create a New Genre",
+    "date-label": "Release Date",
+    "length-label": "Length",
+    "score-label": "Score"
+  },
+  "LoginHandler": {
+    "message": "Successful log in."
+  },
+  "Login": {
+    "email-placeholder": "Email",
+    "password-placeholder": "Password",
+    "login-button": "Log in",
+    "signup-button": "Sign up"
+  },
+  "Signup": {
+    "username-placeholder": "Username",
+    "email-placeholder": "Email",
+    "password-placeholder": "Password",
+    "password-error": "The password must have:",
+    "register-button": "Register",
+    "login-button": "Log in"
+  },
+  "SignupSuccessHandler": {
+    "message": "Successful sign up."
+  },
+  "GenreCard": {
+    "title": "Movies by Genre",
+    "link-start": "View all",
+    "link-end": "movies",
+    "no-movies-msg": "No movies available for this genre yet.",
+    "no-genres-msg": "No genres available at the moment.",
+    "fail-msg": "Failed to load genres and movies."
+  },
+  "MovieCard": {
+    "button-text": "Read reviews"
+  },
+  "ByGenre": {
+    "title": "Genre:",
+    "error-msg": "Something went wrong."
+  },
+  "Profile": {
+    "created-date-label": "Created on:"
+  },
+  "ImageUpload": {
+    "main-label": "Change image",
+    "image-placeholder": "No image selected",
+    "upload-in-progress": "Uploading...",
+    "upload-button": "Upload"
+  },
+  "ReviewsByUserID": {
+    "title": "My reviews",
+    "error-msg": "Something went wrong."
+  },
+  "ReviewCard": {
+    "detail": "Details and reviews",
+    "short-detail": "Details"
+  },
+  "AllGroups": {
+    "title": "Browse Groups",
+    "create-button": "Create Group",
+    "search-placeholder": "Search groups..."
+  },
+  "GroupCreate": {
+    "title": "Create Group",
+    "name-label": "Name",
+    "description-label": "Description"
+  },
+  "GroupHeader": {
+    "confirmation": "Are you sure you want to delete this group?",
+    "creation-date-label": "Reviewing since",
+    "join-button": "Join",
+    "leave-button": "Leave",
+    "delete-button": "Delete Group",
+    "edit-button": "Edit Group"
+  },
+  "GroupMeetingColumn": {
+    "title": "Meeting",
+    "schedule-button": "Schedule Meeting",
+    "no-meeting-msg": "No meetings scheduled"
+  },
+  "ScheduleMeeting": {
+    "title": "Schedule Meeting",
+    "date-label": "Date",
+    "link-placeholder": "Copy your link here...",
+    "link-label": "Link"
+  },
+  "MeetingCard": {
+    "meeting-ongoing-text": "NOW",
+    "link-button": "Go to Meeting",
+    "delete-button": "Delete"
+  },
+  "GroupReviews": {
+    "select-modal-msg": "Select a movie",
+    "title": "Reviews",
+    "create-button": "Write Review",
+    "no-reviews-msg": "This group has no reviews yet.",
+    "page-text": "Page"
+  },
+  "MovieSelectModal": {
+    "search-placeholder": "Search...",
+    "no-date-label": "Unknown",
+    "confirm": "Confirm",
+    "cancel": "Cancel"
+  },
+  "CreateReview": {
+    "score-label": "Your score",
+    "content-placeholder": "Write your review here..."
+  },
+  "GroupMembersPreview": {
+    "title": "Members"
+  },
+  "GroupEdit": {
+    "not-auth-message": "Sorry, you must be a group admin to view this page"
+  },
+  "GroupEditHeader": {
+    "title": "Edit Group"
+  },
+  "GroupEditForm": {
+    "name-label": "Name",
+    "description-label": "Description"
+  },
+  "GroupMembersHeader": {
+    "title": "Members"
+  },
+  "GroupMembersBody": {
+    "confirmation": "Are you sure you want to kick",
+    "admins-label": "Admins",
+    "members-label": "Members",
+    "context-kick": "Kick member"
+  },
+  "Navbar": {
+    "home-link": "Home",
+    "movies-link": "All Movies",
+    "genres-button": "Genres",
+    "all-genres-link": "All Genres",
+    "groups-link": "Groups",
+    "logout-button": "Logout",
+    "profile-button": "Profile",
+    "login-link": "Log In",
+    "signup-link": "Sign Up"
+  },
+  "SearchBar": {
+    "search-placeholder": "Search..."
+  },
+  "Footer": {
+    "pages-label": "Pages",
+    "movies-link": "Movies",
+    "genres-link": "Genres",
+    "groups-link": "Groups",
+    "resources-label": "Resources",
+    "contact-link": "Contact us",
+    "report-link": "Report bugs"
+  },
+  "Validation": {
+    "group-join-id-number": "Group ID must be a number.",
+    "group-join-id-int": "Group ID must be an integer.",
+    "group-join-id-positive": "Group ID must be a positive number.",
+    "meeting-form-date": "Must be a valid date and time",
+    "meeting-form-link": "Link must be a valid URL. Ex: https://example.com/abc",
+    "review-form-content-string": "Review content must be a string",
+    "review-form-content-length": "Review content must not be empty",
+    "review-form-id-number": "Movie ID must be a number.",
+    "review-form-id-int": "Movie ID must be an integer.",
+    "review-form-id-positive": "Movie ID must be a positive number.",
+    "signup-form-username-string": "Username must be a string",
+    "signup-form-username-length": "Username must be at least 3 characters long",
+    "signup-form-email-string": "Email must be a string",
+    "signup-form-email-format": "Please enter a valid email address.",
+    "signup-form-email-length": "Email must be at least 1 character long",
+    "signup-form-password-string": "Password must be a string",
+    "signup-form-password-length": "Password must be at least 8 characters long",
+    "signup-form-password-letter": "Password must contain at least 1 letter.",
+    "signup-form-password-number": "Password must contain at least 1 number.",
+    "group-edit-name-string": "Group name must be a string",
+    "group-edit-name-length": "Group name must be at least 3 characters long",
+    "group-edit-description-string": "Group description must be a string",
+    "comment-form-content-string": "Comment content must be a string",
+    "comment-form-content-length": "Comment content must not be empty",
+    "movie-edit-name-string": "Movie name must be a string",
+    "movie-edit-name-length": "Movie name must be at least 1 character long",
+    "movie-edit-synopsis-string": "Movie synopsis must be a string",
+    "movie-edit-synopsis-length": "Movie synopsis must be at least 1 character long",
+    "movie-edit-genre-string": "Movie genre must be a string",
+    "movie-edit-genre-length": "Movie genre must be at least 1 character long",
+    "movie-edit-date-format": "Release date must be a valid date",
+    "movie-edit-length-number": "Movie length must be a number",
+    "movie-edit-length-int": "Movie length must be an integer",
+    "movie-edit-length-positive": "Movie length must be a positive number",
+    "movie-edit-score-number": "Movie score must be a number",
+    "movie-edit-score-int": "Movie score must be an integer",
+    "movie-edit-score-positive": "Movie score must be a positive number"
+  }
+}

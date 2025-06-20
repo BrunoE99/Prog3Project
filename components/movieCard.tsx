@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Button from "./button";
 import { MovieWithReviews } from "./reviewsection";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 export default function MovieCard({
   pelicula,
@@ -12,6 +13,7 @@ export default function MovieCard({
   pelicula: MovieWithReviews;
   key: number;
 }) {
+  const t = useTranslations("MovieCard");
   const clicked = () => redirect("/movie/" + pelicula.id);
 
   return (
@@ -32,7 +34,7 @@ export default function MovieCard({
         <span className="text-[#f5c518] text-xl m-1">
           ⭐{pelicula.calificacion}
         </span>
-        <Button text="Read reviews" onClick={clicked} />
+        <Button text={t("button-text")} onClick={clicked} />
         <span className="text-white text-xl m-1">💬{pelicula.reviewCount}</span>
       </div>
     </div>

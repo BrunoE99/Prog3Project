@@ -3,6 +3,7 @@ import Image from "next/image";
 import { ModalConfirmation } from "./modalConfirmation";
 import { redirect } from "next/navigation";
 import { eraseComment } from "@/app/reviews/actions";
+import { useTranslations } from "next-intl";
 
 interface MovieComponents {
   id: number;
@@ -86,6 +87,7 @@ export default function Comment({
   onDelete: () => void;
   authorized: boolean;
 }) {
+  const t = useTranslations("Comment");
   const [deleteOpen, setOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const handleModalOpen = () => {
@@ -105,7 +107,7 @@ export default function Comment({
     <div className="flex flex-col bg-[#001d3d] rounded-sm">
       {modalOpen ? (
         <ModalConfirmation
-          message={`Are you sure you want to delete this comment?`}
+          message={t("confirmation")}
           onAccept={() => {
             handleDelete();
             setModalOpen(false);
@@ -144,7 +146,9 @@ export default function Comment({
                 onClick={handleModalOpen}
               >
                 <i className="fa fa-trash-o pl-1 text-orange-500"></i>
-                <button className="pr-1 cursor-pointer">Delete</button>
+                <button className="pr-1 cursor-pointer">
+                  {t("context-delete")}
+                </button>
               </div>
             ) : null}
             <div

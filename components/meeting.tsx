@@ -1,5 +1,7 @@
-import { deleteMeeting } from "@/app/group/actions";
+import { deleteMeeting } from "@/app/[locale]/group/actions";
 import Button from "./button";
+import { use } from "react";
+import { useTranslations } from "next-intl";
 
 interface MovieComponents {
   id: number;
@@ -78,11 +80,14 @@ export default function MeetingCard({
   meeting,
   role,
   onDelete,
+  isAdmin,
 }: {
   meeting: Reunion;
   role: string;
   onDelete: () => void;
+  isAdmin: boolean;
 }) {
+  const t = useTranslations("MeetingCard");
   const meetingDate = meeting.fecha.split("T")[0].split("-");
 
   const meetingInProgress = new Date(meeting.fecha).getTime() <= Date.now();
@@ -92,17 +97,17 @@ export default function MeetingCard({
     >
       <span className="tex-2xl">
         {meetingInProgress
-          ? "NOW"
+          ? t("meeting-ongoing-text")
           : `${meetingDate[2]}/${meetingDate[1]}/${meetingDate[0]}`}
       </span>
       <div className="flex flex-row gap-2">
         <Button
-          text="Go to Meeting"
+          text={t("link-button")}
           onClick={() => window.location.replace(meeting.link)}
         />
-        <div className={role && role === "lider" ? "" : "hidden"}>
+        <div className={(role && role === "lider") || isAdmin ? "" : "hidden"}>
           <Button
-            text="Delete"
+            text={t("delete-button")}
             onClick={() => {
               deleteMeeting();
               onDelete();

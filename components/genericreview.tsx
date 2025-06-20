@@ -6,11 +6,12 @@ import {
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import Comment from "./comment";
-import { getDecodedToken } from "@/app/movie/[id]/actions";
 import { ModalConfirmation } from "./modalConfirmation";
 import { redirect } from "next/navigation";
 import Button from "./button";
 import ReviewEditSidebar from "./editReview";
+import { getDecodedToken } from "@/app/[locale]/movie/[id]/actions";
+import { useTranslations } from "next-intl";
 
 interface MovieComponents {
   id: number;
@@ -101,6 +102,7 @@ export default function MovieReview({
   authorized: boolean;
   onEditDelete: () => void;
 }) {
+  const t = useTranslations("MovieReview");
   const [commentsOpen, setOpen] = useState(false);
   const [isSidebarOpen, setSidebarOpen] = useState(false);
   const [comments, setComments] = useState<Comment[] | undefined>(undefined);
@@ -178,7 +180,7 @@ export default function MovieReview({
       ) : null}
       {modalOpen ? (
         <ModalConfirmation
-          message={`Are you sure you want to delete this review?`}
+          message={t("delete-confirmation")}
           onAccept={() => {
             deleteReview();
             setContextOpen(false);
@@ -271,7 +273,7 @@ export default function MovieReview({
             className="text-sm cursor-pointer transition-colors delay-75 duration-150 ease-in-out hover:text-[#f5c518]"
             onClick={() => setOpen((prev) => !prev)}
           >
-            View Comments
+            {t("comment-button")}
           </button>
           <div
             className={`${
@@ -290,7 +292,9 @@ export default function MovieReview({
             >
               &lt;
             </button>
-            <span className="text-sm">Page {pageNumber}</span>
+            <span className="text-sm">
+              {t("page-text")} {pageNumber}
+            </span>
             <button
               className="pl-2 text-2xl cursor-pointer"
               onClick={() => {
@@ -315,7 +319,7 @@ export default function MovieReview({
                 >
                   <i className="fa fa-edit pl-1"></i>
                   <button className="pr-1 cursor-pointer" disabled={modalOpen}>
-                    Edit
+                    {t("edit-button")}
                   </button>
                 </div>
                 <div
@@ -324,7 +328,7 @@ export default function MovieReview({
                 >
                   <i className="fa fa-trash-o pl-1 text-orange-500"></i>
                   <button className="pr-1 cursor-pointer" disabled={modalOpen}>
-                    Delete
+                    {t("delete-button")}
                   </button>
                 </div>
               </div>
@@ -348,13 +352,16 @@ export default function MovieReview({
             <input
               className="w-full"
               type="text"
-              placeholder="Write comment..."
+              placeholder={t("comment-write-placeholder")}
               id="comment-post"
               autoComplete="off"
               onChange={(e) => setNewComment(e.target.value)}
               value={newComment}
             />
-            <Button text="Post" onClick={handleCommentPost} />
+            <Button
+              text={t("comment-post-button")}
+              onClick={handleCommentPost}
+            />
           </div>
           {comments &&
             comments.map((comment, index) => (

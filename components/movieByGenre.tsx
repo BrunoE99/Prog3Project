@@ -1,8 +1,11 @@
+"use server";
+
 import { movieByGenre } from "@/app/API/movie/route";
 import MovieCardFull from "./movieCardComplete";
 import MovieFilter from "./filter";
 import Pagination from "./pagination";
 import { reviewsByMovieCount } from "@/app/API/reviews/route";
+import { getTranslations } from "next-intl/server";
 
 export interface Movie {
   id: number;
@@ -32,6 +35,7 @@ export default async function ByGenre({
   order,
   page,
 }: GenresProps) {
+  const t = await getTranslations("ByGenre");
   const rating = filter === "rating" ? order : null;
   const alphabetic = filter === "alphabetic" ? order : null;
 
@@ -50,15 +54,15 @@ export default async function ByGenre({
   if (peliculas.status === 500) {
     return (
       <section className="px-6 py-10 bg-[#003566]">
-        <h1 className="text-center pb-4 text-3xl font-bold text-center">
-          Genre: {genre}
+        <h1 className="text-center pb-4 text-3xl font-bold">
+          {t("title")} {genre}
         </h1>
         <div className="mb-10 bg-[#001d3d]">
           <div>
             <MovieFilter />
           </div>
           <div className="grid grid-cols-1 gap-6 p-5">
-            <p className="text-red-900">Something went wrong.</p>
+            <p className="text-red-900">{t("error-msg")}</p>
           </div>
           <div>
             <Pagination
@@ -74,8 +78,8 @@ export default async function ByGenre({
   if (peliculas.status === 400) {
     return (
       <section className="px-6 py-10 bg-[#003566]">
-        <h1 className="text-center pb-4 text-3xl font-bold text-center">
-          Genre: {genre}
+        <h1 className="text-center pb-4 text-3xl font-bold">
+          {t("title")} {genre}
         </h1>
         <div className="mb-10 bg-[#001d3d]">
           <div>
@@ -100,8 +104,8 @@ export default async function ByGenre({
   if (peliculas.status === 404) {
     return (
       <section className="px-6 py-10 bg-[#003566]">
-        <h1 className="text-center pb-4 text-3xl font-bold text-center">
-          Genre: {genre}
+        <h1 className="text-center pb-4 text-3xl font-bold">
+          {t("title")} {genre}
         </h1>
         <div className="mb-10 bg-[#001d3d]">
           <div>
@@ -125,8 +129,8 @@ export default async function ByGenre({
 
   return (
     <section className="px-6 py-10 bg-[#003566]">
-      <h1 className="text-center pb-4 text-3xl font-bold text-center">
-        Genre: {genre}
+      <h1 className="text-center pb-4 text-3xl font-bold">
+        {t("title")} {genre}
       </h1>
       <div className="mb-10 bg-[#001d3d]">
         <div>

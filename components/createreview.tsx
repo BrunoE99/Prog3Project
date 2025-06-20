@@ -1,4 +1,5 @@
-import { createReview } from "@/app/movie/[id]/actions";
+import { createReview } from "@/app/[locale]/movie/[id]/actions";
+import { useTranslations } from "next-intl";
 import { redirect } from "next/navigation";
 import { useActionState, useEffect, useRef, useState } from "react";
 
@@ -80,6 +81,7 @@ export default function CreateReview(props: {
   onSubmit: () => void;
   groupId?: string;
 }) {
+  const t = useTranslations("CreateReview");
   const { movie, onSubmit, groupId } = props;
   const scoreSelected = useRef(false);
   const [score, setScore] = useState("1");
@@ -178,7 +180,7 @@ export default function CreateReview(props: {
           defaultValue={movie.id}
         />
         <div className="flex flex-col gap-2">
-          <span>Your score</span>
+          <span>{t("score-label")}</span>
           <div id="review-score" className="flex flex-row gap-2 items-center">
             <button aria-label="1" type="button" className="cursor-pointer">
               <span className="fa fa-star-o fa-lg checked text-[#f5c518] text-xl inline-block"></span>
@@ -225,7 +227,7 @@ export default function CreateReview(props: {
             name="content"
             id="content"
             className="border-2 h-3/4 p-2 text-start rounded-md items-start justify-start placeholder-gray-400"
-            placeholder="Write you review here..."
+            placeholder={t("content-placeholder")}
           />
         </div>
         <div className="flex flex-col justify-center items-center">

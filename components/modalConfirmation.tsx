@@ -1,3 +1,5 @@
+import { useTranslations } from "use-intl";
+
 export function ModalConfirmation({
   message,
   onAccept,
@@ -7,6 +9,7 @@ export function ModalConfirmation({
   onAccept: () => void;
   onCancel: () => void;
 }) {
+  const t = useTranslations("ModalConfirmation");
   return (
     <div className="fixed">
       <div className="fixed inset-0 bg-black opacity-60 z-4"></div>
@@ -20,13 +23,13 @@ export function ModalConfirmation({
               onClick={onAccept}
               className="rounded-lg shadow-md bg-green-800 p-2 pl-3 pr-3 cursor-pointer"
             >
-              Yes
+              {t("confirm")}
             </button>
             <button
               onClick={onCancel}
               className="rounded-lg shadow-md bg-red-800 p-2 pl-3 pr-3 cursor-pointer"
             >
-              No
+              {t("cancel")}
             </button>
           </div>
         </div>

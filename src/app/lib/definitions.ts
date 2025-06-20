@@ -1,135 +1,173 @@
+import "server-only";
+
+import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
-export const groupJoinSchema = z.object({
-  id: z.coerce
-    .number()
-    .int({ message: "Grupo ID must be an integer" })
-    .positive({ message: "Grupo ID must be a positive number" }),
-});
+export async function getGroupJoinSchema() {
+  const t = await getTranslations("Validation");
+  return z.object({
+    id: z.coerce
+      .number({ message: t("group-join-id-number") })
+      .int({ message: t("group-join-id-int") })
+      .positive({ message: t("group-join-id-positive") }),
+  });
+}
 
-export const MeetingFormSchema = z.object({
-  fecha: z
-    .string()
-    .datetime({ message: "Debe ser un dia y tiempo valido" })
-    .trim(),
-  link: z
-    .string()
-    .url({
-      message: "Debe ser un formate de url valido Ej: https://example.com/abc",
-    })
-    .trim(),
-});
+export async function getMeetingFormSchema() {
+  const t = await getTranslations("Validation");
+  return z.object({
+    fecha: z
+      .string()
+      .datetime({ message: t("meeting-form-date") })
+      .trim(),
+    link: z
+      .string()
+      .url({
+        message: t("meeting-form-link"),
+      })
+      .trim(),
+  });
+}
 
-export const reviewFormSchema = z.object({
-  puntuacion: z.coerce
-    .number()
-    .gte(1, { message: "Score must be at least 1" })
-    .lte(10, { message: "Score must be at most 10" }),
-  texto: z.string().min(1, "Review content must not be empty").trim(),
-  pelicula_id: z.coerce
-    .number()
-    .int({ message: "Pelicula ID must be an integer" })
-    .positive({ message: "Pelicula ID must be a positive number" }),
-  grupo_id: z
-    .number()
-    .int({ message: "Grupo ID must be an integer" })
-    .positive({ message: "Grupo ID must be a positive number" })
-    .optional(),
-});
+export async function getReviewFormSchema() {
+  const t = await getTranslations("Validation");
+  return z.object({
+    puntuacion: z.coerce.number().gte(1).lte(10),
+    texto: z
+      .string({ message: t("review-form-content-string") })
+      .min(1, { message: t("review-form-content-length") })
+      .trim(),
+    pelicula_id: z.coerce
+      .number({ message: t("review-form-id-number") })
+      .int({ message: t("review-form-id-int") })
+      .positive({ message: t("review-form-id-positive") }),
+    grupo_id: z
+      .number({ message: t("group-join-id-number") })
+      .int({ message: t("group-join-id-int") })
+      .positive({ message: t("group-join-id-positive") })
+      .optional(),
+  });
+}
 
-export const reviewEditSchema = z.object({
-  puntuacion: z.coerce
-    .number()
-    .gte(1, { message: "Score must be at least 1" })
-    .lte(10, { message: "Score must be at most 10" })
-    .optional(),
-  texto: z
-    .string()
-    .min(1, "Review content must not be empty")
-    .trim()
-    .optional(),
-});
+export async function getReviewEditSchema() {
+  const t = await getTranslations("Validation");
+  return z.object({
+    puntuacion: z.coerce.number().gte(1).lte(10).optional(),
+    texto: z
+      .string({ message: t("review-form-content-string") })
+      .min(1, { message: t("review-form-content-length") })
+      .trim()
+      .optional(),
+  });
+}
 
-export const SignupFormSchema = z.object({
-  username: z.string().min(3, { message: "Minimo 3 caracteres." }).trim(),
-  email: z
-    .string()
-    .email({ message: "Porfavor ingrese un email valido. " })
-    .min(1, { message: "Debe tener mas caracteres" })
-    .trim(),
-  password: z
-    .string()
-    .min(8, { message: "Minimo 8 caracteres" })
-    .regex(/[a-zA-Z]/, { message: "Por lo menos 1 letra." })
-    .regex(/[0-9]/, { message: "Por lo menos un numero." })
-    .trim(),
-});
+export async function getSignupFormSchema() {
+  const t = await getTranslations("Validation");
+  return z.object({
+    username: z
+      .string({ message: t("signup-form-username-string") })
+      .min(3, { message: t("signup-form-username-length") })
+      .trim(),
+    email: z
+      .string({ message: t("signup-form-email-string") })
+      .email({ message: t("signup-form-email-format") })
+      .min(1, { message: t("signup-form-email-length") })
+      .trim(),
+    password: z
+      .string({ message: t("signup-form-password-string") })
+      .min(8, { message: t("signup-form-password-length") })
+      .regex(/[a-zA-Z]/, { message: t("signup-form-password-letter") })
+      .regex(/[0-9]/, { message: t("signup-form-password-number") })
+      .trim(),
+  });
+}
 
-export const LogInFormSchema = z.object({
-  email: z
-    .string()
-    .email({ message: "Ingrese un formato de email valido." })
-    .trim(),
-  password: z
-    .string()
-    .min(6, { message: "La password tiene que tener minimo 6 caracteres" })
-    .trim(),
-});
+export async function getLoginFormSchema() {
+  const t = await getTranslations("Validation");
+  return z.object({
+    email: z
+      .string({ message: t("signup-form-email-string") })
+      .email({ message: t("signup-form-email-format") })
+      .trim(),
+    password: z
+      .string({ message: t("signup-form-password-string") })
+      .min(8, { message: t("signup-form-password-length") })
+      .trim(),
+  });
+}
 
-export const groupEditSchema = z.object({
-  nombre: z
-    .string()
-    .min(3, { message: "El nombre debe tener al menos 3 caracteres" })
-    .trim()
-    .optional(),
-  descripcion: z.string().optional(),
-});
+export async function getGroupEditSchema() {
+  const t = await getTranslations("Validation");
+  return z.object({
+    nombre: z
+      .string({ message: t("group-edit-name-string") })
+      .min(3, { message: t("group-edit-name-length") })
+      .trim()
+      .optional(),
+    descripcion: z
+      .string({ message: t("group-edit-description-string") })
+      .optional(),
+  });
+}
 
-export const groupCreateSchema = z.object({
-  nombre: z
-    .string()
-    .min(3, { message: "El nombre debe tener al menos 3 caracteres" })
-    .trim(),
-  descripcion: z.string().optional(),
-});
+export async function getGroupCreateSchema() {
+  const t = await getTranslations("Validation");
+  return z.object({
+    nombre: z
+      .string({ message: t("group-edit-name-string") })
+      .min(3, { message: t("group-edit-name-length") })
+      .trim(),
+    descripcion: z
+      .string({ message: t("group-edit-description-string") })
+      .optional(),
+  });
+}
 
-export const commentSchema = z.object({
-  texto: z
-    .string()
-    .min(1, { message: "El texto debe tener al menos 1 caracter" })
-    .trim(),
-});
+export async function getCommentSchema() {
+  const t = await getTranslations("Validation");
+  return z.object({
+    texto: z
+      .string({ message: t("comment-form-content-string") })
+      .min(1, { message: t("comment-form-content-length") })
+      .trim(),
+  });
+}
 
-export const movieEditSchema = z.object({
-  nombre: z
-    .string()
-    .min(1, { message: "El nombre debe tener al menos 1 caracter" })
-    .trim()
-    .optional(),
-  sinopsis: z
-    .string()
-    .min(1, { message: "La sinopsis debe tener al menos 1 caracter" })
-    .trim()
-    .optional(),
-  genero: z
-    .string()
-    .min(1, { message: "El genero debe tener al menos 1 caracter" })
-    .trim()
-    .optional(),
-  fechaEstreno: z
-    .date({
-      message: "La fecha de estreno debe ser una fecha valida. Ej: 01/01/2020",
-    })
-    .optional(),
-  duracion: z
-    .number({ message: "La duracion debe ser un numero" })
-    .int({ message: "La duracion debe ser un entero" })
-    .optional(),
-  calificacion: z
-    .number({ message: "La calificacion debe ser un numero" })
-    .int({ message: "La caliicacioon debe ser un entero" })
-    .optional(),
-});
+export async function getMovieEditSchema() {
+  const t = await getTranslations("Validation");
+  return z.object({
+    nombre: z
+      .string({ message: t("movie-edit-name-string") })
+      .min(1, { message: t("movie-edit-name-length") })
+      .trim()
+      .optional(),
+    sinopsis: z
+      .string({ message: t("movie-edit-synopsis-string") })
+      .min(1, { message: t("movie-edit-synopsis-length") })
+      .trim()
+      .optional(),
+    genero: z
+      .string({ message: t("movie-edit-genre-string") })
+      .min(1, { message: t("movie-edit-genre-length") })
+      .trim()
+      .optional(),
+    fechaEstreno: z
+      .date({
+        message: t("move-edit-date-format"),
+      })
+      .optional(),
+    duracion: z
+      .number({ message: t("movie-edit-length-number") })
+      .int({ message: t("movie-edit-length-int") })
+      .positive({ message: t("movie-edit-length-positive") })
+      .optional(),
+    calificacion: z
+      .number({ message: t("movie-edit-score-number") })
+      .int({ message: t("movie-edit-score-int") })
+      .positive({ message: t("movie-edit-score-positive") })
+      .optional(),
+  });
+}
 
 export type FormState = {
   errors?: {

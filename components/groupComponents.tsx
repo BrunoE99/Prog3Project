@@ -245,7 +245,7 @@ export function GroupMeetingColumn(props: {
   }, [submitted]);
 
   return (
-    <div className="col-span-1 pl-6 bg-[#003566] h-full shadow-2xl rounded-br-md">
+    <div className="col-span-1 pl-2 xl:pl-6 bg-[#003566] h-full shadow-2xl rounded-br-md">
       {isSidebarOpen ? (
         <>
           <div className="flex">
@@ -261,15 +261,11 @@ export function GroupMeetingColumn(props: {
               }}
             />
           </div>
-          <div
-            className={`${
-              isSidebarOpen ? "fixed" : "hidden"
-            } inset-0 bg-black opacity-60`}
-          ></div>
+          <div className="fixed inset-0 bg-black opacity-60"></div>
         </>
       ) : null}
       <div className="flex flex-col gap-2">
-        <div className="flex flex-row justify-between items-center mr-3 pt-4">
+        <div className="flex flex-row justify-between items-center mr-1 xl:mr-3 pt-4 gap-1">
           <h2 className="font-semibold text-xl">{t("title")}</h2>
           {role && role === "lider" ? (
             <button
@@ -471,7 +467,7 @@ export function GroupMembersPreview({
     unit = "m";
   }
   return (
-    <div className="flex flex-col col-span-1 items-start mr-0 sm:mr-6 h-full w-full pt-4 bg-[#003566] shadow-2xl rounded-bl-md pb-2 sm:pb-0">
+    <div className="flex flex-col col-span-1 items-start mr-0 sm:mr-6 h-full w-full pt-4 pb-4 bg-[#003566] shadow-2xl rounded-bl-md lg:pb-0">
       <div className="flex flex-col mb-2 ml-3">
         <span
           onClick={() => redirect(`/group/${params.id}/members`)}

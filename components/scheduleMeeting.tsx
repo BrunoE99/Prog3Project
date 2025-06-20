@@ -24,7 +24,7 @@ export default function ScheduleMeeting({
   return (
     <div
       id="meeting-sidebar"
-      className="h-full fixed z-2 top-0 left-0 overflow-x-hidden bg-white dark:bg-[#001d3d] dark:text-white pt-15 md:w-1/2 lg:w-1/5 text-black"
+      className="h-full fixed z-2 top-0 left-0 overflow-x-hidden bg-white dark:bg-[#001d3d] dark:text-white pt-15 md:w-1/2 xl:w-1/5 text-black"
     >
       <div className="text-2xl p-4 ml-2 font-semibold">{t("title")}</div>
       <form

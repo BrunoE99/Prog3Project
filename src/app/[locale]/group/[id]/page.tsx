@@ -16,6 +16,7 @@ import {
   findMeeting,
   findRoleInGroup,
 } from "../actions";
+import { getAuthToken } from "../../movie/[id]/actions";
 
 interface MovieComponents {
   id: number;
@@ -101,12 +102,18 @@ export default async function Group({ params }: { params: { id: string } }) {
   const meeting = userRole ? await findMeeting() : undefined;
   const reviews = await findAllGroupReviews(Number(id));
   const isAdmin = await getAuthorization();
+  const loggedIn = (await getAuthToken()) ? true : false;
 
   return (
     <div className="min-h-screen bg-[#001d3d] w-full overflow-x-hidden">
       {group ? (
         <div>
-          <GroupHeader group={group} isAdmin={isAdmin} />
+          <GroupHeader
+            group={group}
+            isAdmin={isAdmin}
+            isLoggedIn={loggedIn}
+            role={userRole}
+          />
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 divide-x-1 divide-[#65686c] md:divide-x-0">
             <GroupMeetingColumn
               meeting={meeting && meeting.statusCode ? undefined : meeting}

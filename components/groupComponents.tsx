@@ -6,7 +6,6 @@ import {
   eraseGroup,
   findAllGroupReviews,
   findMeeting,
-  findRoleInGroup,
   joinGroup,
   leaveGroup,
 } from "@/app/[locale]/group/actions";
@@ -17,7 +16,6 @@ import ScheduleMeeting from "./scheduleMeeting";
 import CreateReview from "./createreview";
 import { MovieSelectModal } from "./movieSelectModal";
 import { ModalConfirmation } from "./modalConfirmation";
-import { getAuthToken } from "@/app/[locale]/movie/[id]/actions";
 import { useTranslations } from "next-intl";
 
 interface MovieComponents {
@@ -109,46 +107,31 @@ export function GroupPreviewCard(group: Group) {
 
 export function GroupHeader({
   group,
+  isLoggedIn,
+  role,
   isAdmin,
 }: {
   group: Group;
   isAdmin: boolean;
+  isLoggedIn: boolean;
+  role: string;
 }) {
   const t = useTranslations("GroupHeader");
   let creationDate: string[] = [];
-  const [data, setData] = useState<{ token?: string; role?: string }>({});
   const [modalOpen, setOpen] = useState(false);
-  const [joined, setJoin] = useState(false);
 
   if (group) {
     creationDate = group.createdAt.split("T")[0].split("-");
   }
 
-  useEffect(() => {
-    async function fetchData() {
-      const [t, rol] = await Promise.all([
-        getAuthToken(),
-        findRoleInGroup(group.id),
-      ]);
-      setData({ token: t, role: rol });
-    }
-    fetchData();
-
-    if (joined) {
-      setJoin(false);
-    }
-  }, [group.id, joined]);
-
-  const wrappedJoinLeave = () => {
-    if (data.token) {
-      if (data.role) {
-        leaveGroup(group.id);
+  const wrappedJoinLeave = async () => {
+    if (isLoggedIn) {
+      if (role !== "") {
+        await leaveGroup(group.id);
+        redirect("/group");
       } else {
-        setJoin(true);
-        console.log(joined);
-        joinGroup(group.id);
+        await joinGroup(group.id);
       }
-      if (data.role) redirect("/group");
     } else {
       redirect("/login");
     }
@@ -190,13 +173,13 @@ export function GroupHeader({
               type="submit"
               name="submit"
               className={`flex shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 ${
-                !data.role ? "before:content-['+']" : "before:content-['-']"
+                role === "" ? "before:content-['+']" : "before:content-['-']"
               } before:pr-2 before:text-xl text-lg text-center rounded-sm font-semibold bg-blue-700 hover:bg-blue-800 transition-colors delay-75 duration-100 ease-in-out`}
             >
-              {!data.role ? t("join-button") : t("leave-button")}
+              {role === "" ? t("join-button") : t("leave-button")}
             </button>
           </div>
-          {data.role === "lider" || isAdmin ? (
+          {role === "lider" || isAdmin ? (
             <button
               onClick={() => redirect(`/group/${group.id}/edit`)}
               className={`flex bg-[#1c1e21] shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 text-lg text-center rounded-sm font-semibold text-nowrap`}
@@ -204,7 +187,7 @@ export function GroupHeader({
               {t("edit-button")}
             </button>
           ) : null}
-          {data.role === "lider" || isAdmin ? (
+          {role === "lider" || isAdmin ? (
             <button
               onClick={() => {
                 setOpen(true);

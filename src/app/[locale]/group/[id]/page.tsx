@@ -105,16 +105,16 @@ export default async function Group({ params }: { params: { id: string } }) {
   const loggedIn = (await getAuthToken()) ? true : false;
 
   return (
-    <div className="min-h-screen bg-[#001d3d] w-full overflow-x-hidden">
+    <div className="min-h-screen bg-[#001d3d] w-full overflow-x-hidden flex flex-col">
       {group ? (
-        <div>
+        <div className="flex flex-col flex-1">
           <GroupHeader
             group={group}
             isAdmin={isAdmin}
             isLoggedIn={loggedIn}
             role={userRole}
           />
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 divide-x-1 divide-[#65686c] md:divide-x-0">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 divide-x-1 divide-[#65686c] md:divide-x-0 min-h-full flex-1">
             <GroupMeetingColumn
               meeting={meeting && meeting.statusCode ? undefined : meeting}
               role={userRole}

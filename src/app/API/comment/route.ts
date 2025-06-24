@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import "server-only";
 
-const api_URL = "http:localhost:3000/api/comentarios";
+const api_URL = `${process.env.api_URL}/api/comentarios`;
 
 export async function postComment(
   reviewId: number,

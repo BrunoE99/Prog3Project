@@ -1,6 +1,6 @@
 import "server-only";
 
-const api_URL = "http:localhost:3000/api/generos";
+const api_URL = `${process.env.api_URL}/api/generos`;
 
 export async function getAllGenres() {
   try {

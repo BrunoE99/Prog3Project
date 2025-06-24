@@ -1,7 +1,7 @@
 import { cookies } from "next/headers";
 import "server-only";
 
-const api_URL = "http:localhost:3000/api/peliculas";
+const api_URL = `${process.env.api_URL}/api/peliculas`;
 
 export async function getAllMoviesByName(name: string) {
   try {

@@ -2,7 +2,7 @@
 
 import { cookies } from "next/headers";
 
-const api_URL = "http:localhost:3000/api/reuniones";
+const api_URL = `${process.env.api_URL}/api/reuniones`;
 
 export async function meetingGet() {
   try {

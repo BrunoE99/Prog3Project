@@ -1,7 +1,7 @@
 import "server-only";
 import { cookies } from "next/headers";
 
-const api_URL = "http://localhost:3000";
+const api_URL = `${process.env.api_URL}`;
 
 export async function logInPost(userEmail: string, userPassword: string) {
   // Password should already be received encrypted

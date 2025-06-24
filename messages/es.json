@@ -231,7 +231,8 @@
     "signup-link": "Registrarse"
   },
   "SearchBar": {
-    "search-placeholder": "Buscar..."
+    "search-placeholder": "Buscar...",
+    "view-all-msg": "Ver todos los resultados para"
   },
   "Footer": {
     "pages-label": "Páginas",
@@ -280,5 +281,9 @@
     "movie-edit-score-number": "La puntuación de la película debe ser un número",
     "movie-edit-score-int": "La puntuación de la película debe ser un número entero",
     "movie-edit-score-positive": "La puntuación de la película debe ser un número positivo"
+  },
+  "MoviesByName": {
+    "title": "Busqueda",
+    "error-msg": "Algo salió mal."
   }
 }

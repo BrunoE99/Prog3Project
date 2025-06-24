@@ -3,17 +3,44 @@ import "server-only";
 
 const api_URL = `${process.env.api_URL}/api/peliculas`;
 
-export async function getAllMoviesByName(name: string) {
+export async function getAllMoviesByName(
+  name: string,
+  page: number = 0,
+  alphabetic?: "asc" | "desc",
+  rating?: "asc" | "desc"
+) {
   try {
-    const params = new URLSearchParams({ q: name });
-    const request = await fetch(`${api_URL}/search/name?${params}`, {
+    const params = new URLSearchParams({
+      q: name,
+      page: String(page),
+    });
+    if (alphabetic) {
+      params.append("alphabetic", alphabetic);
+    }
+    if (rating) {
+      params.append("rating", rating);
+    }
+    const request = await fetch(`${api_URL}/search/name/all?${params}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
       },
     });
 
-    return request.json();
+    const responseJson = await request.json();
+
+    if (request.status === 200) {
+      return {
+        status: request.status,
+        movies: responseJson,
+      };
+    } else {
+      return {
+        status: request.status,
+        message: responseJson.message || "An unexpected error ocurred.",
+        movies: [],
+      };
+    }
   } catch (e) {
     console.error(e);
     return {

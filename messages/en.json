@@ -231,7 +231,8 @@
     "signup-link": "Sign Up"
   },
   "SearchBar": {
-    "search-placeholder": "Search..."
+    "search-placeholder": "Search...",
+    "view-all-msg": "View all results for"
   },
   "Footer": {
     "pages-label": "Pages",
@@ -280,5 +281,9 @@
     "movie-edit-score-number": "Movie score must be a number",
     "movie-edit-score-int": "Movie score must be an integer",
     "movie-edit-score-positive": "Movie score must be a positive number"
+  },
+  "MoviesByName": {
+    "title": "Search",
+    "error-msg": "Something went wrong."
   }
 }

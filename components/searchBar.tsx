@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import SearchChip from "./searchChip";
 import { retrieveFilteredMovies } from "@/app/[locale]/movie/[id]/actions";
 import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 interface MovieComponents {
   id: number;
@@ -25,8 +26,8 @@ export default function SearchBar() {
     async function fetchMovies() {
       if (searchString && searchString !== "" && hasSearched) {
         const data = await retrieveFilteredMovies(searchString);
-        if (data.length > 0) {
-          setMovies(data);
+        if (data.movies.length > 0) {
+          setMovies(data.movies);
         } else {
           setMovies([]);
         }
@@ -85,7 +86,7 @@ export default function SearchBar() {
         id="searchResults"
         className={`${
           hasSearched ? "flex flex-col" : "hidden"
-        } absolute top-11 rounded-none bg-[#0b244a] w-full shadow-lg z-2`}
+        } absolute top-11 rounded-none bg-[#0b244a] w-full shadow-lg z-2 gap-1`}
       >
         {filteredMovies.map((movie, index) => (
           <SearchChip
@@ -97,6 +98,14 @@ export default function SearchBar() {
             }}
           />
         ))}
+        {filteredMovies ? (
+          <Link
+            href={`/results/${searchString}`}
+            className="text-lg cursor-pointer hover:bg-[#041b3d]"
+          >
+            {`${t("view-all-msg")} "${searchString}"`}
+          </Link>
+        ) : null}
       </div>
     </div>
   );

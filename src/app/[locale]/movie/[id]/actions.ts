@@ -33,8 +33,13 @@ export async function getDecodedToken() {
   return decoded;
 }
 
-export async function retrieveFilteredMovies(name: string) {
-  const response = await getAllMoviesByName(name);
+export async function retrieveFilteredMovies(
+  name: string,
+  page: number = 0,
+  alphabetic?: "asc" | "desc",
+  rating?: "asc" | "desc"
+) {
+  const response = await getAllMoviesByName(name, page, alphabetic, rating);
 
   return response;
 }

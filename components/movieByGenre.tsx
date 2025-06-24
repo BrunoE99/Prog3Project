@@ -136,9 +136,7 @@ export default async function ByGenre({
         <div>
           <MovieFilter />
         </div>
-        <h2 className="text-2xl font-semibold mb-4 p-5">
-          {peliculas.movies.nombre}
-        </h2>
+        <h2 className="text-2xl font-semibold mb-4 p-5"></h2>
         <div className="grid grid-cols-1 gap-6 p-5">
           {moviesWithReviews.map(
             (pelicula: MovieWithReviews, index: number) => (

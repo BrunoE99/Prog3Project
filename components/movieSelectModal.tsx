@@ -102,8 +102,9 @@ export function MovieSelectModal({
     async function fetchMovies() {
       if (searchString && searchString !== "" && hasSearched) {
         const data = await retrieveFilteredMovies(searchString);
-        if (data.length > 0) {
-          setMovies(data);
+
+        if (data.movies.length > 0) {
+          setMovies(data.movies);
         } else {
           setMovies([]);
         }

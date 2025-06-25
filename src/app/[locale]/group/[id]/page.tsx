@@ -114,7 +114,7 @@ export default async function Group({ params }: { params: { id: string } }) {
             isLoggedIn={loggedIn}
             role={userRole}
           />
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 divide-x-1 divide-[#65686c] md:divide-x-0 min-h-full flex-1">
+          <div className="grid grid-cols-1 lg:grid-cols-4  lg:divide-x-1 lg:divide-[#65686c] md:divide-x-0 min-h-full flex-1">
             <GroupMeetingColumn
               meeting={meeting && meeting.statusCode ? undefined : meeting}
               role={userRole}

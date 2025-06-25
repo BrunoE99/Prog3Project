@@ -167,22 +167,21 @@ export function GroupHeader({
           <p className="text-lg text-wrap w-2/3 pb-3">{group.descripcion}</p>
         </div>
         <div className="flex flex-row justify-end items-end">
-          <div className="flex flex-col">
-            <button
-              onClick={wrappedJoinLeave}
-              type="submit"
-              name="submit"
-              className={`flex shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 ${
-                role === "" ? "before:content-['+']" : "before:content-['-']"
-              } before:pr-2 before:text-xl text-lg text-center rounded-sm font-semibold bg-blue-700 hover:bg-blue-800 transition-colors delay-75 duration-100 ease-in-out`}
-            >
-              {role === "" ? t("join-button") : t("leave-button")}
-            </button>
-          </div>
+          <button
+            onClick={wrappedJoinLeave}
+            type="submit"
+            name="submit"
+            className={`flex shadow-sm cursor-pointer m-2 mb-5 md:m-5 pb-1 pt-1 pr-4 pl-4 ${
+              role === "" ? "before:content-['+']" : "before:content-['-']"
+            } before:pr-2 before:text-xl text-lg text-center rounded-sm font-semibold bg-blue-700 hover:bg-blue-800 transition-colors delay-75 duration-100 ease-in-out`}
+          >
+            {role === "" ? t("join-button") : t("leave-button")}
+          </button>
+
           {role === "lider" || isAdmin ? (
             <button
               onClick={() => redirect(`/group/${group.id}/edit`)}
-              className={`flex bg-[#1c1e21] shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 text-lg text-center rounded-sm font-semibold text-nowrap`}
+              className={`flex bg-[#1c1e21] shadow-sm cursor-pointer m-2 mb-5 md:m-5 pb-1 pt-1 pr-4 pl-4 text-lg text-center rounded-sm font-semibold text-nowrap`}
             >
               {t("edit-button")}
             </button>
@@ -193,7 +192,7 @@ export function GroupHeader({
                 setOpen(true);
                 document.body.style.overflow = "hidden";
               }}
-              className={`flex bg-red-800 shadow-sm cursor-pointer m-5 pb-1 pt-1 pr-4 pl-4 text-lg text-center rounded-sm font-semibold text-nowrap`}
+              className={`flex bg-red-800 shadow-sm cursor-pointer m-2 mb-5 md:m-5 pb-1 pt-1 pr-4 pl-4 text-lg text-center rounded-sm font-semibold text-nowrap`}
             >
               {t("delete-button")}
             </button>
@@ -235,7 +234,7 @@ export function GroupMeetingColumn(props: {
   }, [submitted]);
 
   return (
-    <div className="col-span-1 pl-2 xl:pl-6 bg-[#003566] h-full shadow-2xl rounded-br-md">
+    <div className="col-span-1 pl-2 xl:pl-6 bg-[#003566] h-full shadow-md lg:shadow-2xl pb-4 lg:pb-0">
       {isSidebarOpen ? (
         <>
           <div className="flex">
@@ -344,7 +343,7 @@ export function GroupReviews({
   }, [submitted, pageChanged]);
 
   return (
-    <div className="flex flex-col col-span-2 items-center h-full pt-4 gap-3">
+    <div className="flex flex-col col-span-2 items-center h-full pt-4 gap-3 pl-3 pr-3">
       {modalOpen ? (
         <MovieSelectModal
           message={t("select-modal-msg")}
@@ -457,7 +456,7 @@ export function GroupMembersPreview({
     unit = "m";
   }
   return (
-    <div className="flex flex-col col-span-1 items-start mr-0 sm:mr-6 h-full w-full pt-4 pb-4 bg-[#003566] shadow-2xl rounded-bl-md lg:pb-0">
+    <div className="flex flex-col col-span-1 items-start mr-0 sm:mr-6 h-full w-full pt-4 pb-4 bg-[#003566] shadow-2xl lg:pb-0">
       <div className="flex flex-col mb-2 ml-3">
         <span
           onClick={() => redirect(`/group/${params.id}/members`)}

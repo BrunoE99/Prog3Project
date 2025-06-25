@@ -205,12 +205,7 @@ export default function MovieReview({
               height={50}
             />
             <div className="p-2 flex flex-col">
-              <h3
-                className="text-2xl font-semibold cursor-pointer"
-                onClick={() => redirect(`/profile/${review.userId}`)}
-              >
-                {review.user.username}
-              </h3>
+              <h3 className="text-2xl font-semibold">{review.user.username}</h3>
               <h4
                 className={`${
                   review.grupo ? "cursor-pointer" : "hidden"

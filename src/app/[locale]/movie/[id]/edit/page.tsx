@@ -33,20 +33,20 @@ export default async function MovieEdit({
               authorized={isAuthorized}
               generos={genres}
             />
-            {isAuthorized ? null : (
-              <div className="flex justify-center items-center">
-                <div className="fixed justify-center items-center blur-none">
-                  <span className="rounded-sm text-3xl font-bold z-2">
-                    {t("not-auth-message")}
-                  </span>
-                </div>
-              </div>
-            )}
           </>
         ) : (
           <NotFoundPage />
         )}
       </div>
+      {isAuthorized ? null : (
+        <div className="flex justify-center items-center">
+          <div className="fixed flex justify-center items-center blur-none inset-0">
+            <span className="rounded-sm text-3xl font-bold z-2">
+              {t("not-auth-message")}
+            </span>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

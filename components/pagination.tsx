@@ -37,7 +37,7 @@ export default function Pagination({
       </div>
 
       <div>
-        {t("page-text")} {currentPage}
+        {t("page-text")} {currentPage + 1}
       </div>
 
       <div>

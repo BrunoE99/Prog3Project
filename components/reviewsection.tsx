@@ -25,6 +25,8 @@ export default async function AllReviews() {
   const rating = "desc";
   const alphabetic = "";
   const peliculas = await getAllMovies(0, rating);
+  
+  // console.log(peliculas);
 
   const moviesWithReviews: MovieWithReviews[] = await Promise.all(
     peliculas.movies.map(async (pelicula: Movie) => {

@@ -8,6 +8,8 @@ Los objetivos son ofrecerles a los usuarios un lugar donde puedan expresarse lib
 
 ## Setup
 
+Se debe incluir la URL de la API en .env, como `api_URL`.
+
 Para ejecutar en modo de desarrollo:
 
 ```bash

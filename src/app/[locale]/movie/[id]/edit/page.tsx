@@ -24,7 +24,7 @@ export default async function MovieEdit({
 
   return (
     <div className={`min-h-screen bg-[#001d3d]`}>
-      <div className={isAuthorized ? "" : "blur-sm"}>
+      <div className={isAuthorized ? "" : "blur-sm relative"}>
         {movie ? (
           <>
             <MovieEditHeader id={movie.id} authorized={isAuthorized} />
@@ -39,12 +39,10 @@ export default async function MovieEdit({
         )}
       </div>
       {isAuthorized ? null : (
-        <div className="flex justify-center items-center">
-          <div className="fixed flex justify-center items-center blur-none inset-0">
-            <span className="rounded-sm text-3xl font-bold z-2">
-              {t("not-auth-message")}
-            </span>
-          </div>
+        <div className="inset-0 flex justify-center items-center absolute pointer-events-none">
+          <span className="rounded-sm text-3xl font-bold px-4 py-2">
+            {t("not-auth-message")}
+          </span>
         </div>
       )}
     </div>

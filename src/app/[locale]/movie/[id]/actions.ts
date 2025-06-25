@@ -5,8 +5,8 @@ import {
   getAllMoviesByName,
   getMovie,
   movieUpdate,
-} from "@/app/API/movie/route";
-import { reviewGetAllPaged, reviewPost } from "@/app/API/reviews/route";
+} from "@/app/API/movie/movieRoute";
+import { reviewGetAllPaged, reviewPost } from "@/app/API/reviews/reviewsRoute";
 import { getMovieEditSchema, getReviewFormSchema } from "@/app/lib/definitions";
 import { jwtDecode } from "jwt-decode";
 import { cookies } from "next/headers";

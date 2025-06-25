@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import Navbar from "../../../components/navbar";
 import Footer from "../../../components/footer";
 import { Suspense } from "react";
-import { getAllGenres } from "../API/genres/route";
+import { getAllGenres } from "../API/genres/genreRoute";
 import { cookies } from "next/headers";
 import { DecodeToken } from "@/actions";
 import { Inter } from "next/font/google";

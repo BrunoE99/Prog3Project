@@ -3,7 +3,7 @@
 import MovieCardFull from "./movieCardComplete";
 import MovieFilter from "./filter";
 import Pagination from "./pagination";
-import { reviewsByMovieCount } from "@/app/API/reviews/route";
+import { reviewsByMovieCount } from "@/app/API/reviews/reviewsRoute";
 import { getTranslations } from "next-intl/server";
 import { retrieveFilteredMovies } from "@/app/[locale]/movie/[id]/actions";
 import { Movie } from "./reviewsection";

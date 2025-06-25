@@ -1,6 +1,6 @@
 "use server";
 
-import { reviewByUserID } from "@/app/API/reviews/route";
+import { reviewByUserID } from "@/app/API/reviews/reviewsRoute";
 import ReviewCard from "./reviewProfileSection";
 import Pagination from "./pagination";
 import { getTranslations } from "next-intl/server";

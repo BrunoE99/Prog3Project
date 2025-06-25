@@ -14,13 +14,13 @@ import {
   groupLeavePost,
   groupPost,
   groupUpdate,
-} from "../../API/group/route";
+} from "../../API/group/groupRoute";
 import {
   meetingDelete,
   meetingGet,
   meetingPost,
-} from "../../API/meeting/route";
-import { groupReviewsGetAllPaged } from "../../API/reviews/route";
+} from "../../API/meeting/meetingRoute";
+import { groupReviewsGetAllPaged } from "../../API/reviews/reviewsRoute";
 import {
   getGroupCreateSchema,
   getGroupEditSchema,

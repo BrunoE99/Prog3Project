@@ -91,7 +91,11 @@ interface ReviewComponents {
   comentarios: Comment[];
 }
 
-export default async function Group({ params }: { params: { id: string } }) {
+export default async function Group({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const group: Group = await findGroupById(Number(id));
   const groupMembers = await findAllGroupMembers(Number(id));

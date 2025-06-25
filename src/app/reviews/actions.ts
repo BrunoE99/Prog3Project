@@ -4,8 +4,8 @@ import {
   deleteComment,
   getAllCommentsForReview,
   postComment,
-} from "../API/comment/route";
-import { reviewDelete, reviewUpdate } from "../API/reviews/route";
+} from "../API/comment/commentRoute";
+import { reviewDelete, reviewUpdate } from "../API/reviews/reviewsRoute";
 import { getCommentSchema, getReviewEditSchema } from "../lib/definitions";
 
 export async function eraseReview(id: number) {

@@ -78,7 +78,11 @@ interface ReviewComponents {
   comentarios: Comment[];
 }
 
-export default async function Members({ params }: { params: { id: string } }) {
+export default async function Members({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const groupMembers: GroupMembership[] = await findAllGroupMembers(Number(id));
   const userRole = await findRoleInGroup(Number(id));

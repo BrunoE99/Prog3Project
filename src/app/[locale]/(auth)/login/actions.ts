@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { logInPost } from "@/app/API/login/route";
+import { logInPost } from "@/app/API/login/loginRoute";
 import { getLoginFormSchema } from "@/app/lib/definitions";
 
 export async function logIn(_: any, formData: FormData) {

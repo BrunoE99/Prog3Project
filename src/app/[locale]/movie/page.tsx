@@ -1,11 +1,11 @@
 import AllMovies from "../../../../components/allMovies";
 
 interface PageProps {
-  searchParams?: {
+  searchParams?: Promise<{
     filter?: string;
     order?: string;
     page?: string;
-  };
+  }>;
 }
 
 export default async function CompleteMovies({ searchParams }: PageProps) {

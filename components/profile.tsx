@@ -1,6 +1,6 @@
 "use server";
 
-import { userById } from "@/app/API/userId/route";
+import { userById } from "@/app/API/userId/userIdRoute";
 import Image from "next/image";
 import ImageUpload from "./imageUpload";
 import ReviewsByUserID from "./reviewByUserID";

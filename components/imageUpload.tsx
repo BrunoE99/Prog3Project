@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { updateProfilePicture } from "@/app/API/userId/route";
+import { updateProfilePicture } from "@/app/API/userId/userIdRoute";
 import { useTranslations } from "next-intl";
 
 export default function ImageUpload() {

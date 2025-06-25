@@ -1,14 +1,14 @@
 import ByGenre from "../../../../../components/movieByGenre";
 
 interface GenrePage {
-  params: {
+  params: Promise<{
     genreId: string;
-  };
-  searchParams?: {
+  }>;
+  searchParams?: Promise<{
     filter?: string;
     order?: string;
     page?: string;
-  };
+  }>;
 }
 
 export default async function oneGenre({ params, searchParams }: GenrePage) {

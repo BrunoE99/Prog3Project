@@ -85,7 +85,7 @@ interface ReviewComponents {
 export default async function GroupEdit({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const t = await getTranslations("GroupEdit");
   const { id } = await params;

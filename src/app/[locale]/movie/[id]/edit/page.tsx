@@ -3,7 +3,7 @@
 import { getAuthorization } from "@/app/API/auth/actions";
 
 import { getMovieById } from "../actions";
-import { getAllGenres } from "@/app/API/genres/route";
+import { getAllGenres } from "@/app/API/genres/genreRoute";
 import {
   MovieEditForm,
   MovieEditHeader,
@@ -14,7 +14,7 @@ import NotFoundPage from "../../../../../../components/notFoundPage";
 export default async function MovieEdit({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
   const t = await getTranslations("MovieEdit");
   const { id } = await params;

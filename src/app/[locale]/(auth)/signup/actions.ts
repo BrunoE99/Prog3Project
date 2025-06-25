@@ -1,7 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { signUpPost } from "@/app/API/signup/route";
+import { signUpPost } from "@/app/API/signup/signupRoute";
 import { getSignupFormSchema } from "@/app/lib/definitions";
 
 export async function signUp(_: any, formData: FormData) {

@@ -4,12 +4,12 @@ export default async function AllSearchResults({
   params,
   searchParams,
 }: {
-  params: { name: string };
-  searchParams?: {
+  params: Promise<{ name: string }>;
+  searchParams?: Promise<{
     filter?: string;
     order?: "asc" | "desc";
     page?: string;
-  };
+  }>;
 }) {
   const name = decodeURIComponent((await params).name);
   const awaitedSearchParams = await searchParams;

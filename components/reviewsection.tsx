@@ -1,8 +1,8 @@
 "use server";
 
-import { getAllMovies } from "@/app/API/movie/route";
+import { getAllMovies } from "@/app/API/movie/movieRoute";
 import MovieCard from "./movieCard";
-import { reviewsByMovieCount } from "@/app/API/reviews/route";
+import { reviewsByMovieCount } from "@/app/API/reviews/reviewsRoute";
 import { getTranslations } from "next-intl/server";
 
 export interface Movie {

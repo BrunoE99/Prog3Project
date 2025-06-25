@@ -3,9 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import MovieCard from "./movieCard";
-import { getAllGenres } from "@/app/API/genres/route";
-import { movieByGenre } from "@/app/API/movie/route";
-import { reviewsByMovieCount } from "@/app/API/reviews/route";
+import { getAllGenres } from "@/app/API/genres/genreRoute";
+import { movieByGenre } from "@/app/API/movie/movieRoute";
+import { reviewsByMovieCount } from "@/app/API/reviews/reviewsRoute";
 import { getTranslations } from "next-intl/server";
 
 interface Genre {

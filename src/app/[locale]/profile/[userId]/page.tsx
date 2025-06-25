@@ -11,9 +11,9 @@ type UserData = {
 };
 
 interface ProfilePage {
-  searchParams?: {
+  searchParams?: Promise<{
     page?: string;
-  };
+  }>;
 }
 
 export default async function UserInformation({ searchParams }: ProfilePage) {

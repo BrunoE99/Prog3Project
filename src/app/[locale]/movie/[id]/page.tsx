@@ -71,7 +71,11 @@ interface ReviewComponents {
   comentarios: Comment[];
 }
 
-export default async function Movie({ params }: { params: { id: string } }) {
+export default async function Movie({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
   const { id } = await params;
   const reviews = await getAllReviewsByMovie(Number(id), 0);
   const movie = await getMovieById(Number(id));

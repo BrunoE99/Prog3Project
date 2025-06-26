@@ -144,7 +144,9 @@
   },
   "ReviewCard": {
     "detail": "Detalles y reseñas",
-    "short-detail": "Detalles"
+    "short-detail": "Detalles",
+    "read-less": "Leer menos",
+    "read-more": "Leer mas"
   },
   "AllGroups": {
     "title": "Explorar grupos",

@@ -80,10 +80,7 @@ export default async function ReviewsByUserID({
           <div className="grid grid-cols-1 gap-6 p-5">
             <p className="text-red-900">{t("error-msg")}</p>
           </div>
-          <Pagination
-            currentPage={pagination}
-            hasMovies={reviewsUser?.hasMovies ?? false}
-          />
+          <Pagination currentPage={pagination} hasMovies={reviewsUser?.hasMovies ?? false} />
         </div>
       </section>
     );
@@ -99,10 +96,7 @@ export default async function ReviewsByUserID({
               {reviewsUser.message}
             </h1>
           </div>
-          <Pagination
-            currentPage={pagination}
-            hasMovies={reviewsUser?.hasMovies ?? false}
-          />
+          <Pagination currentPage={pagination} hasMovies={reviewsUser?.hasMovies ?? false} />
         </div>
       </section>
     );
@@ -118,10 +112,7 @@ export default async function ReviewsByUserID({
               {reviewsUser.message}
             </h1>
           </div>
-          <Pagination
-            currentPage={pagination}
-            hasMovies={reviewsUser?.hasMovies ?? false}
-          />
+          <Pagination currentPage={pagination} hasMovies={reviewsUser?.hasMovies ?? false} />
         </div>
       </section>
     );
@@ -138,10 +129,7 @@ export default async function ReviewsByUserID({
             )
           )}
         </div>
-        <Pagination
-          currentPage={pagination}
-          hasMovies={reviewsUser?.hasMovies ?? false}
-        />
+        <Pagination currentPage={pagination} hasMovies={reviewsUser?.hasMovies ?? false} />
       </div>
     </section>
   );

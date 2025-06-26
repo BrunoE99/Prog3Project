@@ -187,6 +187,9 @@ export default function Navbar({
               isProfileOpen ? "flex" : "hidden"
             } grid grid-column bg-[#010f24] lg:hidden justify-end`}
           >
+            <button onClick={clicked} className="mt-2">
+              {t("profile-button")}
+            </button>
             <form action={logOut}>
               <button
                 type="submit"
@@ -195,9 +198,6 @@ export default function Navbar({
                 {t("logout-button")}
               </button>
             </form>
-            <button onClick={clicked} className="mb-2">
-              {t("profile-button")}
-            </button>
           </div>
         ) : (
           <div

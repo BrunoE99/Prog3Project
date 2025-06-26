@@ -253,7 +253,11 @@ export default function MovieReview({
         </div>
       </div>
       <div className="text-sm p-2 pl-0 lg:pl-15 w-3/4 md:text-base h-fit break-words">
-        {review.texto}
+        {review.texto.split("\n").map((paragraph, idx) => (
+          <p key={idx} className="">
+            {paragraph}
+          </p>
+        ))}
       </div>
       <div
         className={`flex flex-row justify-between items-center ${

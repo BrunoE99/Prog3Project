@@ -7,11 +7,11 @@ import { redirect, useParams } from "next/navigation";
 import Image from "next/image";
 import { ModalConfirmation } from "./modalConfirmation";
 import {
+  eraseMovie,
   getAllReviewsByMovie,
   getDecodedToken,
   getFeaturedReviews,
 } from "@/app/[locale]/movie/[id]/actions";
-import { eraseComment } from "@/app/reviews/actions";
 import { useTranslations } from "next-intl";
 
 interface MovieComponents {
@@ -360,7 +360,7 @@ export function MovieInfoSection({
         <ModalConfirmation
           message={`${t("confirmation")} ${movie.nombre}?`}
           onAccept={() => {
-            eraseComment(Number(movie.id));
+            eraseMovie(Number(movie.id));
             setContextOpen(false);
             setModalOpen(false);
             document.body.style.overflow = "unset";

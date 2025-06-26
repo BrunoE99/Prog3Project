@@ -244,7 +244,8 @@
     "report-link": "Report bugs",
     "about-text-1": "We are 4 students who created this project as practical work for a Univeristy subject.",
     "about-text-2": "All the movie information was created with AI.",
-    "copyright": "Movie Review page. All rights reserved."
+    "copyright": "Movie Review page. All rights reserved.",
+    "about-title": "About us"
   },
   "Validation": {
     "group-join-id-number": "Group ID must be a number.",

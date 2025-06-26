@@ -246,7 +246,8 @@
     "report-link": "Reportar errores",
     "about-text-1": "Somos 4 estudiantes que creamos este proyecto como un trabajo práctico para una materia de la Universidad.",
     "about-text-2": "Toda la información de las películas fue creada con IA.",
-    "copyright": "Página de reseñas. Todos los derechos reservados."
+    "copyright": "Página de reseñas. Todos los derechos reservados.",
+    "about-title": "Acerca de nosotros"
   },
   "Validation": {
     "group-join-id-number": "El ID del grupo debe ser un número.",

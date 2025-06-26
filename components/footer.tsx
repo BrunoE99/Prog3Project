@@ -11,24 +11,33 @@ export default function Footer() {
             <h4 className="font-bold text-lg mb-4">{t("pages-label")}</h4>
             <ul className="space-y-2">
               <li>
-                <Link href="/movie" className="text-gray-300 hover:text-white transition-colors duration-200">
+                <Link
+                  href="/movie"
+                  className="text-gray-300 hover:text-white transition-colors duration-200"
+                >
                   {t("movies-link")}
                 </Link>
               </li>
               <li>
-                <Link href="/genres" className="text-gray-300 hover:text-white transition-colors duration-200">
+                <Link
+                  href="/genres"
+                  className="text-gray-300 hover:text-white transition-colors duration-200"
+                >
                   {t("genres-link")}
                 </Link>
               </li>
               <li>
-                <Link href="/group" className="text-gray-300 hover:text-white transition-colors duration-200">
+                <Link
+                  href="/group"
+                  className="text-gray-300 hover:text-white transition-colors duration-200"
+                >
                   {t("groups-link")}
                 </Link>
               </li>
             </ul>
           </div>
           <div>
-            <h4 className="font-bold text-lg mb-4">Acerca de nosotros</h4>
+            <h4 className="font-bold text-lg mb-4">{t("about-title")}</h4>
             <p className="text-gray-300 text-sm leading-relaxed">
               {t("about-text-1")}
             </p>
